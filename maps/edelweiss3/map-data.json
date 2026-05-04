@@ -224,13 +224,6 @@
       ],
       "enemy_all": [
         {
-          "key": "kubelwagen.vehicle",
-          "icon": 62,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
-        {
           "key": "sdkfz251.vehicle",
           "icon": 55,
           "x": 2374.83,
@@ -338,22 +331,8 @@
         {
           "key": "stug_iii_fastrespawn.vehicle",
           "icon": 31,
-          "x": 1383.78,
-          "y": 512.28,
-          "layer": "layer.allies"
-        },
-        {
-          "key": "stug_iii_fastrespawn.vehicle",
-          "icon": 31,
           "x": 1371.92,
           "y": 552.8,
-          "layer": "layer.allies"
-        },
-        {
-          "key": "sdkfz251_fastrespawn.vehicle",
-          "icon": 55,
-          "x": 1482.7,
-          "y": 524.46,
           "layer": "layer.allies"
         },
         {
@@ -374,13 +353,6 @@
     },
     "Axis": {
       "friendly_all": [
-        {
-          "key": "kubelwagen.vehicle",
-          "icon": 62,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
         {
           "key": "sdkfz251.vehicle",
           "icon": 55,
@@ -520,13 +492,6 @@
           "x": 1371.62,
           "y": 553.24,
           "layer": "layer.axis"
-        },
-        {
-          "key": "kubelwagen.vehicle",
-          "icon": 62,
-          "x": 820.92,
-          "y": 363.9,
-          "layer": "layer_campaign.axis"
         }
       ],
       "enemy_all": [

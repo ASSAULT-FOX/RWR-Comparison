@@ -31,62 +31,6 @@
     "USMC": {
       "friendly_all": [
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 2373.94,
-          "y": 200.94,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 2798.15,
-          "y": 1977.91,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 2797.31,
-          "y": 2000.61,
-          "layer": "unlayered"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 2793.17,
-          "y": 2274.58,
-          "layer": "unlayered"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 2797.37,
-          "y": 2122.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 2797.38,
-          "y": 2153.03,
-          "layer": "unlayered"
-        },
-        {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 2798.37,
-          "y": 2186.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 2797.31,
-          "y": 2023.24,
-          "layer": "unlayered"
-        },
-        {
           "key": "m1919_hmg.vehicle",
           "icon": 48,
           "x": 1216.84,
@@ -129,9 +73,9 @@
           "layer": "layer2"
         },
         {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
-          "x": 1204,
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1204.0,
           "y": 1688.33,
           "layer": "layer2"
         },
@@ -157,10 +101,10 @@
           "layer": "layer2"
         },
         {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 933.27,
-          "y": 1686.82,
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1006.77,
+          "y": 340.68,
           "layer": "layer2"
         },
         {
@@ -199,8 +143,8 @@
           "layer": "layer2"
         },
         {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
+          "key": "pillbox.vehicle",
+          "icon": 40,
           "x": 1091.49,
           "y": 1683.25,
           "layer": "layer2"
@@ -231,6 +175,166 @@
           "icon": 48,
           "x": 857.48,
           "y": 1130.51,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 750.74,
+          "y": 1096.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1029.75,
+          "y": 1280.33,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1010.32,
+          "y": 1309.64,
+          "layer": "layer2"
+        }
+      ],
+      "enemy_all": [
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1204.0,
+          "y": 1688.33,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1268.08,
+          "y": 754.91,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 763.25,
+          "y": 790.17,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 982.41,
+          "y": 304.68,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1006.77,
+          "y": 340.68,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 933.27,
+          "y": 1686.82,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 937.71,
+          "y": 338.45,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1043.79,
+          "y": 1297.8,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1091.49,
+          "y": 1683.25,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 750.74,
+          "y": 1096.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1029.75,
+          "y": 1280.33,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1010.32,
+          "y": 1309.64,
+          "layer": "layer2"
+        }
+      ]
+    },
+    "IJA": {
+      "friendly_all": [
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1204.0,
+          "y": 1688.33,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1268.08,
+          "y": 754.91,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 763.25,
+          "y": 790.17,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 982.41,
+          "y": 304.68,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1006.77,
+          "y": 340.68,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1043.79,
+          "y": 1297.8,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1091.49,
+          "y": 1683.25,
           "layer": "layer2"
         },
         {
@@ -257,341 +361,6 @@
       ],
       "enemy_all": [
         {
-          "key": "jeep1.vehicle",
-          "icon": 32,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
-        {
-          "key": "hoha.vehicle",
-          "icon": 52,
-          "x": 2374.83,
-          "y": 68.98,
-          "layer": "unlayered"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 2373.94,
-          "y": 200.94,
-          "layer": "unlayered"
-        },
-        {
-          "key": "radio_jammer.vehicle",
-          "icon": 9,
-          "x": 2381.11,
-          "y": 364.63,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 2798.15,
-          "y": 1977.91,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 2797.31,
-          "y": 2000.61,
-          "layer": "unlayered"
-        },
-        {
-          "key": "pillbox.vehicle",
-          "icon": 40,
-          "x": 2797.23,
-          "y": 2101.83,
-          "layer": "unlayered"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 2797.37,
-          "y": 2122.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 2797.38,
-          "y": 2153.03,
-          "layer": "unlayered"
-        },
-        {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 2798.37,
-          "y": 2186.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "type92_hmg.vehicle",
-          "icon": 49,
-          "x": 2798.15,
-          "y": 2047.88,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 2797.31,
-          "y": 2023.24,
-          "layer": "unlayered"
-        },
-        {
-          "key": "type98.vehicle",
-          "icon": 47,
-          "x": 2798.15,
-          "y": 2074.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 1268.08,
-          "y": 754.91,
-          "layer": "layer2"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 763.25,
-          "y": 790.17,
-          "layer": "layer2"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 982.41,
-          "y": 304.68,
-          "layer": "layer2"
-        },
-        {
-          "key": "pillbox.vehicle",
-          "icon": 40,
-          "x": 1006.77,
-          "y": 340.68,
-          "layer": "layer2"
-        },
-        {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 933.27,
-          "y": 1686.82,
-          "layer": "layer2"
-        },
-        {
-          "key": "type98.vehicle",
-          "icon": 47,
-          "x": 937.71,
-          "y": 338.45,
-          "layer": "layer2"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 1043.79,
-          "y": 1297.8,
-          "layer": "layer2"
-        }
-      ]
-    },
-    "IJA": {
-      "friendly_all": [
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 2373.94,
-          "y": 200.94,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 2798.15,
-          "y": 1977.91,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 2797.31,
-          "y": 2000.61,
-          "layer": "unlayered"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 2797.37,
-          "y": 2122.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 2797.38,
-          "y": 2153.03,
-          "layer": "unlayered"
-        },
-        {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 2798.37,
-          "y": 2186.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 2797.31,
-          "y": 2023.24,
-          "layer": "unlayered"
-        },
-        {
-          "key": "type98.vehicle",
-          "icon": 47,
-          "x": 2798.15,
-          "y": 2074.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 1268.08,
-          "y": 754.91,
-          "layer": "layer2"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 763.25,
-          "y": 790.17,
-          "layer": "layer2"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 982.41,
-          "y": 304.68,
-          "layer": "layer2"
-        },
-        {
-          "key": "pillbox.vehicle",
-          "icon": 40,
-          "x": 1006.77,
-          "y": 340.68,
-          "layer": "layer2"
-        },
-        {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 933.27,
-          "y": 1686.82,
-          "layer": "layer2"
-        },
-        {
-          "key": "type98.vehicle",
-          "icon": 47,
-          "x": 937.71,
-          "y": 338.45,
-          "layer": "layer2"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 1043.79,
-          "y": 1297.8,
-          "layer": "layer2"
-        }
-      ],
-      "enemy_all": [
-        {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 2373.94,
-          "y": 200.94,
-          "layer": "unlayered"
-        },
-        {
-          "key": "radio_jammer.vehicle",
-          "icon": 9,
-          "x": 2381.11,
-          "y": 364.63,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 2798.15,
-          "y": 1977.91,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 2797.31,
-          "y": 2000.61,
-          "layer": "unlayered"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 2793.17,
-          "y": 2274.58,
-          "layer": "unlayered"
-        },
-        {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
-          "x": 2797.23,
-          "y": 2101.83,
-          "layer": "unlayered"
-        },
-        {
-          "key": "heavy_mortar.vehicle",
-          "icon": 46,
-          "x": 2797.37,
-          "y": 2122.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 2797.38,
-          "y": 2153.03,
-          "layer": "unlayered"
-        },
-        {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 2798.37,
-          "y": 2186.66,
-          "layer": "unlayered"
-        },
-        {
-          "key": "m1919_hmg.vehicle",
-          "icon": 48,
-          "x": 2798.15,
-          "y": 2047.88,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 2797.31,
-          "y": 2023.24,
-          "layer": "unlayered"
-        },
-        {
           "key": "m1919_hmg.vehicle",
           "icon": 48,
           "x": 1216.84,
@@ -634,9 +403,9 @@
           "layer": "layer2"
         },
         {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
-          "x": 1204,
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1204.0,
           "y": 1688.33,
           "layer": "layer2"
         },
@@ -659,6 +428,13 @@
           "icon": 46,
           "x": 982.41,
           "y": 304.68,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1006.77,
+          "y": 340.68,
           "layer": "layer2"
         },
         {
@@ -690,6 +466,13 @@
           "layer": "layer2"
         },
         {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 937.71,
+          "y": 338.45,
+          "layer": "layer2"
+        },
+        {
           "key": "m1919_hmg.vehicle",
           "icon": 48,
           "x": 1063.43,
@@ -704,8 +487,8 @@
           "layer": "layer2"
         },
         {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
+          "key": "pillbox.vehicle",
+          "icon": 40,
           "x": 1091.49,
           "y": 1683.25,
           "layer": "layer2"
@@ -739,22 +522,22 @@
           "layer": "layer2"
         },
         {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
+          "key": "pillbox.vehicle",
+          "icon": 40,
           "x": 750.74,
           "y": 1096.53,
           "layer": "layer2"
         },
         {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
+          "key": "pillbox.vehicle",
+          "icon": 40,
           "x": 1029.75,
           "y": 1280.33,
           "layer": "layer2"
         },
         {
-          "key": "pillbox1.vehicle",
-          "icon": 39,
+          "key": "pillbox.vehicle",
+          "icon": 40,
           "x": 1010.32,
           "y": 1309.64,
           "layer": "layer2"
