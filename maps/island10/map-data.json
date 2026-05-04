@@ -278,20 +278,6 @@
       ],
       "enemy_all": [
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1637.39,
-          "y": 1533.79,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1627.7,
-          "y": 1543.36,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "coastal_gun2.vehicle",
           "icon": 44,
           "x": 1088.76,
@@ -583,20 +569,6 @@
     "IJA": {
       "friendly_all": [
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1637.38,
-          "y": 1533.8,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1627.69,
-          "y": 1543.38,
-          "layer": "layer.ija"
-        },
-        {
           "key": "type92_hmg.vehicle",
           "icon": 49,
           "x": 294.13,
@@ -788,20 +760,6 @@
           "layer": "layer.ija"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1637.38,
-          "y": 1533.8,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1627.69,
-          "y": 1543.38,
-          "layer": "layer.ija"
-        },
-        {
           "key": "coastal_gun.vehicle",
           "icon": 44,
           "x": 1088.65,
@@ -848,6 +806,20 @@
           "icon": 45,
           "x": 1658.33,
           "y": 1531.21,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1637.39,
+          "y": 1533.79,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1627.7,
+          "y": 1543.36,
           "layer": "layer.usmc"
         },
         {

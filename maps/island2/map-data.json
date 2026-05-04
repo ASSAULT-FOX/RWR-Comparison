@@ -197,13 +197,6 @@
           "x": 1646.21,
           "y": 1712.04,
           "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 343.79,
-          "y": 1461.07,
-          "layer": "layer2"
         }
       ],
       "enemy_all": [
@@ -324,20 +317,6 @@
           "icon": 49,
           "x": 374.55,
           "y": 1391.44,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1686.21,
-          "y": 1666.86,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1678.56,
-          "y": 1678.12,
           "layer": "layer2"
         },
         {
@@ -524,20 +503,6 @@
           "icon": 39,
           "x": 801.0,
           "y": 1068.0,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1686.21,
-          "y": 1666.86,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1678.56,
-          "y": 1678.12,
           "layer": "layer2"
         },
         {
@@ -813,13 +778,6 @@
           "icon": 47,
           "x": 592.3,
           "y": 1719.45,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 343.79,
-          "y": 1461.07,
           "layer": "layer2"
         },
         {

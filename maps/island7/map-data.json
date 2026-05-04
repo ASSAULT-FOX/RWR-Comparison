@@ -374,41 +374,6 @@
           "layer": "layer2"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
-          "layer": "layer2"
-        },
-        {
           "key": "pillbox.vehicle",
           "icon": 40,
           "x": 1128.64,
@@ -563,20 +528,6 @@
           "x": 891.24,
           "y": 826.25,
           "layer": "layer1"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 853.54,
-          "y": 1746.27,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 690.54,
-          "y": 1755.26,
-          "layer": "layer.usmc"
         },
         {
           "key": "fortified_turret_chi_ha.vehicle",
@@ -800,41 +751,6 @@
           "icon": 46,
           "x": 348.03,
           "y": 354.53,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
           "layer": "layer2"
         },
         {
@@ -1318,41 +1234,6 @@
           "layer": "layer2"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
-          "layer": "layer2"
-        },
-        {
           "key": "pillbox1.vehicle",
           "icon": 39,
           "x": 1128.64,
@@ -1635,10 +1516,24 @@
           "layer": "layer.ija"
         },
         {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 853.54,
+          "y": 1746.27,
+          "layer": "layer.usmc"
+        },
+        {
           "key": "pt_boat.vehicle",
           "icon": 36,
           "x": 914.46,
           "y": 1769.89,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 690.54,
+          "y": 1755.26,
           "layer": "layer.usmc"
         },
         {
@@ -1842,41 +1737,6 @@
           "icon": 46,
           "x": 348.03,
           "y": 354.53,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
           "layer": "layer2"
         },
         {

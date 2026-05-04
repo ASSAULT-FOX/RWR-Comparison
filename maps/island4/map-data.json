@@ -31,13 +31,6 @@
     "USMC": {
       "friendly_all": [
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1205.74,
-          "y": 532.61,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "landing_craft_noai.vehicle",
           "icon": 37,
           "x": 372.91,
@@ -313,32 +306,18 @@
           "layer": "layer.ija"
         },
         {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1322.7,
+          "y": 928.58,
+          "layer": "layer.ija"
+        },
+        {
           "key": "landing_craft1.vehicle",
           "icon": 38,
           "x": 1317.59,
           "y": 958.39,
           "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1205.74,
-          "y": 532.61,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 409.99,
-          "y": 1547.48,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 399.06,
-          "y": 1533.68,
-          "layer": "layer.usmc"
         },
         {
           "key": "chi_ha.vehicle",
@@ -604,34 +583,6 @@
           "layer": "layer.ija"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 399.3,
-          "y": 1537.68,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 410.31,
-          "y": 1551.42,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 364.42,
-          "y": 1579.69,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 353.49,
-          "y": 1565.89,
-          "layer": "layer.ija"
-        },
-        {
           "key": "fortified_turret_chi_ha.vehicle",
           "icon": 65,
           "x": 650.27,
@@ -788,41 +739,6 @@
           "layer": "layer1"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1322.7,
-          "y": 928.58,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 399.3,
-          "y": 1537.68,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 410.31,
-          "y": 1551.42,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 364.42,
-          "y": 1579.69,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 353.49,
-          "y": 1565.89,
-          "layer": "layer.ija"
-        },
-        {
           "key": "m4_75.vehicle",
           "icon": 60,
           "x": 640.75,
@@ -869,6 +785,20 @@
           "icon": 36,
           "x": 391.95,
           "y": 1641.28,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 409.99,
+          "y": 1547.48,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 399.06,
+          "y": 1533.68,
           "layer": "layer.usmc"
         },
         {
