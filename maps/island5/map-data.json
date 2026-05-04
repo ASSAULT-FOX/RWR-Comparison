@@ -33,41 +33,6 @@
         {
           "key": "pt_boat.vehicle",
           "icon": 36,
-          "x": 319.59,
-          "y": 928.99,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 348.21,
-          "y": 1028.07,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 316.11,
-          "y": 1094.04,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 298.54,
-          "y": 974.52,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 264.6,
-          "y": 1040.99,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
           "x": 272.46,
           "y": 1142.5,
           "layer": "layer.usmc"
@@ -313,20 +278,6 @@
           "layer": "layer.usmc"
         },
         {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1659.26,
-          "y": 565.17,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1645.09,
-          "y": 600.55,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "fortified_turret_chi_ha.vehicle",
           "icon": 65,
           "x": 673.9,
@@ -562,20 +513,6 @@
           "layer": "layer.ija"
         },
         {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1659.26,
-          "y": 565.17,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1645.09,
-          "y": 600.55,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "pillbox1.vehicle",
           "icon": 39,
           "x": 933.72,
@@ -715,41 +652,6 @@
           "icon": 4,
           "x": 325.96,
           "y": 1058.0,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 319.59,
-          "y": 928.99,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 348.21,
-          "y": 1028.07,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 316.11,
-          "y": 1094.04,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 298.54,
-          "y": 974.52,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 264.6,
-          "y": 1040.99,
           "layer": "layer.ija"
         },
         {

@@ -31,34 +31,6 @@
     "USMC": {
       "friendly_all": [
         {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 322.99,
-          "y": 1540.05,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 440.22,
-          "y": 1579.39,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 396.14,
-          "y": 1518.99,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 390.26,
-          "y": 1641.1,
-          "layer": "layer.ija"
-        },
-        {
           "key": "rubber_boat.vehicle",
           "icon": 4,
           "x": 1205.74,
@@ -369,27 +341,6 @@
           "layer": "layer.usmc"
         },
         {
-          "key": "soukoutei.vehicle",
-          "icon": 67,
-          "x": 1363.44,
-          "y": 550.23,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1269.06,
-          "y": 959.53,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1607.09,
-          "y": 751.47,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "chi_ha.vehicle",
           "icon": 64,
           "x": 1594.47,
@@ -688,27 +639,6 @@
           "layer": "layer.ija"
         },
         {
-          "key": "soukoutei.vehicle",
-          "icon": 67,
-          "x": 1363.44,
-          "y": 550.23,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1269.06,
-          "y": 959.53,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "landing_craft1.vehicle",
-          "icon": 38,
-          "x": 1607.09,
-          "y": 751.47,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "pillbox1.vehicle",
           "icon": 39,
           "x": 492.18,
@@ -890,34 +820,6 @@
           "icon": 4,
           "x": 353.49,
           "y": 1565.89,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 322.99,
-          "y": 1540.05,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 440.22,
-          "y": 1579.39,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 396.14,
-          "y": 1518.99,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 390.26,
-          "y": 1641.1,
           "layer": "layer.ija"
         },
         {

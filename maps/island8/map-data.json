@@ -31,34 +31,6 @@
     "USMC": {
       "friendly_all": [
         {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 431.74,
-          "y": 1659.95,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 313.25,
-          "y": 1624.3,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 359.22,
-          "y": 1683.26,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 361.24,
-          "y": 1561.08,
-          "layer": "layer.ija"
-        },
-        {
           "key": "landing_craft_noai.vehicle",
           "icon": 37,
           "x": 380.0,
@@ -1023,34 +995,6 @@
           "icon": 4,
           "x": 400.34,
           "y": 1635.08,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 431.74,
-          "y": 1659.95,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 313.25,
-          "y": 1624.3,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 359.22,
-          "y": 1683.26,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 361.24,
-          "y": 1561.08,
           "layer": "layer.ija"
         },
         {

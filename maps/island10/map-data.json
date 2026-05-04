@@ -31,20 +31,6 @@
     "USMC": {
       "friendly_all": [
         {
-          "key": "landing_craft_noai.vehicle",
-          "icon": 37,
-          "x": 1708.09,
-          "y": 1562.68,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "armory_higgins.vehicle",
-          "icon": 50,
-          "x": 1738.11,
-          "y": 1500.99,
-          "layer": "layer.ija"
-        },
-        {
           "key": "oerlikon.vehicle",
           "icon": 45,
           "x": 1684.55,
@@ -70,27 +56,6 @@
           "icon": 45,
           "x": 1658.2,
           "y": 1531.22,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 1590.94,
-          "y": 1638.99,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 1671.05,
-          "y": 1494.95,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 1589.13,
-          "y": 1570.4,
           "layer": "layer.ija"
         },
         {
@@ -795,20 +760,6 @@
       ],
       "enemy_all": [
         {
-          "key": "landing_craft_noai.vehicle",
-          "icon": 37,
-          "x": 1708.09,
-          "y": 1562.68,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "armory_higgins.vehicle",
-          "icon": 50,
-          "x": 1738.11,
-          "y": 1500.99,
-          "layer": "layer.ija"
-        },
-        {
           "key": "oerlikon.vehicle",
           "icon": 45,
           "x": 1684.55,
@@ -848,27 +799,6 @@
           "icon": 4,
           "x": 1627.69,
           "y": 1543.38,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "pt_boat.vehicle",
-          "icon": 36,
-          "x": 1590.94,
-          "y": 1638.99,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 1671.05,
-          "y": 1494.95,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "landing_craft.vehicle",
-          "icon": 37,
-          "x": 1589.13,
-          "y": 1570.4,
           "layer": "layer.ija"
         },
         {
