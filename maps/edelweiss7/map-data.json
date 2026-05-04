@@ -1,606 +1,702 @@
 {
-  "id": "edelweiss7",
-  "group": "雪绒花",
-  "name": "edelweiss7",
-  "factions": [
-    {
-      "id": "Allies",
-      "label": "盟军",
-      "image": "map.png"
+  "map": "edelweiss7",
+  "source": "maps/edelweiss7/objects.svg",
+  "spawn_ranges": {
+    "Allies": [],
+    "Axis": null
+  },
+  "views": {
+    "Allies": {
+      "friendly_all": [
+        {
+          "key": "willys_mb.vehicle",
+          "icon": 10,
+          "x": 2374.89,
+          "y": 3.16,
+          "layer": "unlayered"
+        },
+        {
+          "key": "m3_halftrack.vehicle",
+          "icon": 24,
+          "x": 2374.84,
+          "y": 68.98,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 2373.89,
+          "y": 200.95,
+          "layer": "unlayered"
+        },
+        {
+          "key": "stuart.vehicle",
+          "icon": 33,
+          "x": 2374.81,
+          "y": 101.89,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 2798.17,
+          "y": 1977.88,
+          "layer": "unlayered"
+        },
+        {
+          "key": "bofors.vehicle",
+          "icon": 43,
+          "x": 2797.27,
+          "y": 2000.6,
+          "layer": "unlayered"
+        },
+        {
+          "key": "pt_boat.vehicle",
+          "icon": 36,
+          "x": 2793.2,
+          "y": 2274.57,
+          "layer": "unlayered"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 2797.39,
+          "y": 2122.63,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2797.37,
+          "y": 2153.07,
+          "layer": "unlayered"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 2798.37,
+          "y": 2186.63,
+          "layer": "unlayered"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 2798.13,
+          "y": 2047.88,
+          "layer": "unlayered"
+        },
+        {
+          "key": "5inch_gun.vehicle",
+          "icon": 41,
+          "x": 2797.3,
+          "y": 2023.2,
+          "layer": "unlayered"
+        },
+        {
+          "key": "m4_75.vehicle",
+          "icon": 60,
+          "x": 524.95,
+          "y": 335.39,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 501.68,
+          "y": 439.09,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "willys_mb.vehicle",
+          "icon": 10,
+          "x": 1371.2,
+          "y": 1238.09,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "willys_mb.vehicle",
+          "icon": 10,
+          "x": 980.86,
+          "y": 793.41,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "willys_mb.vehicle",
+          "icon": 10,
+          "x": 518.33,
+          "y": 552.43,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "willys_mb.vehicle",
+          "icon": 10,
+          "x": 773.66,
+          "y": 1487.49,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m3_halftrack.vehicle",
+          "icon": 24,
+          "x": 1210.92,
+          "y": 1502.54,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m3_halftrack.vehicle",
+          "icon": 24,
+          "x": 351.95,
+          "y": 1305.25,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "stuart.vehicle",
+          "icon": 33,
+          "x": 453.1,
+          "y": 632.68,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1612.94,
+          "y": 800.66,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1657.92,
+          "y": 832.45,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1390.88,
+          "y": 1678.2,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1283.57,
+          "y": 1697.1,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1177.99,
+          "y": 1720.16,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1323.74,
+          "y": 1758.72,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1255.06,
+          "y": 1849.72,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "willys_mb.vehicle",
+          "icon": 10,
+          "x": 1167.19,
+          "y": 1514.21,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 971.65,
+          "y": 509.04,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 978.37,
+          "y": 473.09,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1314.54,
+          "y": 1627.81,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m4_75.vehicle",
+          "icon": 60,
+          "x": 1388.1,
+          "y": 1854.14,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 858.41,
+          "y": 493.27,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1160.26,
+          "y": 1799.48,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1102.35,
+          "y": 1757.39,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 1238.69,
+          "y": 1885.83,
+          "layer": "layer.allies"
+        }
+      ],
+      "enemy_all": [
+        {
+          "key": "lefh18.vehicle",
+          "icon": 15,
+          "x": 1531.92,
+          "y": -203.14,
+          "layer": "unlayered"
+        },
+        {
+          "key": "lefh18.vehicle",
+          "icon": 15,
+          "x": 1561.79,
+          "y": -146.52,
+          "layer": "unlayered"
+        },
+        {
+          "key": "lefh18.vehicle",
+          "icon": 15,
+          "x": 1622.17,
+          "y": -176.5,
+          "layer": "unlayered"
+        },
+        {
+          "key": "kubelwagen.vehicle",
+          "icon": 62,
+          "x": 2374.89,
+          "y": 3.16,
+          "layer": "unlayered"
+        },
+        {
+          "key": "sdkfz251.vehicle",
+          "icon": 55,
+          "x": 2374.84,
+          "y": 68.98,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 2373.89,
+          "y": 200.95,
+          "layer": "unlayered"
+        },
+        {
+          "key": "panzer_iv.vehicle",
+          "icon": 30,
+          "x": 2374.81,
+          "y": 101.89,
+          "layer": "unlayered"
+        },
+        {
+          "key": "opel_blitz_1.vehicle",
+          "icon": 1,
+          "x": 2374.78,
+          "y": 134.81,
+          "layer": "unlayered"
+        },
+        {
+          "key": "radio_jammer.vehicle",
+          "icon": 9,
+          "x": 2381.16,
+          "y": 364.61,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 2798.17,
+          "y": 1977.88,
+          "layer": "unlayered"
+        },
+        {
+          "key": "bofors.vehicle",
+          "icon": 43,
+          "x": 2797.27,
+          "y": 2000.6,
+          "layer": "unlayered"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 2797.39,
+          "y": 2122.63,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2797.37,
+          "y": 2153.07,
+          "layer": "unlayered"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 2798.37,
+          "y": 2186.63,
+          "layer": "unlayered"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 2798.13,
+          "y": 2047.88,
+          "layer": "unlayered"
+        },
+        {
+          "key": "5inch_gun.vehicle",
+          "icon": 41,
+          "x": 2797.3,
+          "y": 2023.2,
+          "layer": "unlayered"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1241.44,
+          "y": 1467.04,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1342.28,
+          "y": 1767.47,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "stug_iii.vehicle",
+          "icon": 31,
+          "x": 1734.46,
+          "y": 745.95,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "tiger.vehicle",
+          "icon": 11,
+          "x": 1193.59,
+          "y": 1828.45,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "sdkfz251_flak.vehicle",
+          "icon": 54,
+          "x": 872.34,
+          "y": 526.3,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 501.68,
+          "y": 439.09,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1681.56,
+          "y": 837.01,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1361.74,
+          "y": 1887.93,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1135.69,
+          "y": 1905.74,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 966.6,
+          "y": 550.06,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1219.07,
+          "y": 257.98,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1006.71,
+          "y": 734.65,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "radio_jammer_2.vehicle",
+          "icon": 9,
+          "x": 1315.66,
+          "y": 1640.11,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "radio_jammer.vehicle",
+          "icon": 9,
+          "x": 1239.67,
+          "y": 1844.08,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "opel_blitz_1.vehicle",
+          "icon": 1,
+          "x": 1664.14,
+          "y": 815.75,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "kubelwagen.vehicle",
+          "icon": 62,
+          "x": 866.9,
+          "y": 500.98,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "kubelwagen.vehicle",
+          "icon": 62,
+          "x": 1208.52,
+          "y": 310.49,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "kubelwagen.vehicle",
+          "icon": 62,
+          "x": 351.68,
+          "y": 1221.38,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "panzer_iv.vehicle",
+          "icon": 30,
+          "x": 1145.43,
+          "y": 273.3,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "lefh18.vehicle",
+          "icon": 15,
+          "x": 1628.97,
+          "y": 754.37,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "lefh18.vehicle",
+          "icon": 15,
+          "x": 1627.16,
+          "y": 839.15,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "lefh18.vehicle",
+          "icon": 15,
+          "x": 1729.44,
+          "y": 833.22,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "sdkfz251.vehicle",
+          "icon": 55,
+          "x": 1210.92,
+          "y": 1502.54,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "sdkfz251.vehicle",
+          "icon": 55,
+          "x": 351.95,
+          "y": 1305.25,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "luchs.vehicle",
+          "icon": 71,
+          "x": 453.1,
+          "y": 632.68,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1612.94,
+          "y": 800.66,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1657.92,
+          "y": 832.45,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1390.88,
+          "y": 1678.2,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1283.57,
+          "y": 1697.1,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1177.99,
+          "y": 1720.16,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1323.74,
+          "y": 1758.72,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1255.06,
+          "y": 1849.72,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "kubelwagen.vehicle",
+          "icon": 62,
+          "x": 1167.19,
+          "y": 1514.21,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 971.65,
+          "y": 509.04,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 978.37,
+          "y": 473.09,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1314.54,
+          "y": 1627.81,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "panzer_iv.vehicle",
+          "icon": 30,
+          "x": 1388.1,
+          "y": 1854.14,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "opel_blitz_1.vehicle",
+          "icon": 1,
+          "x": 1143.19,
+          "y": 1845.84,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 858.41,
+          "y": 493.27,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1160.26,
+          "y": 1799.48,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "kubelwagen.vehicle",
+          "icon": 62,
+          "x": 1598.35,
+          "y": 1193.65,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1102.35,
+          "y": 1757.39,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "opel_blitz_armoury.vehicle",
+          "icon": 2,
+          "x": 1220.11,
+          "y": 1895.17,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "mg42_hmg.vehicle",
+          "icon": 28,
+          "x": 1238.69,
+          "y": 1885.83,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "opel_blitz_2.vehicle",
+          "icon": 1,
+          "x": 450.89,
+          "y": 898.96,
+          "layer": "layer_invasion.allies"
+        }
+      ]
     }
-  ],
-  "items": [
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 1218.44,
-      "y": 262.35,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Panzer IV",
-      "x": 1141.25,
-      "y": 272.89,
-      "file": "panzer_iv.vehicle",
-      "atlasIndex": 30,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Kubelwagen",
-      "x": 1204.41,
-      "y": 309.58,
-      "file": "kubelwagen.vehicle",
-      "atlasIndex": 62,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "M4A3 Sherman",
-      "x": 529,
-      "y": 336.5,
-      "file": "m4_75.vehicle",
-      "atlasIndex": 60,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 503.91,
-      "y": 438.22,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 975.97,
-      "y": 473.2,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 856.26,
-      "y": 494.33,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Kubelwagen",
-      "x": 871.03,
-      "y": 500.2,
-      "file": "kubelwagen.vehicle",
-      "atlasIndex": 62,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 971.54,
-      "y": 511.43,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "SdKfz 251/17 Flak",
-      "x": 871.78,
-      "y": 522.14,
-      "file": "sdkfz251_flak.vehicle",
-      "atlasIndex": 54,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Willys MB",
-      "x": 520.07,
-      "y": 548.61,
-      "file": "willys_mb.vehicle",
-      "atlasIndex": 10,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 962.2,
-      "y": 549.76,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "light_tank",
-      "x": 457.15,
-      "y": 633.79,
-      "file": "stuart.vehicle",
-      "atlasIndex": 33,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 1002.31,
-      "y": 734.35,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "StuG III",
-      "x": 1734.88,
-      "y": 750.13,
-      "file": "stug_iii.vehicle",
-      "atlasIndex": 31,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "LeFH 18",
-      "x": 1625.29,
-      "y": 756.81,
-      "file": "lefh18.vehicle",
-      "atlasIndex": 15,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Willys MB",
-      "x": 983.65,
-      "y": 790.27,
-      "file": "willys_mb.vehicle",
-      "atlasIndex": 10,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1611.15,
-      "y": 802.26,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "truck",
-      "x": 1665.12,
-      "y": 811.67,
-      "file": "austin_k5.vehicle",
-      "atlasIndex": 56,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "LeFH 18",
-      "x": 1733.85,
-      "y": 833.23,
-      "file": "lefh18.vehicle",
-      "atlasIndex": 15,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1658.17,
-      "y": 834.83,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 1683.65,
-      "y": 840.9,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "LeFH 18",
-      "x": 1628.13,
-      "y": 843.45,
-      "file": "lefh18.vehicle",
-      "atlasIndex": 15,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Opel Blitz",
-      "x": 452.72,
-      "y": 895.18,
-      "file": "opel_blitz_2.vehicle",
-      "atlasIndex": 1,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Kubelwagen",
-      "x": 1600.05,
-      "y": 1197.49,
-      "file": "kubelwagen.vehicle",
-      "atlasIndex": 62,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Kubelwagen",
-      "x": 355.84,
-      "y": 1220.8,
-      "file": "kubelwagen.vehicle",
-      "atlasIndex": 62,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "M4A3 Sherman",
-      "x": 342.56,
-      "y": 1232.49,
-      "file": "m4_75.vehicle",
-      "atlasIndex": 60,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Willys MB",
-      "x": 1374.39,
-      "y": 1235.36,
-      "file": "willys_mb.vehicle",
-      "atlasIndex": 10,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "apc",
-      "x": 354.26,
-      "y": 1308.75,
-      "file": "m3_halftrack.vehicle",
-      "atlasIndex": 24,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "M10 GMC",
-      "x": 322.75,
-      "y": 1314.74,
-      "file": "m10.vehicle",
-      "atlasIndex": 63,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 1237.16,
-      "y": 1468.09,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Willys MB",
-      "x": 776.93,
-      "y": 1484.86,
-      "file": "willys_mb.vehicle",
-      "atlasIndex": 10,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "halftrack",
-      "x": 1212.85,
-      "y": 1498.81,
-      "file": "m3_halftrack.vehicle",
-      "atlasIndex": 24,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "jeep",
-      "x": 1163.45,
-      "y": 1516.12,
-      "file": "jeep.vehicle",
-      "atlasIndex": 0,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1312.35,
-      "y": 1626.81,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Radio jammer",
-      "x": 1311.38,
-      "y": 1644.27,
-      "file": "radio_jammer_2.vehicle",
-      "atlasIndex": 9,
-      "categories": [
-        "radio"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1389.03,
-      "y": 1676.67,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1281.52,
-      "y": 1695.86,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1176.72,
-      "y": 1718.13,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1100.05,
-      "y": 1758.07,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1322.28,
-      "y": 1760.62,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 1341.9,
-      "y": 1763.07,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1158.56,
-      "y": 1797.78,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Tiger I",
-      "x": 1196.29,
-      "y": 1825.23,
-      "file": "tiger.vehicle",
-      "atlasIndex": 11,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "truck",
-      "x": 1138.99,
-      "y": 1845.66,
-      "file": "austin_k5.vehicle",
-      "atlasIndex": 56,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1253.94,
-      "y": 1847.6,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Radio jammer",
-      "x": 1235.39,
-      "y": 1848.24,
-      "file": "radio_jammer.vehicle",
-      "atlasIndex": 9,
-      "categories": [
-        "radio"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "tank",
-      "x": 1384.39,
-      "y": 1856.1,
-      "file": "m4_75.vehicle",
-      "atlasIndex": 60,
-      "categories": [
-        "tank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "hmg",
-      "x": 1237.09,
-      "y": 1884.04,
-      "file": "mg42_hmg.vehicle",
-      "atlasIndex": 28,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 1357.81,
-      "y": 1885.91,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Opel Blitz Armory",
-      "x": 1217.3,
-      "y": 1891.76,
-      "file": "opel_blitz_armoury.vehicle",
-      "atlasIndex": 2,
-      "categories": []
-    },
-    {
-      "faction": "Allies",
-      "factionLabel": "盟军",
-      "tag": "Pak 40 Anti-Tank Gun",
-      "x": 1134.57,
-      "y": 1901.47,
-      "file": "at_gun_pak40.vehicle",
-      "atlasIndex": 13,
-      "categories": [
-        "antiTank"
-      ]
-    }
-  ],
-  "counts": {
-    "radio": 2,
-    "tank": 8,
-    "antiTank": 8,
-    "hmg": 15
   }
 }

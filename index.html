@@ -760,6 +760,8 @@
     .map-stage {
       position: relative;
       width: fit-content;
+      min-width: 280px;
+      min-height: 160px;
       max-width: 100%;
       max-height: 100%;
       margin: 0 auto;
@@ -772,6 +774,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .map-stage[data-message]::before {
+      content: attr(data-message);
+      padding: 18px 22px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.45;
+      text-align: center;
     }
 
     .map-stage img#mapImage {
@@ -1714,6 +1725,7 @@
     const mapModal = document.getElementById("mapModal");
     const closeMapModal = document.getElementById("closeMapModal");
     const mapTitle = document.getElementById("mapTitle");
+    const mapStage = document.getElementById("mapStage");
     const mapImage = document.getElementById("mapImage");
     const toast = document.getElementById("toast");
     const weaponSections = [
@@ -2365,13 +2377,76 @@
           <td>
             <div class="map-actions">
               <button class="map-action-button map-open-button" data-map-id="${escapeHtml(map.id)}" type="button">查看地图</button>
-              ${(map.factions || []).map((faction) => `
-                <button class="map-action-button map-perspective-button" data-map-id="${escapeHtml(map.id)}" data-faction="${escapeHtml(faction.id)}" type="button">查看${escapeHtml(faction.label)}视角</button>
-              `).join("")}
+              ${mapPerspectiveButtons(map)}
             </div>
           </td>
         </tr>
       `).join("");
+    }
+
+    function mapPerspectiveButtons(map) {
+      const factions = map.factions || [];
+      if (factions.length < 2) {
+        return factions.flatMap((faction) => {
+          const states = map.viewStates?.[faction.id] || ["friendly_all"];
+          if (states.includes("friendly_all") && states.includes("enemy_all")) {
+            return [
+              mapPerspectiveButton(map.id, faction, "friendly_all", faction.label),
+              mapPerspectiveButton(map.id, faction, "enemy_all", enemyFactionFor(faction.id, factions).label)
+            ];
+          }
+          return [`
+            <button class="map-action-button map-perspective-button" data-map-id="${escapeHtml(map.id)}" data-faction="${escapeHtml(faction.id)}" data-state="${escapeHtml(primaryMapState(map, faction.id))}" type="button">查看${escapeHtml(faction.label)}视角</button>
+          `];
+        }).join("");
+      }
+
+      const order = ["Axis", "Allies"];
+      const viewFactions = factions.slice().sort((left, right) => {
+        const leftIndex = order.indexOf(left.id);
+        const rightIndex = order.indexOf(right.id);
+        return (leftIndex === -1 ? 99 : leftIndex) - (rightIndex === -1 ? 99 : rightIndex);
+      });
+      return viewFactions.flatMap((faction) => {
+        const enemy = enemyFactionFor(faction.id, factions);
+        return [
+          mapPerspectiveButton(map.id, faction, "friendly_all", faction.label),
+          mapPerspectiveButton(map.id, faction, "enemy_all", enemy.label)
+        ];
+      }).join("");
+    }
+
+    function mapPerspectiveButton(mapId, faction, state, ownerLabel) {
+      return `
+        <button class="map-action-button map-perspective-button" data-map-id="${escapeHtml(mapId)}" data-faction="${escapeHtml(faction.id)}" data-state="${escapeHtml(state)}" type="button">查看${escapeHtml(faction.label)}视角(${escapeHtml(ownerLabel)}占领)</button>
+      `;
+    }
+
+    function primaryMapState(map, factionId) {
+      const states = map.viewStates?.[factionId] || [];
+      return states.includes("friendly_all") ? "friendly_all" : (states[0] || "friendly_all");
+    }
+
+    function enemyFactionFor(factionId, factions) {
+      const enemyId = {
+        Axis: "Allies",
+        Allies: "Axis",
+        USMC: "IJA",
+        IJA: "USMC"
+      }[factionId];
+      return (factions || []).find((item) => item.id === enemyId)
+        || (factions || []).find((item) => item.id !== factionId)
+        || factionMeta(enemyId)
+        || { id: enemyId || "", label: "敌方" };
+    }
+
+    function factionMeta(factionId) {
+      return {
+        Axis: { id: "Axis", label: "德军", image: "map_axis.png" },
+        Allies: { id: "Allies", label: "盟军", image: "map_allies.png" },
+        USMC: { id: "USMC", label: "美军", image: "map_usmc.png" },
+        IJA: { id: "IJA", label: "日军", image: "map_ija.png" }
+      }[factionId] || null;
     }
 
     function detailBaseRows(vehicle) {
@@ -2491,7 +2566,7 @@
       compareBtn.classList.toggle("hidden", tab === "maps");
       confirmCompareBtn.classList.toggle("hidden", tab === "maps");
       compareHint.textContent = tab === "maps"
-        ? "点选地图查看载具设施分布"
+        ? "点击按钮查看地图或阵营视角"
         : (tab === "weapons" ? "在列表中选两个枪械进行对比" : "在列表中选两个载具进行对比");
       searchInput.placeholder = tab === "maps" ? "在地图页中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索");
       applyView();
@@ -2526,7 +2601,13 @@
       if (!currentMap) return;
       mapTitle.textContent = `${currentMap.group} / ${currentMap.name}`;
       mapModal.classList.add("open");
-      renderMapDetail();
+      try {
+        renderMapDetail();
+      } catch (error) {
+        console.error(error);
+        mapImage.hidden = true;
+        mapStage.dataset.message = "地图图片加载失败";
+      }
       resetDialogScroll(mapModal);
     }
 
@@ -2539,17 +2620,49 @@
         showToast("地图数据加载失败");
         return null;
       }
-      const mapData = await response.json();
+      const mapData = normalizeMapData(await response.json(), summary);
       mapDataCache.set(mapId, mapData);
       return mapData;
     }
 
+    function normalizeMapData(mapData, summary) {
+      const normalized = { ...mapData };
+      normalized.id = mapData.id || mapData.map || summary.id;
+      normalized.group = mapData.group || summary.group;
+      normalized.name = mapData.name || summary.name || normalized.id;
+      normalized.baseImage = mapData.baseImage || summary.baseImage;
+      normalized.viewStates = mapData.viewStates || summary.viewStates || {};
+      const summaryFactions = summary.factions || [];
+      if (Array.isArray(mapData.factions)) {
+        normalized.factions = mapData.factions;
+      } else if (mapData.views) {
+        normalized.factions = Object.keys(mapData.views).map((id) => {
+          return summaryFactions.find((item) => item.id === id) || factionMeta(id) || { id, label: id, image: `map_${String(id).toLowerCase()}.png` };
+        });
+      } else {
+        normalized.factions = summaryFactions;
+      }
+      return normalized;
+    }
+
     function renderMapDetail() {
       if (!currentMap) return;
-      const factions = currentMap.factions || [];
-      const defaultFaction = factions.find((item) => item.image === "map.png") || factions[0] || {};
-      setMapImageWithFallback(mapImage, defaultFaction);
+      setMapImageWithFallback(mapImage, null, overviewMapImageSources(currentMap));
       mapImage.alt = `${currentMap.name} 原始地图`;
+    }
+
+    function overviewMapImageSources(mapData = currentMap) {
+      if (!mapData?.id) return [];
+      const names = [];
+      const add = (name) => {
+        if (name && !names.includes(name)) names.push(name);
+      };
+      add(mapData?.baseImage);
+      add("map.png");
+      (mapData?.factions || []).forEach((faction) => {
+        mapImageNames(faction).forEach(add);
+      });
+      return names.map((name) => `maps/${mapData.id}/${name}`);
     }
 
     function mapImageNames(faction) {
@@ -2559,6 +2672,14 @@
       };
       add(faction?.image);
       if (faction?.id) add(`map_${String(faction.id).toLowerCase()}.png`);
+      if (faction?.id === "Axis") add("map_axis.png");
+      if (faction?.id === "Allies") add("map_allies.png");
+      if (faction?.id === "USMC") add("map_usmc.png");
+      if (faction?.id === "IJA") add("map_ija.png");
+      add("map_axis.png");
+      add("map_allies.png");
+      add("map_usmc.png");
+      add("map_ija.png");
       add("map.png");
       return names;
     }
@@ -2567,15 +2688,24 @@
       return mapImageNames(faction).map((name) => `maps/${mapData.id}/${name}`);
     }
 
-    function setMapImageWithFallback(imageElement, faction) {
-      const sources = mapImageSources(faction);
+    function setMapImageWithFallback(imageElement, faction, sourceList = null) {
+      const sources = sourceList || mapImageSources(faction);
+      if (!sources.length) {
+        imageElement.hidden = true;
+        mapStage.dataset.message = "未找到地图图片";
+        return;
+      }
       let index = 0;
+      mapStage.removeAttribute("data-message");
+      imageElement.hidden = false;
       imageElement.onerror = () => {
         index += 1;
         if (index < sources.length) {
           imageElement.src = sources[index];
         } else {
           imageElement.onerror = null;
+          imageElement.hidden = true;
+          mapStage.dataset.message = `未找到地图图片：${sources.map((src) => src.split("/").pop()).join(" / ")}`;
         }
       };
       imageElement.src = sources[index];
@@ -2602,17 +2732,31 @@
       throw lastError || new Error("No map image source available");
     }
 
-    async function openProcessedMap(factionId, mapData = currentMap, popup = null) {
+    function showPopupMessage(popup, title, message) {
+      popup.document.title = title;
+      popup.document.body.innerHTML = "";
+      popup.document.body.style.margin = "0";
+      popup.document.body.style.background = "#101820";
+      popup.document.body.style.color = "#dce8f4";
+      popup.document.body.style.display = "grid";
+      popup.document.body.style.placeItems = "center";
+      popup.document.body.style.font = "16px Microsoft YaHei UI, Microsoft YaHei, sans-serif";
+      popup.document.body.style.padding = "24px";
+      popup.document.body.textContent = message;
+    }
+
+    async function openProcessedMap(factionId, mapData = currentMap, popup = null, state = "friendly_all") {
       if (!mapData) return;
       const factions = mapData.factions || [];
       const faction = factions.find((item) => item.id === factionId) || factions[0];
       if (!faction) return;
+      const ownerLabel = mapData.views && factions.length > 1 ? ownerLabelForState(faction.id, state, factions) : "";
       popup = popup || window.open("", "_blank");
       if (!popup) {
         showToast("浏览器阻止了新窗口，请允许弹窗后重试");
         return;
       }
-      const pageTitle = `${mapData.name} ${faction.label}视角`;
+      const pageTitle = `${mapData.name} ${faction.label}视角${ownerLabel ? `(${ownerLabel}占领)` : ""}`;
       popup.document.title = pageTitle;
       popup.document.body.style.margin = "0";
       popup.document.body.style.background = "#101820";
@@ -2628,10 +2772,10 @@
         const ctx = canvas.getContext("2d");
         ctx.drawImage(baseImage, 0, 0);
 
-        const items = mapData.items.filter((item) => item.faction === factionId || item.faction === "公用");
+        const items = mapItemsForPerspective(mapData, factionId, state);
         const iconCache = new Map();
         for (const item of items) {
-          const iconSrc = `images/${item.atlasIndex}.png`;
+          const iconSrc = `images/${item.atlasIndex ?? item.icon}.png`;
           if (!iconCache.has(iconSrc)) {
             iconCache.set(iconSrc, loadImageElement(iconSrc).catch(() => null));
           }
@@ -2642,7 +2786,9 @@
           const scale = Math.min(1, 48 / Math.max(naturalW, naturalH));
           const width = naturalW * scale;
           const height = naturalH * scale;
-          ctx.drawImage(icon, item.x - width / 2, item.y - height / 2, width, height);
+          const point = mapPointToCanvas(item, canvas, mapData);
+          if (!point) continue;
+          ctx.drawImage(icon, point.x - width / 2, point.y - height / 2, width, height);
         }
 
         canvas.toBlob((blob) => {
@@ -2685,6 +2831,27 @@
         popup.close();
         showToast("地图图片生成失败");
       }
+    }
+
+    function ownerLabelForState(factionId, state, factions) {
+      if (state === "friendly_all") return (factions.find((item) => item.id === factionId) || factionMeta(factionId) || {}).label || factionId;
+      if (state === "enemy_all") return enemyFactionFor(factionId, factions).label;
+      return "";
+    }
+
+    function mapItemsForPerspective(mapData, factionId, state) {
+      if (mapData.views) {
+        const view = mapData.views[factionId] || {};
+        return view[state] || view.friendly_all || [];
+      }
+      return (mapData.items || []).filter((item) => item.faction === factionId || item.faction === "公用");
+    }
+
+    function mapPointToCanvas(item, canvas, mapData = currentMap) {
+      const x = Number(item.x);
+      const y = Number(item.y);
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+      return { x, y };
     }
 
     function renderThreatButtons() {
@@ -3234,7 +3401,7 @@
       popup.document.body.style.placeItems = "center";
       popup.document.body.textContent = "正在生成地图图片...";
       loadMapData(perspectiveButton.dataset.mapId).then((mapData) => {
-        if (mapData) return openProcessedMap(perspectiveButton.dataset.faction, mapData, popup);
+        if (mapData) return openProcessedMap(perspectiveButton.dataset.faction, mapData, popup, perspectiveButton.dataset.state || "friendly_all");
         popup.close();
       }).catch((error) => {
         console.error(error);

@@ -1,1039 +1,1472 @@
 {
-  "id": "island3",
-  "group": "太平洋",
-  "name": "island3",
-  "factions": [
-    {
-      "id": "USMC",
-      "label": "美军",
-      "image": "map_usmc.png"
+  "map": "island3",
+  "source": "maps/island3/objects.svg",
+  "spawn_ranges": {
+    "USMC": [
+      {
+        "from": [
+          1705,
+          1366
+        ],
+        "to": [
+          1910,
+          1710
+        ]
+      }
+    ],
+    "IJA": [
+      {
+        "from": [
+          822,
+          477
+        ],
+        "to": [
+          1160,
+          820
+        ]
+      }
+    ]
+  },
+  "views": {
+    "USMC": {
+      "friendly_all": [
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 881.3,
+          "y": 1283.08,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 846.71,
+          "y": 1253.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 885.7,
+          "y": 1237.22,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 904.62,
+          "y": 1253.38,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 841.59,
+          "y": 1275.67,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 856.14,
+          "y": 1287.21,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 905.54,
+          "y": 1236.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 891.36,
+          "y": 1224.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 2373.94,
+          "y": 200.94,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 2798.15,
+          "y": 1977.91,
+          "layer": "unlayered"
+        },
+        {
+          "key": "bofors.vehicle",
+          "icon": 43,
+          "x": 2797.31,
+          "y": 2000.61,
+          "layer": "unlayered"
+        },
+        {
+          "key": "pt_boat.vehicle",
+          "icon": 36,
+          "x": 2793.17,
+          "y": 2274.58,
+          "layer": "unlayered"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 2797.37,
+          "y": 2122.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2797.38,
+          "y": 2153.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 2798.37,
+          "y": 2186.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "5inch_gun.vehicle",
+          "icon": 41,
+          "x": 2797.31,
+          "y": 2023.24,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1068.36,
+          "y": 726.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 921.47,
+          "y": 670.77,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 1579.63,
+          "y": 1257.79,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun2.vehicle",
+          "icon": 44,
+          "x": 1498.12,
+          "y": 1411.28,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1010.58,
+          "y": 931.9,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 996.92,
+          "y": 936.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 889.57,
+          "y": 890.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 890.68,
+          "y": 894.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 398.21,
+          "y": 460.75,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 1228.27,
+          "y": 913.37,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun2.vehicle",
+          "icon": 42,
+          "x": 1287.38,
+          "y": 939.29,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 382.38,
+          "y": 463.17,
+          "layer": "layer2"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1792.17,
+          "y": 1542.91,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1807.66,
+          "y": 1500.02,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1837.29,
+          "y": 1530.77,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1828.87,
+          "y": 1554.2,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1794.45,
+          "y": 1510.69,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1789.13,
+          "y": 1525.09,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "pt_boat.vehicle",
+          "icon": 36,
+          "x": 1802.26,
+          "y": 1615.61,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "landing_craft_noai.vehicle",
+          "icon": 37,
+          "x": 1735.19,
+          "y": 1574.6,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "landing_craft_noai.vehicle",
+          "icon": 37,
+          "x": 1744.38,
+          "y": 1493.26,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "landing_craft_noai.vehicle",
+          "icon": 37,
+          "x": 1754.67,
+          "y": 1443.9,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "landing_craft_noai.vehicle",
+          "icon": 37,
+          "x": 1772.05,
+          "y": 1391.99,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "landing_craft_noai.vehicle",
+          "icon": 37,
+          "x": 1693.44,
+          "y": 1634.29,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "landing_craft_noai.vehicle",
+          "icon": 37,
+          "x": 1872.79,
+          "y": 1340.93,
+          "layer": "layer.usmc"
+        }
+      ],
+      "enemy_all": [
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 881.3,
+          "y": 1283.08,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 846.71,
+          "y": 1253.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 885.7,
+          "y": 1237.22,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 904.62,
+          "y": 1253.38,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 841.59,
+          "y": 1275.67,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 856.14,
+          "y": 1287.21,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 905.54,
+          "y": 1236.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 891.36,
+          "y": 1224.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "jeep1.vehicle",
+          "icon": 32,
+          "x": 2374.87,
+          "y": 3.16,
+          "layer": "unlayered"
+        },
+        {
+          "key": "hoha.vehicle",
+          "icon": 52,
+          "x": 2374.83,
+          "y": 68.98,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 2373.94,
+          "y": 200.94,
+          "layer": "unlayered"
+        },
+        {
+          "key": "radio_jammer.vehicle",
+          "icon": 9,
+          "x": 2381.11,
+          "y": 364.63,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 2798.15,
+          "y": 1977.91,
+          "layer": "unlayered"
+        },
+        {
+          "key": "bofors.vehicle",
+          "icon": 43,
+          "x": 2797.31,
+          "y": 2000.61,
+          "layer": "unlayered"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 2797.23,
+          "y": 2101.83,
+          "layer": "unlayered"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 2797.37,
+          "y": 2122.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2797.38,
+          "y": 2153.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 2798.37,
+          "y": 2186.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "type92_hmg.vehicle",
+          "icon": 49,
+          "x": 2798.15,
+          "y": 2047.88,
+          "layer": "unlayered"
+        },
+        {
+          "key": "5inch_gun.vehicle",
+          "icon": 41,
+          "x": 2797.31,
+          "y": 2023.24,
+          "layer": "unlayered"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 2798.15,
+          "y": 2074.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 470.97,
+          "y": 555.25,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 454.98,
+          "y": 424.97,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 405.76,
+          "y": 674.44,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 325.94,
+          "y": 544.88,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 971.52,
+          "y": 924.54,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1450.65,
+          "y": 1407.55,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1446.63,
+          "y": 1379.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1522.1,
+          "y": 1380.78,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1531.56,
+          "y": 1229.39,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1583.78,
+          "y": 1269.97,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 339.39,
+          "y": 440.64,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1079.8,
+          "y": 1085.12,
+          "layer": "layer2"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1068.36,
+          "y": 726.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "landing_craft1.vehicle",
+          "icon": 38,
+          "x": 1010.31,
+          "y": 611.26,
+          "layer": "layer2"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 921.47,
+          "y": 670.77,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 1579.63,
+          "y": 1257.79,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun2.vehicle",
+          "icon": 44,
+          "x": 1498.12,
+          "y": 1411.28,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1010.58,
+          "y": 931.9,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 996.92,
+          "y": 936.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 889.57,
+          "y": 890.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 890.68,
+          "y": 894.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 398.21,
+          "y": 460.75,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 1283.1,
+          "y": 1319.77,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 1228.27,
+          "y": 913.37,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun2.vehicle",
+          "icon": 42,
+          "x": 1287.38,
+          "y": 939.29,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 757.13,
+          "y": 837.19,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 456.81,
+          "y": 539.83,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 466.21,
+          "y": 527.88,
+          "layer": "layer2"
+        },
+        {
+          "key": "type92_hmg.vehicle",
+          "icon": 49,
+          "x": 994.15,
+          "y": 699.43,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 1491.24,
+          "y": 1346.56,
+          "layer": "layer2"
+        },
+        {
+          "key": "landing_craft1.vehicle",
+          "icon": 38,
+          "x": 1071.85,
+          "y": 710.74,
+          "layer": "layer2"
+        },
+        {
+          "key": "soukoutei.vehicle",
+          "icon": 67,
+          "x": 1090.01,
+          "y": 598.59,
+          "layer": "layer2"
+        },
+        {
+          "key": "type92_hmg.vehicle",
+          "icon": 49,
+          "x": 953.06,
+          "y": 726.67,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 382.38,
+          "y": 463.17,
+          "layer": "layer2"
+        },
+        {
+          "key": "type92_hmg.vehicle",
+          "icon": 49,
+          "x": 374.12,
+          "y": 483.6,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox.vehicle",
+          "icon": 40,
+          "x": 398.3,
+          "y": 577.2,
+          "layer": "layer2"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1792.17,
+          "y": 1542.91,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1807.66,
+          "y": 1500.02,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1837.29,
+          "y": 1530.77,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 1828.87,
+          "y": 1554.2,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1794.45,
+          "y": 1510.69,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1789.13,
+          "y": 1525.09,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "radio_jammer.vehicle",
+          "icon": 9,
+          "x": 390.63,
+          "y": 500.2,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "radio_jammer.vehicle",
+          "icon": 9,
+          "x": 942.22,
+          "y": 699.68,
+          "layer": "layer.usmc"
+        }
+      ]
     },
-    {
-      "id": "IJA",
-      "label": "日军",
-      "image": "map_ija.png"
+    "IJA": {
+      "friendly_all": [
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 881.3,
+          "y": 1283.08,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 846.71,
+          "y": 1253.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 885.7,
+          "y": 1237.22,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 904.62,
+          "y": 1253.38,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 841.59,
+          "y": 1275.67,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 856.14,
+          "y": 1287.21,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 905.54,
+          "y": 1236.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 891.36,
+          "y": 1224.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 2373.94,
+          "y": 200.94,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 2798.15,
+          "y": 1977.91,
+          "layer": "unlayered"
+        },
+        {
+          "key": "bofors.vehicle",
+          "icon": 43,
+          "x": 2797.31,
+          "y": 2000.61,
+          "layer": "unlayered"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 2797.37,
+          "y": 2122.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2797.38,
+          "y": 2153.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 2798.37,
+          "y": 2186.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "5inch_gun.vehicle",
+          "icon": 41,
+          "x": 2797.31,
+          "y": 2023.24,
+          "layer": "unlayered"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 2798.15,
+          "y": 2074.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1068.36,
+          "y": 726.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "landing_craft1.vehicle",
+          "icon": 38,
+          "x": 1010.31,
+          "y": 611.26,
+          "layer": "layer2"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 921.47,
+          "y": 670.77,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 1579.63,
+          "y": 1257.79,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun2.vehicle",
+          "icon": 44,
+          "x": 1498.12,
+          "y": 1411.28,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1010.58,
+          "y": 931.9,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 996.92,
+          "y": 936.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 889.57,
+          "y": 890.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 890.68,
+          "y": 894.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 398.21,
+          "y": 460.75,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 1228.27,
+          "y": 913.37,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun2.vehicle",
+          "icon": 42,
+          "x": 1287.38,
+          "y": 939.29,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 757.13,
+          "y": 837.19,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 456.81,
+          "y": 539.83,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 466.21,
+          "y": 527.88,
+          "layer": "layer2"
+        },
+        {
+          "key": "type92_hmg.vehicle",
+          "icon": 49,
+          "x": 994.15,
+          "y": 699.43,
+          "layer": "layer2"
+        },
+        {
+          "key": "type98.vehicle",
+          "icon": 47,
+          "x": 1491.24,
+          "y": 1346.56,
+          "layer": "layer2"
+        },
+        {
+          "key": "landing_craft1.vehicle",
+          "icon": 38,
+          "x": 1071.85,
+          "y": 710.74,
+          "layer": "layer2"
+        },
+        {
+          "key": "soukoutei.vehicle",
+          "icon": 67,
+          "x": 1090.01,
+          "y": 598.59,
+          "layer": "layer2"
+        },
+        {
+          "key": "type92_hmg.vehicle",
+          "icon": 49,
+          "x": 953.06,
+          "y": 726.67,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 382.38,
+          "y": 463.17,
+          "layer": "layer2"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 864.87,
+          "y": 1296.76,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 830.65,
+          "y": 1266.62,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 870.2,
+          "y": 1250.35,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 888.89,
+          "y": 1266.8,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 835.71,
+          "y": 1282.86,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 847.26,
+          "y": 1293.09,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "landing_craft1_noai.vehicle",
+          "icon": 38,
+          "x": 990.56,
+          "y": 667.22,
+          "layer": "layer.ija"
+        }
+      ],
+      "enemy_all": [
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 881.3,
+          "y": 1283.08,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 846.71,
+          "y": 1253.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 885.7,
+          "y": 1237.22,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 904.62,
+          "y": 1253.38,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 841.59,
+          "y": 1275.67,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 856.14,
+          "y": 1287.21,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 905.54,
+          "y": 1236.02,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 891.36,
+          "y": 1224.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "jeep.vehicle",
+          "icon": 0,
+          "x": 2374.87,
+          "y": 3.16,
+          "layer": "unlayered"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 2373.94,
+          "y": 200.94,
+          "layer": "unlayered"
+        },
+        {
+          "key": "radio_jammer.vehicle",
+          "icon": 9,
+          "x": 2381.11,
+          "y": 364.63,
+          "layer": "unlayered"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 2798.15,
+          "y": 1977.91,
+          "layer": "unlayered"
+        },
+        {
+          "key": "bofors.vehicle",
+          "icon": 43,
+          "x": 2797.31,
+          "y": 2000.61,
+          "layer": "unlayered"
+        },
+        {
+          "key": "pt_boat.vehicle",
+          "icon": 36,
+          "x": 2793.17,
+          "y": 2274.58,
+          "layer": "unlayered"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 2797.23,
+          "y": 2101.83,
+          "layer": "unlayered"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 2797.37,
+          "y": 2122.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2797.38,
+          "y": 2153.03,
+          "layer": "unlayered"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 2798.37,
+          "y": 2186.66,
+          "layer": "unlayered"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 2798.15,
+          "y": 2047.88,
+          "layer": "unlayered"
+        },
+        {
+          "key": "5inch_gun.vehicle",
+          "icon": 41,
+          "x": 2797.31,
+          "y": 2023.24,
+          "layer": "unlayered"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 470.97,
+          "y": 555.25,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 454.98,
+          "y": 424.97,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 405.76,
+          "y": 674.44,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 325.94,
+          "y": 544.88,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 971.52,
+          "y": 924.54,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1450.65,
+          "y": 1407.55,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1446.63,
+          "y": 1379.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1522.1,
+          "y": 1380.78,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1531.56,
+          "y": 1229.39,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1583.78,
+          "y": 1269.97,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 339.39,
+          "y": 440.64,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1079.8,
+          "y": 1085.12,
+          "layer": "layer2"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 1068.36,
+          "y": 726.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 921.47,
+          "y": 670.77,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun.vehicle",
+          "icon": 44,
+          "x": 1579.63,
+          "y": 1257.79,
+          "layer": "layer2"
+        },
+        {
+          "key": "coastal_gun2.vehicle",
+          "icon": 44,
+          "x": 1498.12,
+          "y": 1411.28,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 1010.58,
+          "y": 931.9,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 996.92,
+          "y": 936.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 889.57,
+          "y": 890.53,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 890.68,
+          "y": 894.22,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 398.21,
+          "y": 460.75,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 1283.1,
+          "y": 1319.77,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 1228.27,
+          "y": 913.37,
+          "layer": "layer2"
+        },
+        {
+          "key": "aa_gun2.vehicle",
+          "icon": 42,
+          "x": 1287.38,
+          "y": 939.29,
+          "layer": "layer2"
+        },
+        {
+          "key": "heavy_mortar.vehicle",
+          "icon": 46,
+          "x": 382.38,
+          "y": 463.17,
+          "layer": "layer2"
+        },
+        {
+          "key": "m1919_hmg.vehicle",
+          "icon": 48,
+          "x": 374.12,
+          "y": 483.6,
+          "layer": "layer2"
+        },
+        {
+          "key": "pillbox1.vehicle",
+          "icon": 39,
+          "x": 398.3,
+          "y": 577.2,
+          "layer": "layer2"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 864.87,
+          "y": 1296.76,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 830.65,
+          "y": 1266.62,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 870.2,
+          "y": 1250.35,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "oerlikon.vehicle",
+          "icon": 45,
+          "x": 888.89,
+          "y": 1266.8,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 835.71,
+          "y": 1282.86,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 847.26,
+          "y": 1293.09,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "radio_jammer_2.vehicle",
+          "icon": 9,
+          "x": 839.82,
+          "y": 1217.32,
+          "layer": "layer.ija"
+        }
+      ]
     }
-  ],
-  "items": [
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 459.39,
-      "y": 424.7,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 335.03,
-      "y": 439.98,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Heavy Mortar",
-      "x": 395.98,
-      "y": 456.94,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Heavy Mortar",
-      "x": 384.71,
-      "y": 466.92,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "hmg",
-      "x": 375.95,
-      "y": 485.14,
-      "file": "m1919_hmg.vehicle",
-      "atlasIndex": 48,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Type 98 Autocannon",
-      "x": 466.15,
-      "y": 525.48,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Type 98 Autocannon",
-      "x": 457.01,
-      "y": 542.22,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 325.6,
-      "y": 549.28,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 475.19,
-      "y": 556.53,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 402.21,
-      "y": 579.25,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "landing_craft",
-      "x": 1010.19,
-      "y": 597.33,
-      "file": "landing_craft1_noai.vehicle",
-      "atlasIndex": 38,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pt_boat",
-      "x": 1072.33,
-      "y": 599.98,
-      "file": "soukoutei.vehicle",
-      "atlasIndex": 67,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Daihatsu",
-      "x": 990.44,
-      "y": 653.28,
-      "file": "landing_craft1_noai.vehicle",
-      "atlasIndex": 38,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "armory boat",
-      "x": 1018.74,
-      "y": 659.66,
-      "file": "armory_daihatsu.vehicle",
-      "atlasIndex": 51,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Rubber boat",
-      "x": 917.21,
-      "y": 671.91,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 409.89,
-      "y": 672.86,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "landing_craft",
-      "x": 1071.73,
-      "y": 696.81,
-      "file": "landing_craft1_noai.vehicle",
-      "atlasIndex": 38,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "hmg",
-      "x": 995.13,
-      "y": 701.62,
-      "file": "type92_hmg.vehicle",
-      "atlasIndex": 49,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Rubber boat",
-      "x": 1064.25,
-      "y": 728.15,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "hmg",
-      "x": 954.9,
-      "y": 728.21,
-      "file": "type92_hmg.vehicle",
-      "atlasIndex": 49,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Type 98 Autocannon",
-      "x": 759.44,
-      "y": 836.56,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Heavy Mortar",
-      "x": 889.25,
-      "y": 886.13,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Heavy Mortar",
-      "x": 891,
-      "y": 898.63,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Anti-Aircraft Gun",
-      "x": 1230.54,
-      "y": 917.16,
-      "file": "aa_gun.vehicle",
-      "atlasIndex": 42,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 974.28,
-      "y": 928,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Heavy Mortar",
-      "x": 1007.25,
-      "y": 929,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Heavy Mortar",
-      "x": 1000.25,
-      "y": 939.13,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Anti-Aircraft Gun",
-      "x": 1284.28,
-      "y": 942.44,
-      "file": "aa_gun2.vehicle",
-      "atlasIndex": 42,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 1081.08,
-      "y": 1089.35,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pt_boat",
-      "x": 779.69,
-      "y": 1195.74,
-      "file": "pt_boat.vehicle",
-      "atlasIndex": 36,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 1527.15,
-      "y": 1229.41,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Oerlikon Gun",
-      "x": 870.03,
-      "y": 1247.95,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Coastal Gun",
-      "x": 1585.24,
-      "y": 1257.65,
-      "file": "coastal_gun.vehicle",
-      "atlasIndex": 44,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Oerlikon Gun",
-      "x": 888.72,
-      "y": 1264.41,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "landing_craft",
-      "x": 806.82,
-      "y": 1265.33,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Oerlikon Gun",
-      "x": 830.83,
-      "y": 1269.01,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 1588.17,
-      "y": 1269.49,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Rubber boat",
-      "x": 835.94,
-      "y": 1287.27,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Rubber boat",
-      "x": 847.49,
-      "y": 1297.5,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Oerlikon Gun",
-      "x": 865.05,
-      "y": 1299.15,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 1278.69,
-      "y": 1319.99,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "landing_craft",
-      "x": 875.91,
-      "y": 1324.38,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Type 98 Autocannon",
-      "x": 1489.09,
-      "y": 1345.5,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 1442.28,
-      "y": 1379.92,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 1526.45,
-      "y": 1381.52,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "Coastal Gun",
-      "x": 1503.69,
-      "y": 1411.9,
-      "file": "coastal_gun2.vehicle",
-      "atlasIndex": 44,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "IJA",
-      "factionLabel": "日军",
-      "tag": "pillbox",
-      "x": 1451.31,
-      "y": 1411.92,
-      "file": "pillbox.vehicle",
-      "atlasIndex": 40,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 459.39,
-      "y": 424.7,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 335.03,
-      "y": 439.98,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Heavy Mortar",
-      "x": 395.98,
-      "y": 456.94,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Heavy Mortar",
-      "x": 384.71,
-      "y": 466.92,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "hmg",
-      "x": 375.95,
-      "y": 485.14,
-      "file": "type92_hmg.vehicle",
-      "atlasIndex": 49,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Radio jammer",
-      "x": 386.35,
-      "y": 504.36,
-      "file": "radio_jammer.vehicle",
-      "atlasIndex": 9,
-      "categories": [
-        "radio"
-      ]
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Type 98 Autocannon",
-      "x": 466.15,
-      "y": 525.48,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Type 98 Autocannon",
-      "x": 457.01,
-      "y": 542.22,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 325.6,
-      "y": 549.28,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 475.19,
-      "y": 556.53,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 402.21,
-      "y": 579.25,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "landing_craft",
-      "x": 1010.19,
-      "y": 597.33,
-      "file": "landing_craft1_noai.vehicle",
-      "atlasIndex": 38,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pt_boat",
-      "x": 1072.33,
-      "y": 599.98,
-      "file": "soukoutei.vehicle",
-      "atlasIndex": 67,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Rubber boat",
-      "x": 917.21,
-      "y": 671.91,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 409.89,
-      "y": 672.86,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "landing_craft",
-      "x": 1071.73,
-      "y": 696.81,
-      "file": "landing_craft1_noai.vehicle",
-      "atlasIndex": 38,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "hmg",
-      "x": 995.13,
-      "y": 701.62,
-      "file": "type92_hmg.vehicle",
-      "atlasIndex": 49,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Radio jammer",
-      "x": 937.94,
-      "y": 703.83,
-      "file": "radio_jammer.vehicle",
-      "atlasIndex": 9,
-      "categories": [
-        "radio"
-      ]
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Rubber boat",
-      "x": 1064.25,
-      "y": 728.15,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "hmg",
-      "x": 954.9,
-      "y": 728.21,
-      "file": "type92_hmg.vehicle",
-      "atlasIndex": 49,
-      "categories": [
-        "hmg"
-      ]
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Type 98 Autocannon",
-      "x": 759.44,
-      "y": 836.56,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Heavy Mortar",
-      "x": 889.25,
-      "y": 886.13,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Heavy Mortar",
-      "x": 891,
-      "y": 898.63,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Anti-Aircraft Gun",
-      "x": 1230.54,
-      "y": 917.16,
-      "file": "aa_gun.vehicle",
-      "atlasIndex": 42,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 974.28,
-      "y": 928,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Heavy Mortar",
-      "x": 1007.25,
-      "y": 929,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Heavy Mortar",
-      "x": 1000.25,
-      "y": 939.13,
-      "file": "heavy_mortar.vehicle",
-      "atlasIndex": 46,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Anti-Aircraft Gun",
-      "x": 1284.28,
-      "y": 942.44,
-      "file": "aa_gun2.vehicle",
-      "atlasIndex": 42,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 1081.08,
-      "y": 1089.35,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 1527.15,
-      "y": 1229.41,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Coastal Gun",
-      "x": 1585.24,
-      "y": 1257.65,
-      "file": "coastal_gun.vehicle",
-      "atlasIndex": 44,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 1588.17,
-      "y": 1269.49,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 1278.69,
-      "y": 1319.99,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Higgins Boat",
-      "x": 1858.87,
-      "y": 1341.69,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Type 98 Autocannon",
-      "x": 1489.09,
-      "y": 1345.5,
-      "file": "type98.vehicle",
-      "atlasIndex": 47,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 1442.28,
-      "y": 1379.92,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 1526.45,
-      "y": 1381.52,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Higgins Boat",
-      "x": 1758.13,
-      "y": 1392.74,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Coastal Gun",
-      "x": 1503.69,
-      "y": 1411.9,
-      "file": "coastal_gun2.vehicle",
-      "atlasIndex": 44,
-      "categories": [
-        "antiTank"
-      ]
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pillbox",
-      "x": 1451.31,
-      "y": 1411.92,
-      "file": "pillbox1.vehicle",
-      "atlasIndex": 39,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "armory boat",
-      "x": 1854.21,
-      "y": 1427.28,
-      "file": "armory_higgins.vehicle",
-      "atlasIndex": 50,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Higgins Boat",
-      "x": 1740.87,
-      "y": 1445.82,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Higgins Boat",
-      "x": 1730.56,
-      "y": 1495.05,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Oerlikon Gun",
-      "x": 1805.5,
-      "y": 1501.07,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Rubber boat",
-      "x": 1790.43,
-      "y": 1512.51,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Rubber boat",
-      "x": 1785.11,
-      "y": 1526.91,
-      "file": "rubber_boat.vehicle",
-      "atlasIndex": 4,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Oerlikon Gun",
-      "x": 1839.45,
-      "y": 1529.74,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Oerlikon Gun",
-      "x": 1790.02,
-      "y": 1543.96,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Oerlikon Gun",
-      "x": 1831.03,
-      "y": 1553.16,
-      "file": "oerlikon.vehicle",
-      "atlasIndex": 45,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Higgins Boat",
-      "x": 1721.48,
-      "y": 1572.13,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "pt_boat",
-      "x": 1784.58,
-      "y": 1617.04,
-      "file": "pt_boat.vehicle",
-      "atlasIndex": 36,
-      "categories": []
-    },
-    {
-      "faction": "USMC",
-      "factionLabel": "美军",
-      "tag": "Higgins Boat",
-      "x": 1679.73,
-      "y": 1631.81,
-      "file": "landing_craft_noai.vehicle",
-      "atlasIndex": 37,
-      "categories": []
-    }
-  ],
-  "counts": {
-    "radio": 2,
-    "tank": 0,
-    "antiTank": 4,
-    "hmg": 6
   }
 }
