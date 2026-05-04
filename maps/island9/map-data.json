@@ -51,6 +51,34 @@
     "USMC": {
       "friendly_all": [
         {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.38,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.64,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.39,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.65,
+          "layer": "layer.usmc"
+        },
+        {
           "key": "pillbox.vehicle",
           "icon": 40,
           "x": 594.87,
@@ -95,6 +123,20 @@
           "layer": "layer.ija"
         },
         {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.38,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.64,
+          "layer": "layer.ija"
+        },
+        {
           "key": "radio_jammer_2.vehicle",
           "icon": 9,
           "x": 371.56,
@@ -127,6 +169,20 @@
           "icon": 38,
           "x": 268.31,
           "y": 449.57,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.39,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.65,
           "layer": "layer.usmc"
         },
         {
@@ -190,6 +246,20 @@
     "IJA": {
       "friendly_all": [
         {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.38,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.64,
+          "layer": "layer.ija"
+        },
+        {
           "key": "pillbox1.vehicle",
           "icon": 39,
           "x": 664.44,
@@ -209,6 +279,20 @@
           "x": 1102.9,
           "y": 845.49,
           "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.39,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.65,
+          "layer": "layer.usmc"
         }
       ],
       "enemy_all": [
@@ -266,6 +350,20 @@
           "icon": 45,
           "x": 316.6,
           "y": 481.09,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.38,
+          "layer": "layer.ija"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.64,
           "layer": "layer.ija"
         },
         {
@@ -336,6 +434,20 @@
           "icon": 37,
           "x": 268.31,
           "y": 449.57,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 306.98,
+          "y": 426.39,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 295.45,
+          "y": 436.65,
           "layer": "layer.usmc"
         },
         {

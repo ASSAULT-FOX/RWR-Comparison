@@ -473,14 +473,14 @@
       line-height: 1.28;
       overflow-wrap: anywhere;
       word-break: break-word;
-      transition: background 0.14s ease, color 0.14s ease;
+      transition: background 0.14s ease, color 0.14s ease, font-size 0.14s ease, font-weight 0.14s ease;
     }
 
     tbody tr {
       position: relative;
       background: rgba(255, 255, 255, 0.42);
       transform-origin: center;
-      transition: background 0.14s ease, box-shadow 0.14s ease;
+      transition: background 0.14s ease, box-shadow 0.14s ease, transform 0.14s ease;
     }
 
     tbody tr:nth-child(even) {
@@ -488,17 +488,20 @@
     }
 
     body:not(.compare-mode) tbody tr:hover {
-      z-index: 4;
-      background: rgba(206, 245, 221, 0.7);
+      z-index: 6;
+      background: rgba(190, 242, 216, 0.9);
+      transform: scale(1.012);
       box-shadow:
         inset 4px 0 0 rgba(32, 182, 108, 0.92),
-        inset 0 0 0 9999px rgba(206, 245, 221, 0.18),
-        0 12px 26px rgba(24, 126, 82, 0.12);
+        inset 0 0 0 9999px rgba(206, 245, 221, 0.22),
+        0 14px 30px rgba(24, 126, 82, 0.16);
       cursor: pointer;
     }
 
     body:not(.compare-mode) tbody tr:hover td {
-      background: rgba(206, 245, 221, 0.28);
+      background: rgba(206, 245, 221, 0.34);
+      font-size: 14px;
+      font-weight: 900;
     }
 
     body.target-mode tbody tr.no-target-weapon,
