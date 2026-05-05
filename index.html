@@ -1831,6 +1831,9 @@
     let viewFrame = null;
     let scoreFrame = null;
     let pendingScoreUpdate = false;
+    let sortableHeaders = [];
+    const imagePromiseCache = new Map();
+    const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
     const antiTankWeapons = [
       { label: "反坦克枪榴弹", file: "kar98k_rifle_grenade_at.weapon", blast: 2.3 },
       { label: "巴祖卡火箭筒", file: "m1_bazooka.weapon", blast: 4.4 },
@@ -1947,9 +1950,9 @@
     async function loadData() {
       setLoading(true);
       const [vehicleResponse, weaponResponse, mapResponse] = await Promise.all([
-        fetch("data/vehicles.json"),
-        fetch("data/weapons.json"),
-        fetch("data/maps.json")
+        fetch("data/vehicles.json", { cache: "force-cache" }),
+        fetch("data/weapons.json", { cache: "force-cache" }),
+        fetch("data/maps.json", { cache: "force-cache" })
       ]);
       if (!vehicleResponse.ok) throw new Error(`载具数据加载失败：${vehicleResponse.status}`);
       if (!weaponResponse.ok) throw new Error(`枪械数据加载失败：${weaponResponse.status}`);
@@ -1960,9 +1963,24 @@
       if (!Array.isArray(vehicleData)) throw new Error("载具数据格式错误：根节点必须是数组");
       if (!Array.isArray(weaponData)) throw new Error("枪械数据格式错误：根节点必须是数组");
       if (!Array.isArray(mapData)) throw new Error("地图数据格式错误：根节点必须是数组");
-      vehicles = vehicleData.map((vehicle, index) => ({ ...normalizeVehicle(vehicle), index }));
-      weapons = weaponData;
-      maps = mapData;
+      vehicles = vehicleData.map((vehicle, index) => {
+        const normalized = normalizeVehicle(vehicle);
+        return {
+          ...normalized,
+          index,
+          searchText: [normalized.faction, normalized.name, normalized.weapon].join("\n").toLowerCase()
+        };
+      });
+      weapons = weaponData.map((weapon) => ({
+        ...weapon,
+        searchText: ["阵营", "类型", "枪械名称", "文件名称", "文件类型"].map((key) => String(weapon[key] || "")).join("\n").toLowerCase(),
+        numeric: Object.fromEntries(Array.from(weaponHigherBetter, (key) => [key, numericValue(weapon[key])]))
+      }));
+      maps = mapData.map((map) => ({
+        ...map,
+        searchText: [map.group, map.name, map.id].join("\n").toLowerCase(),
+        actionsHtml: null
+      }));
       weaponLookup = new Map(weapons.map((weapon) => [weapon.id, weapon]));
       mapLookup = new Map(maps.map((map) => [map.id, map]));
       currentList = vehicles;
@@ -2046,27 +2064,20 @@
 
     function getFilteredList() {
       const keyword = searchInput.value.trim().toLowerCase();
-      return vehicles.filter((vehicle) => {
-        return [vehicle.faction, vehicle.name, vehicle.weapon].some((value) => {
-          return String(value || "").toLowerCase().includes(keyword);
-        });
-      });
+      if (!keyword) return vehicles;
+      return vehicles.filter((vehicle) => vehicle.searchText.includes(keyword));
     }
 
     function getFilteredWeapons() {
       const keyword = searchInput.value.trim().toLowerCase();
-      return weapons.filter((weapon) => {
-        return ["阵营", "类型", "枪械名称", "文件名称", "文件类型"].some((key) => {
-          return String(weapon[key] || "").toLowerCase().includes(keyword);
-        });
-      });
+      if (!keyword) return weapons;
+      return weapons.filter((weapon) => weapon.searchText.includes(keyword));
     }
 
     function getFilteredMaps() {
       const keyword = searchInput.value.trim().toLowerCase();
-      return maps.filter((map) => {
-        return [map.group, map.name, map.id].some((value) => String(value || "").toLowerCase().includes(keyword));
-      });
+      if (!keyword) return maps;
+      return maps.filter((map) => map.searchText.includes(keyword));
     }
 
     function countDisplay(value) {
@@ -2099,8 +2110,8 @@
         ? (higherBetter ? -1 : 1)
         : (higherBetter ? 1 : -1);
       return list.slice().sort((a, b) => {
-        const left = numericValue(a[weaponSortState.key]);
-        const right = numericValue(b[weaponSortState.key]);
+        const left = a.numeric?.[weaponSortState.key] ?? numericValue(a[weaponSortState.key]);
+        const right = b.numeric?.[weaponSortState.key] ?? numericValue(b[weaponSortState.key]);
         const leftMissing = left === null;
         const rightMissing = right === null;
         if (leftMissing && rightMissing) return a.id - b.id;
@@ -2112,7 +2123,7 @@
     }
 
     function updateSortHeaders() {
-      document.querySelectorAll("th.sortable").forEach((header) => {
+      sortableHeaders.forEach((header) => {
         const indicator = header.querySelector(".sort-indicator");
         const state = header.classList.contains("weapon-sort") ? weaponSortState : sortState;
         const active = header.dataset.sort === state.key && state.mode;
@@ -2148,10 +2159,11 @@
 
     function renderTable(list) {
       currentList = list;
+      const selectedSet = new Set(selectedIndices);
       rowsEl.innerHTML = list.map((vehicle) => {
         const index = vehicle.index;
         const rowClasses = [];
-        if (selectedIndices.includes(index)) rowClasses.push("selected");
+        if (selectedSet.has(index)) rowClasses.push("selected");
         if (targetMode && isUnarmedVehicle(vehicle)) rowClasses.push("no-target-weapon");
         const classAttr = rowClasses.length ? ` class="${rowClasses.join(" ")}"` : "";
         return `
@@ -2175,8 +2187,9 @@
 
     function renderWeaponTable(list) {
       currentWeaponList = list;
+      const selectedSet = new Set(selectedWeaponIndices);
       weaponRowsEl.innerHTML = list.map((weapon) => {
-        const selected = selectedWeaponIndices.includes(weapon.id) ? " class=\"selected\"" : "";
+        const selected = selectedSet.has(weapon.id) ? " class=\"selected\"" : "";
         return `
         <tr data-index="${escapeHtml(weapon.id)}"${selected}>
           <td>${factionBadge({ faction: weapon["阵营"] })}</td>
@@ -2416,7 +2429,7 @@
           <td>
             <div class="map-actions">
               <button class="map-action-button map-open-button" data-map-id="${escapeHtml(map.id)}" type="button">查看地图</button>
-              ${mapPerspectiveButtons(map)}
+              ${map.actionsHtml || (map.actionsHtml = mapPerspectiveButtons(map))}
             </div>
           </td>
         </tr>
@@ -2609,6 +2622,7 @@
         : (tab === "weapons" ? "在列表中选两个枪械进行对比" : "在列表中选两个载具进行对比");
       searchInput.placeholder = tab === "maps" ? "在地图页中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索");
       applyView();
+      if (tab === "maps") warmMapAssets();
     }
 
     function setTargetMode(enabled) {
@@ -2661,7 +2675,7 @@
       const summary = mapLookup.get(mapId);
       if (!summary) return null;
       if (mapDataCache.has(mapId)) return mapDataCache.get(mapId);
-      const response = await fetch(summary.data);
+      const response = await fetch(summary.data, { cache: "force-cache" });
       if (!response.ok) {
         showToast("地图数据加载失败");
         return null;
@@ -2669,6 +2683,22 @@
       const mapData = normalizeMapData(await response.json(), summary);
       mapDataCache.set(mapId, mapData);
       return mapData;
+    }
+
+    function warmMapAssets() {
+      idle(() => {
+        maps.forEach((map) => {
+          loadMapData(map.id).then((mapData) => {
+            if (!mapData) return;
+            const sources = overviewMapImageSources(mapData).slice(0, 2);
+            (mapData.factions || []).forEach((faction) => {
+              const firstFactionSource = mapImageSources(faction, mapData)[0];
+              if (firstFactionSource) sources.push(firstFactionSource);
+            });
+            Array.from(new Set(sources)).forEach((src) => loadImageElement(src).catch(() => null));
+          }).catch(() => null);
+        });
+      }, { timeout: 1600 });
     }
 
     function normalizeMapData(mapData, summary) {
@@ -2777,12 +2807,19 @@
     }
 
     function loadImageElement(src) {
-      return new Promise((resolve, reject) => {
+      if (imagePromiseCache.has(src)) return imagePromiseCache.get(src);
+      const promise = new Promise((resolve, reject) => {
         const image = new Image();
+        image.decoding = "async";
         image.onload = () => resolve(image);
         image.onerror = reject;
         image.src = src;
+      }).catch((error) => {
+        imagePromiseCache.delete(src);
+        throw error;
       });
+      imagePromiseCache.set(src, promise);
+      return promise;
     }
 
     async function loadFirstImageElement(srcList) {
@@ -2891,13 +2928,9 @@
         ctx.drawImage(baseImage, 0, 0);
 
         const items = mapItemsForPerspective(mapData, factionId, state);
-        const iconCache = new Map();
         for (const item of items) {
           const iconSrc = `images/${item.atlasIndex ?? item.icon}.png`;
-          if (!iconCache.has(iconSrc)) {
-            iconCache.set(iconSrc, loadImageElement(iconSrc).catch(() => null));
-          }
-          const icon = await iconCache.get(iconSrc);
+          const icon = await loadImageElement(iconSrc).catch(() => null);
           if (!icon) continue;
           const naturalW = icon.naturalWidth || icon.width || 32;
           const naturalH = icon.naturalHeight || icon.height || 32;
@@ -3431,7 +3464,8 @@
       button.addEventListener("click", () => setActiveTab(button.dataset.tab));
     });
 
-    document.querySelectorAll("th.sortable").forEach((header) => {
+    sortableHeaders = Array.from(document.querySelectorAll("th.sortable"));
+    sortableHeaders.forEach((header) => {
       header.addEventListener("click", () => {
         const key = header.dataset.sort;
         const isWeaponSort = header.classList.contains("weapon-sort");
