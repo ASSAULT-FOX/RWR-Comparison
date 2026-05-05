@@ -355,6 +355,10 @@
       width: 12%;
     }
 
+    col.icon-col {
+      width: 9%;
+    }
+
     col.short-col {
       width: 7%;
     }
@@ -384,7 +388,7 @@
     }
 
     col.weapon-name-col {
-      width: 24%;
+      width: 20%;
     }
 
     col.weapon-stat-col {
@@ -502,6 +506,93 @@
       background: rgba(206, 245, 221, 0.34);
       font-size: 14px;
       font-weight: 900;
+    }
+
+    #vehicleTable tbody td,
+    #weaponTable tbody td {
+      padding-top: 16px;
+      padding-bottom: 16px;
+      font-size: 15px;
+      line-height: 1.34;
+    }
+
+    #vehicleTable tbody tr,
+    #weaponTable tbody tr {
+      min-height: 82px;
+    }
+
+    .table-icon-cell {
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+
+    .row-icon {
+      width: 66px;
+      height: 66px;
+      object-fit: contain;
+      vertical-align: middle;
+      image-rendering: auto;
+      filter: drop-shadow(0 8px 12px rgba(35, 76, 124, 0.14));
+    }
+
+    .row-icon.weapon-icon {
+      transform: rotate(90deg);
+    }
+
+    .hero-head {
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 112px;
+      align-items: center;
+      gap: 18px;
+      text-align: left;
+    }
+
+    .hero-title {
+      min-width: 0;
+      display: grid;
+      justify-items: start;
+      gap: 8px;
+    }
+
+    .hero-title h3 {
+      text-align: left;
+    }
+
+    .hero-icon {
+      width: 104px;
+      height: 104px;
+      object-fit: contain;
+      justify-self: end;
+      filter: drop-shadow(0 14px 18px rgba(35, 76, 124, 0.16));
+    }
+
+    .hero-icon.weapon-icon {
+      transform: rotate(90deg);
+    }
+
+    .detail-icon-panel {
+      margin: 18px 18px 0;
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 8px 22px rgba(35, 76, 124, 0.08);
+    }
+
+    .detail-large-icon {
+      width: min(260px, 72vw);
+      height: 200px;
+      object-fit: contain;
+      filter: drop-shadow(0 18px 24px rgba(35, 76, 124, 0.18));
+    }
+
+    .detail-large-icon.weapon-icon {
+      transform: rotate(90deg);
+      width: min(360px, 78vw);
+      height: 260px;
     }
 
     body.target-mode tbody tr.no-target-weapon,
@@ -848,11 +939,31 @@
       height: 100px;
       min-height: 100px;
       display: grid;
-      justify-items: center;
+      grid-template-columns: minmax(0, 1fr) 92px;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .vehicle-head-text {
+      min-width: 0;
+      display: grid;
+      justify-items: start;
       align-content: center;
       gap: 8px;
-      text-align: center;
-      overflow: hidden;
+    }
+
+    .compare-icon {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      justify-self: end;
+      filter: drop-shadow(0 12px 16px rgba(35, 76, 124, 0.16));
+    }
+
+    .compare-icon.weapon-icon {
+      transform: rotate(90deg);
     }
 
     .vehicle-card h3 {
@@ -1572,13 +1683,13 @@
           <colgroup>
             <col class="faction-col">
             <col class="name-col">
+            <col class="icon-col">
             <col class="short-col">
             <col class="medium-col">
             <col class="short-col">
             <col class="medium-col">
             <col class="medium-col">
             <col class="medium-col">
-            <col class="weapon-col">
             <col class="short-col">
             <col class="vision-col">
             <col class="blast-col">
@@ -1587,13 +1698,13 @@
             <tr>
               <th>阵营</th>
               <th>载具名</th>
+              <th>图标</th>
               <th class="sortable" data-sort="hp">生命值<span class="sort-indicator"></span></th>
               <th class="sortable" data-sort="speed">最大速度<span class="sort-indicator"></span></th>
               <th class="sortable" data-sort="acceleration">加速度<span class="sort-indicator"></span></th>
               <th class="sortable" data-sort="turret">炮塔转速<span class="sort-indicator"></span></th>
               <th class="sortable" data-sort="threshold">受击门槛<span class="sort-indicator"></span></th>
               <th class="sortable" data-sort="reduction">爆炸减伤<span class="sort-indicator"></span></th>
-              <th>武器名</th>
               <th class="sortable" data-sort="reload">装填速度<span class="sort-indicator"></span></th>
               <th class="sortable" data-sort="vision">玩家视野修正<span class="sort-indicator"></span></th>
               <th class="sortable" data-sort="blast">爆炸伤害<span class="sort-indicator"></span></th>
@@ -1606,7 +1717,7 @@
             <col class="weapon-faction-col">
             <col class="weapon-type-col">
             <col class="weapon-name-col">
-            <col class="weapon-stat-col">
+            <col class="icon-col">
             <col class="weapon-stat-col">
             <col class="weapon-stat-col">
             <col class="weapon-stat-col">
@@ -1617,7 +1728,7 @@
               <th>阵营</th>
               <th>类型</th>
               <th>枪械名称</th>
-              <th class="sortable weapon-sort" data-sort="基础精度">基础精度<span class="sort-indicator"></span></th>
+              <th>图标</th>
               <th class="sortable weapon-sort" data-sort="致死">致死<span class="sort-indicator"></span></th>
               <th class="sortable weapon-sort" data-sort="射速">射速<span class="sort-indicator"></span></th>
               <th class="sortable weapon-sort" data-sort="单发后坐力">单发后坐力<span class="sort-indicator"></span></th>
@@ -1933,6 +2044,7 @@
         reduction: vehicle["爆炸减伤"] ?? vehicle.reduction ?? null,
         name: vehicle["载具名"] ?? vehicle.name ?? "",
         weapon: vehicle["武器名"] ?? vehicle.weapon ?? "—",
+        icon: vehicle["图标号"] ?? vehicle.icon ?? null,
         reload: vehicle["装填速度"] ?? vehicle.reload ?? null,
         vision: vehicle["玩家视野修正"] ?? vehicle.vision ?? null,
         blast: vehicle["爆炸伤害"] ?? vehicle.blast ?? null,
@@ -2170,13 +2282,13 @@
         <tr data-index="${escapeHtml(index)}"${classAttr}>
           <td>${factionBadge(vehicle)}</td>
           <td>${escapeHtml(vehicle.name)}</td>
+          <td class="table-icon-cell">${assetIconHtml(vehicleIconSrc(vehicle), vehicle.name, "row-icon")}</td>
           <td class="num">${fmt(vehicle.hp)}</td>
           <td class="num">${fmt(vehicle.speed)}</td>
           <td class="num">${fmt(vehicle.acceleration)}</td>
           <td class="num">${fmt(vehicle.turret)}</td>
           <td class="num">${fmt(vehicle.threshold)}</td>
           <td class="num">${fmt(vehicle.reduction)}</td>
-          <td>${escapeHtml(vehicle.weapon)}</td>
           <td class="num">${fmt(vehicle.reload)}</td>
           <td class="num">${fmt(vehicle.vision)}</td>
           <td class="num">${fmt(vehicle.blast)}</td>
@@ -2195,7 +2307,7 @@
           <td>${factionBadge({ faction: weapon["阵营"] })}</td>
           <td>${escapeHtml(displayValue(weapon["类型"]))}</td>
           <td>${escapeHtml(displayValue(weapon["枪械名称"]))}</td>
-          <td class="num">${escapeHtml(displayValue(weapon["基础精度"]))}</td>
+          <td class="table-icon-cell">${assetIconHtml(weaponIconSrc(weapon), displayValue(weapon["枪械名称"]), "row-icon weapon-icon")}</td>
           <td class="num">${escapeHtml(weaponKillDisplay(weapon))}</td>
           <td class="num">${escapeHtml(displayValue(weapon["射速"]))}</td>
           <td class="num">${escapeHtml(displayValue(weapon["单发后坐力"]))}</td>
@@ -2436,6 +2548,29 @@
       `).join("");
     }
 
+    function assetIconHtml(src, alt, className) {
+      if (!src) return '<span class="muted">-</span>';
+      return `<img class="${escapeHtml(className)}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}">`;
+    }
+
+    function vehicleIconSrc(vehicle) {
+      const icon = vehicle?.icon ?? vehicle?.["图标号"];
+      return icon === null || icon === undefined || icon === "" ? "" : `vehicles_textures/${encodeURIComponent(String(icon))}.png`;
+    }
+
+    function weaponIconSrc(weapon) {
+      const icon = weapon?.["图标"] ?? weapon?.icon;
+      return icon ? `weapons_textures/${encodeURIComponent(String(icon))}` : "";
+    }
+
+    function detailIconPanel(src, alt, extraClass) {
+      return `
+        <section class="detail-icon-panel">
+          ${assetIconHtml(src, alt, `detail-large-icon ${extraClass}`.trim())}
+        </section>
+      `;
+    }
+
     function mapPerspectiveButtons(map) {
       const factions = map.factions || [];
       if (factions.length < 2) {
@@ -2578,7 +2713,7 @@
         ${factionBadge(vehicle)}
         <h3>${escapeHtml(vehicle.name)}</h3>
       `;
-      detailRows.innerHTML = [
+      detailRows.innerHTML = detailIconPanel(vehicleIconSrc(vehicle), vehicle.name, "") + [
         renderDetailSection("基本信息", detailBaseRows(vehicle)),
         renderDetailSection("可维修性", repairRows(vehicle)),
         renderDetailSection("伤害抗性", detailAntiTankRows(vehicle))
@@ -3322,7 +3457,7 @@
         ${factionBadge({ faction: weapon["阵营"] })}
         <h3>${escapeHtml(displayValue(weapon["枪械名称"]))}</h3>
       `;
-      detailRows.innerHTML = weaponSections
+      detailRows.innerHTML = detailIconPanel(weaponIconSrc(weapon), displayValue(weapon["枪械名称"]), "weapon-icon") + weaponSections
         .map((section) => renderDetailSection(section.title, weaponDetailRows(weapon, section)))
         .join("");
       detailModal.classList.add("open");
@@ -3389,18 +3524,24 @@
       compareCards.innerHTML = `
         <section class="vehicle-card">
           <div class="vehicle-head">
-            ${factionBadge({ faction: a["阵营"] })}
-            <h3>${escapeHtml(displayValue(a["枪械名称"]))}</h3>
-            <div class="weapon">${escapeHtml(displayValue(a["类型"]))}</div>
+            <div class="vehicle-head-text">
+              ${factionBadge({ faction: a["阵营"] })}
+              <h3>${escapeHtml(displayValue(a["枪械名称"]))}</h3>
+              <div class="weapon">${escapeHtml(displayValue(a["类型"]))}</div>
+            </div>
+            ${assetIconHtml(weaponIconSrc(a), displayValue(a["枪械名称"]), "compare-icon weapon-icon")}
           </div>
           <div class="side-values">${sideMetricRows(rows, "left")}</div>
         </section>
         <section class="metric-labels">${metricLabels(rows)}</section>
         <section class="vehicle-card">
           <div class="vehicle-head">
-            ${factionBadge({ faction: b["阵营"] })}
-            <h3>${escapeHtml(displayValue(b["枪械名称"]))}</h3>
-            <div class="weapon">${escapeHtml(displayValue(b["类型"]))}</div>
+            <div class="vehicle-head-text">
+              ${factionBadge({ faction: b["阵营"] })}
+              <h3>${escapeHtml(displayValue(b["枪械名称"]))}</h3>
+              <div class="weapon">${escapeHtml(displayValue(b["类型"]))}</div>
+            </div>
+            ${assetIconHtml(weaponIconSrc(b), displayValue(b["枪械名称"]), "compare-icon weapon-icon")}
           </div>
           <div class="side-values">${sideMetricRows(rows, "right")}</div>
         </section>
@@ -3432,18 +3573,24 @@
       compareCards.innerHTML = `
         <section class="vehicle-card">
           <div class="vehicle-head">
-            ${factionBadge(a)}
-            <h3>${escapeHtml(a.name)}</h3>
-            <div class="weapon">${escapeHtml(a.weapon)}</div>
+            <div class="vehicle-head-text">
+              ${factionBadge(a)}
+              <h3>${escapeHtml(a.name)}</h3>
+              <div class="weapon">${escapeHtml(a.weapon)}</div>
+            </div>
+            ${assetIconHtml(vehicleIconSrc(a), a.name, "compare-icon")}
           </div>
           <div class="side-values">${sideMetricRows(rows, "left")}</div>
         </section>
         <section class="metric-labels">${metricLabels(rows)}</section>
         <section class="vehicle-card">
           <div class="vehicle-head">
-            ${factionBadge(b)}
-            <h3>${escapeHtml(b.name)}</h3>
-            <div class="weapon">${escapeHtml(b.weapon)}</div>
+            <div class="vehicle-head-text">
+              ${factionBadge(b)}
+              <h3>${escapeHtml(b.name)}</h3>
+              <div class="weapon">${escapeHtml(b.weapon)}</div>
+            </div>
+            ${assetIconHtml(vehicleIconSrc(b), b.name, "compare-icon")}
           </div>
           <div class="side-values">${sideMetricRows(rows, "right")}</div>
         </section>
