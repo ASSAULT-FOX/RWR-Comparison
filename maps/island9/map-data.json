@@ -51,34 +51,6 @@
     "USMC": {
       "friendly_all": [
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.38,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.64,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.39,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.65,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "pillbox.vehicle",
           "icon": 40,
           "x": 594.87,
@@ -123,20 +95,6 @@
           "layer": "layer.ija"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.38,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.64,
-          "layer": "layer.ija"
-        },
-        {
           "key": "radio_jammer_2.vehicle",
           "icon": 9,
           "x": 371.56,
@@ -172,20 +130,6 @@
           "layer": "layer.usmc"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.39,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.65,
-          "layer": "layer.usmc"
-        },
-        {
           "key": "radio_jammer_2.vehicle",
           "icon": 9,
           "x": 371.56,
@@ -197,13 +141,6 @@
           "icon": 42,
           "x": 912.59,
           "y": 580.16,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 1398.55,
-          "y": 1095.15,
           "layer": "layer.usmc"
         },
         {
@@ -235,6 +172,13 @@
           "layer": "layer.usmc"
         },
         {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 1043.29,
+          "y": 877.6,
+          "layer": "layer.usmc"
+        },
+        {
           "key": "hago.vehicle",
           "icon": 34,
           "x": 1102.9,
@@ -245,20 +189,6 @@
     },
     "IJA": {
       "friendly_all": [
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.38,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.64,
-          "layer": "layer.ija"
-        },
         {
           "key": "pillbox1.vehicle",
           "icon": 39,
@@ -279,20 +209,6 @@
           "x": 1102.9,
           "y": 845.49,
           "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.39,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.65,
-          "layer": "layer.usmc"
         }
       ],
       "enemy_all": [
@@ -353,20 +269,6 @@
           "layer": "layer.ija"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.38,
-          "layer": "layer.ija"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.64,
-          "layer": "layer.ija"
-        },
-        {
           "key": "radio_jammer_2.vehicle",
           "icon": 9,
           "x": 371.56,
@@ -423,6 +325,13 @@
           "layer": "layer.ija"
         },
         {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 690.25,
+          "y": 1221.69,
+          "layer": "layer.ija"
+        },
+        {
           "key": "landing_craft.vehicle",
           "icon": 37,
           "x": 335.13,
@@ -434,20 +343,6 @@
           "icon": 37,
           "x": 268.31,
           "y": 449.57,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 306.98,
-          "y": 426.39,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 295.45,
-          "y": 436.65,
           "layer": "layer.usmc"
         },
         {

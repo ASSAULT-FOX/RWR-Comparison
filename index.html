@@ -2062,9 +2062,9 @@
     async function loadData() {
       setLoading(true);
       const [vehicleResponse, weaponResponse, mapResponse] = await Promise.all([
-        fetch("data/vehicles.json", { cache: "force-cache" }),
-        fetch("data/weapons.json", { cache: "force-cache" }),
-        fetch("data/maps.json", { cache: "force-cache" })
+        fetch("data/vehicles.json", { cache: "no-cache" }),
+        fetch("data/weapons.json", { cache: "no-cache" }),
+        fetch("data/maps.json", { cache: "no-cache" })
       ]);
       if (!vehicleResponse.ok) throw new Error(`载具数据加载失败：${vehicleResponse.status}`);
       if (!weaponResponse.ok) throw new Error(`枪械数据加载失败：${weaponResponse.status}`);
@@ -2810,7 +2810,7 @@
       const summary = mapLookup.get(mapId);
       if (!summary) return null;
       if (mapDataCache.has(mapId)) return mapDataCache.get(mapId);
-      const response = await fetch(summary.data, { cache: "force-cache" });
+      const response = await fetch(summary.data, { cache: "no-cache" });
       if (!response.ok) {
         showToast("地图数据加载失败");
         return null;

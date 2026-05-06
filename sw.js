@@ -1,4 +1,4 @@
-const CACHE_VERSION = "rwr-cache-2026-05-06-2";
+const CACHE_VERSION = "rwr-cache-2026-05-06-3";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 
@@ -42,7 +42,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.endsWith(".json")) {
-    event.respondWith(staleWhileRevalidate(request));
+    event.respondWith(networkFirst(request));
     return;
   }
 

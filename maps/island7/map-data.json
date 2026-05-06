@@ -31,153 +31,6 @@
     "USMC": {
       "friendly_all": [
         {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 913.95,
-          "y": 1844.89,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 893.8,
-          "y": 1845.89,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 915.67,
-          "y": 1919.69,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 923.92,
-          "y": 1921.03,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 921.79,
-          "y": 1933.81,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 907.22,
-          "y": 1811.0,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 887.78,
-          "y": 1813.04,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 671.68,
-          "y": 1854.51,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 651.78,
-          "y": 1850.78,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 655.79,
-          "y": 1927.7,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 663.5,
-          "y": 1930.89,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 658.43,
-          "y": 1942.89,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 672.96,
-          "y": 1820.02,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 653.61,
-          "y": 1817.48,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 400.11,
-          "y": 1835.02,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 380.2,
-          "y": 1831.37,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 384.58,
-          "y": 1908.3,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 392.32,
-          "y": 1911.49,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 387.29,
-          "y": 1923.52,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 401.3,
-          "y": 1800.58,
-          "layer": "unlayered"
-        },
-        {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 381.88,
-          "y": 1798.07,
-          "layer": "unlayered"
-        },
-        {
           "key": "rubber_boat.vehicle",
           "icon": 4,
           "x": 853.54,
@@ -374,41 +227,6 @@
           "layer": "layer2"
         },
         {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
-          "layer": "layer2"
-        },
-        {
           "key": "pillbox.vehicle",
           "icon": 40,
           "x": 1128.64,
@@ -472,27 +290,6 @@
           "layer": "layer2"
         },
         {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 393.1,
-          "y": 1699.86,
-          "layer": "layer2"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 665.25,
-          "y": 1719.25,
-          "layer": "layer2"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 876.13,
-          "y": 1714.83,
-          "layer": "layer2"
-        },
-        {
           "key": "fortified_turret_sherman.vehicle",
           "icon": 65,
           "x": 850.85,
@@ -537,46 +334,11 @@
       ],
       "enemy_all": [
         {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 921.79,
-          "y": 1933.81,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 658.43,
-          "y": 1942.89,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 387.29,
-          "y": 1923.52,
-          "layer": "unlayered"
-        },
-        {
           "key": "type98.vehicle",
           "icon": 47,
           "x": 891.24,
           "y": 826.25,
           "layer": "layer1"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 853.54,
-          "y": 1746.27,
-          "layer": "layer.usmc"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 690.54,
-          "y": 1755.26,
-          "layer": "layer.usmc"
         },
         {
           "key": "fortified_turret_chi_ha.vehicle",
@@ -761,13 +523,6 @@
           "layer": "layer2"
         },
         {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 1194.5,
-          "y": 1681.23,
-          "layer": "layer2"
-        },
-        {
           "key": "heavy_mortar.vehicle",
           "icon": 46,
           "x": 1385.46,
@@ -800,41 +555,6 @@
           "icon": 46,
           "x": 348.03,
           "y": 354.53,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
           "layer": "layer2"
         },
         {
@@ -1122,27 +842,6 @@
     "IJA": {
       "friendly_all": [
         {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 921.79,
-          "y": 1933.81,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 658.43,
-          "y": 1942.89,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 387.29,
-          "y": 1923.52,
-          "layer": "unlayered"
-        },
-        {
           "key": "fortified_turret_chi_ha.vehicle",
           "icon": 65,
           "x": 1508.41,
@@ -1315,41 +1014,6 @@
           "icon": 46,
           "x": 348.03,
           "y": 354.53,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
           "layer": "layer2"
         },
         {
@@ -1635,10 +1299,24 @@
           "layer": "layer.ija"
         },
         {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 853.54,
+          "y": 1746.27,
+          "layer": "layer.usmc"
+        },
+        {
           "key": "pt_boat.vehicle",
           "icon": 36,
           "x": 914.46,
           "y": 1769.89,
+          "layer": "layer.usmc"
+        },
+        {
+          "key": "rubber_boat.vehicle",
+          "icon": 4,
+          "x": 690.54,
+          "y": 1755.26,
           "layer": "layer.usmc"
         },
         {
@@ -1842,41 +1520,6 @@
           "icon": 46,
           "x": 348.03,
           "y": 354.53,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1410.73,
-          "y": 1246.15,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1439.01,
-          "y": 1248.46,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1429.4,
-          "y": 1070.3,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1756.86,
-          "y": 1084.03,
-          "layer": "layer2"
-        },
-        {
-          "key": "rubber_boat.vehicle",
-          "icon": 4,
-          "x": 1828.49,
-          "y": 1118.84,
           "layer": "layer2"
         },
         {

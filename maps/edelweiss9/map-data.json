@@ -66,20 +66,6 @@
           "layer": "unlayered"
         },
         {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 2687.97,
-          "y": 1984.54,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 2687.14,
-          "y": 2007.28,
-          "layer": "unlayered"
-        },
-        {
           "key": "pt_boat.vehicle",
           "icon": 36,
           "x": 2682.9,
@@ -94,31 +80,10 @@
           "layer": "unlayered"
         },
         {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 2687.27,
-          "y": 2159.73,
-          "layer": "unlayered"
-        },
-        {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 2688.24,
-          "y": 2193.31,
-          "layer": "unlayered"
-        },
-        {
           "key": "vickers_hmg.vehicle",
           "icon": 7,
           "x": 2688.03,
           "y": 2054.54,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 2687.16,
-          "y": 2029.88,
           "layer": "unlayered"
         },
         {
@@ -405,7 +370,7 @@
           "key": "vickers_hmg.vehicle",
           "icon": 7,
           "x": 1030.57,
-          "y": 344,
+          "y": 344.0,
           "layer": "layer.allies"
         },
         {
@@ -551,7 +516,7 @@
         {
           "key": "at_gun_m5.vehicle",
           "icon": 14,
-          "x": 1672,
+          "x": 1672.0,
           "y": 932.29,
           "layer": "layer.allies"
         },
@@ -663,10 +628,24 @@
           "layer": "unlayered"
         },
         {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 2381.06,
+          "y": 331.72,
+          "layer": "unlayered"
+        },
+        {
           "key": "radio_jammer.vehicle",
           "icon": 9,
           "x": 2381.14,
           "y": 364.62,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2380.34,
+          "y": 398.03,
           "layer": "unlayered"
         },
         {
@@ -681,6 +660,13 @@
           "icon": 9,
           "x": 3340.48,
           "y": 1973.85,
+          "layer": "unlayered"
+        },
+        {
+          "key": "radio_jammer_3.vehicle",
+          "icon": 9,
+          "x": 3402.43,
+          "y": 1974.93,
           "layer": "unlayered"
         },
         {
@@ -744,6 +730,13 @@
           "icon": 62,
           "x": 1040.71,
           "y": 300.06,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 386.0,
+          "y": 1029.01,
           "layer": "layer.allies"
         },
         {
@@ -835,6 +828,20 @@
           "icon": 2,
           "x": 377.79,
           "y": 359.52,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 931.72,
+          "y": 746.15,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 1749.1,
+          "y": 889.43,
           "layer": "layer.allies"
         },
         {
@@ -1044,7 +1051,7 @@
           "key": "mg42_hmg.vehicle",
           "icon": 28,
           "x": 1030.57,
-          "y": 344,
+          "y": 344.0,
           "layer": "layer.allies"
         },
         {
@@ -1190,7 +1197,7 @@
         {
           "key": "at_gun_pak40.vehicle",
           "icon": 13,
-          "x": 1672,
+          "x": 1672.0,
           "y": 932.29,
           "layer": "layer.allies"
         },
@@ -1297,20 +1304,6 @@
           "layer": "unlayered"
         },
         {
-          "key": "oerlikon.vehicle",
-          "icon": 45,
-          "x": 2687.97,
-          "y": 1984.54,
-          "layer": "unlayered"
-        },
-        {
-          "key": "bofors.vehicle",
-          "icon": 43,
-          "x": 2687.14,
-          "y": 2007.28,
-          "layer": "unlayered"
-        },
-        {
           "key": "heavy_mortar.vehicle",
           "icon": 46,
           "x": 2687.14,
@@ -1318,31 +1311,10 @@
           "layer": "unlayered"
         },
         {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 2687.27,
-          "y": 2159.73,
-          "layer": "unlayered"
-        },
-        {
-          "key": "coastal_gun.vehicle",
-          "icon": 44,
-          "x": 2688.24,
-          "y": 2193.31,
-          "layer": "unlayered"
-        },
-        {
           "key": "mg42_hmg.vehicle",
           "icon": 28,
           "x": 2688.03,
           "y": 2054.54,
-          "layer": "unlayered"
-        },
-        {
-          "key": "5inch_gun.vehicle",
-          "icon": 41,
-          "x": 2687.16,
-          "y": 2029.88,
           "layer": "unlayered"
         },
         {
@@ -1622,7 +1594,7 @@
           "key": "mg42_hmg.vehicle",
           "icon": 28,
           "x": 1030.57,
-          "y": 344,
+          "y": 344.0,
           "layer": "layer.axis"
         },
         {
@@ -1768,7 +1740,7 @@
         {
           "key": "at_gun_pak40.vehicle",
           "icon": 13,
-          "x": 1672,
+          "x": 1672.0,
           "y": 932.29,
           "layer": "layer.axis"
         },
@@ -1880,10 +1852,24 @@
           "layer": "unlayered"
         },
         {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 2381.06,
+          "y": 331.72,
+          "layer": "unlayered"
+        },
+        {
           "key": "radio_jammer.vehicle",
           "icon": 9,
           "x": 2381.14,
           "y": 364.62,
+          "layer": "unlayered"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 2380.34,
+          "y": 398.03,
           "layer": "unlayered"
         },
         {
@@ -1898,6 +1884,13 @@
           "icon": 9,
           "x": 3340.48,
           "y": 1973.85,
+          "layer": "unlayered"
+        },
+        {
+          "key": "radio_jammer_3.vehicle",
+          "icon": 9,
+          "x": 3402.43,
+          "y": 1974.93,
           "layer": "unlayered"
         },
         {
@@ -1968,6 +1961,13 @@
           "icon": 0,
           "x": 1040.71,
           "y": 300.06,
+          "layer": "layer.axis"
+        },
+        {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 386.0,
+          "y": 1029.01,
           "layer": "layer.axis"
         },
         {
@@ -2059,6 +2059,20 @@
           "icon": 57,
           "x": 377.79,
           "y": 359.52,
+          "layer": "layer.axis"
+        },
+        {
+          "key": "aa_gun.vehicle",
+          "icon": 42,
+          "x": 931.72,
+          "y": 746.15,
+          "layer": "layer.axis"
+        },
+        {
+          "key": "radar_tower.vehicle",
+          "icon": 9,
+          "x": 1749.1,
+          "y": 889.43,
           "layer": "layer.axis"
         },
         {
@@ -2268,7 +2282,7 @@
           "key": "vickers_hmg.vehicle",
           "icon": 7,
           "x": 1030.57,
-          "y": 344,
+          "y": 344.0,
           "layer": "layer.axis"
         },
         {
@@ -2414,7 +2428,7 @@
         {
           "key": "at_gun_m5.vehicle",
           "icon": 14,
-          "x": 1672,
+          "x": 1672.0,
           "y": 932.29,
           "layer": "layer.axis"
         },

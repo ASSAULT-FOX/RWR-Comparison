@@ -236,13 +236,6 @@
           "layer": "layer2"
         },
         {
-          "key": "aa_gun.vehicle",
-          "icon": 42,
-          "x": 933.27,
-          "y": 1686.82,
-          "layer": "layer2"
-        },
-        {
           "key": "type98.vehicle",
           "icon": 47,
           "x": 937.71,
