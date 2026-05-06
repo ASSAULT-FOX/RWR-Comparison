@@ -3,17 +3,17 @@
     "id": "edelweiss1",
     "group": "雪绒花",
     "name": "edelweiss1",
-    "baseImage": "map_axis.png",
+    "baseImage": "map_axis.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -32,17 +32,17 @@
     "id": "edelweiss2",
     "group": "雪绒花",
     "name": "edelweiss2",
-    "baseImage": "map_axis.png",
+    "baseImage": "map_axis.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -61,17 +61,17 @@
     "id": "edelweiss3",
     "group": "雪绒花",
     "name": "edelweiss3",
-    "baseImage": "map_axis.png",
+    "baseImage": "map_axis.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -90,17 +90,17 @@
     "id": "edelweiss4",
     "group": "雪绒花",
     "name": "edelweiss4",
-    "baseImage": "map_axis.png",
+    "baseImage": "map_axis.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -119,17 +119,17 @@
     "id": "edelweiss5",
     "group": "雪绒花",
     "name": "edelweiss5",
-    "baseImage": "map_axis.png",
+    "baseImage": "map_axis.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -148,17 +148,17 @@
     "id": "edelweiss6",
     "group": "雪绒花",
     "name": "edelweiss6",
-    "baseImage": "map_axis.png",
+    "baseImage": "map_axis.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -177,12 +177,12 @@
     "id": "edelweiss7",
     "group": "雪绒花",
     "name": "edelweiss7",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       }
     ],
     "viewStates": {
@@ -197,12 +197,12 @@
     "id": "edelweiss8",
     "group": "雪绒花",
     "name": "edelweiss8",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -217,17 +217,17 @@
     "id": "edelweiss9",
     "group": "雪绒花",
     "name": "edelweiss9",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -246,17 +246,17 @@
     "id": "edelweiss11",
     "group": "雪绒花",
     "name": "edelweiss11",
-    "baseImage": "map_axis.png",
+    "baseImage": "map_axis.webp",
     "factions": [
       {
         "id": "Allies",
         "label": "盟军",
-        "image": "map_allies.png"
+        "image": "map_allies.webp"
       },
       {
         "id": "Axis",
         "label": "德军",
-        "image": "map_axis.png"
+        "image": "map_axis.webp"
       }
     ],
     "viewStates": {
@@ -275,17 +275,17 @@
     "id": "island1",
     "group": "太平洋",
     "name": "island1",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map.png"
+        "image": "map.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map.png"
+        "image": "map.webp"
       }
     ],
     "viewStates": {
@@ -304,17 +304,17 @@
     "id": "island2",
     "group": "太平洋",
     "name": "island2",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map.png"
+        "image": "map.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map.png"
+        "image": "map.webp"
       }
     ],
     "viewStates": {
@@ -333,17 +333,17 @@
     "id": "island3",
     "group": "太平洋",
     "name": "island3",
-    "baseImage": "map_usmc.png",
+    "baseImage": "map_usmc.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map_usmc.png"
+        "image": "map_usmc.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map_ija.png"
+        "image": "map_ija.webp"
       }
     ],
     "viewStates": {
@@ -362,17 +362,17 @@
     "id": "island4",
     "group": "太平洋",
     "name": "island4",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map.png"
+        "image": "map.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map.png"
+        "image": "map.webp"
       }
     ],
     "viewStates": {
@@ -391,17 +391,17 @@
     "id": "island5",
     "group": "太平洋",
     "name": "island5",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map.png"
+        "image": "map.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map.png"
+        "image": "map.webp"
       }
     ],
     "viewStates": {
@@ -420,17 +420,17 @@
     "id": "island6",
     "group": "太平洋",
     "name": "island6",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map.png"
+        "image": "map.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map.png"
+        "image": "map.webp"
       }
     ],
     "viewStates": {
@@ -449,17 +449,17 @@
     "id": "island7",
     "group": "太平洋",
     "name": "island7",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map.png"
+        "image": "map.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map.png"
+        "image": "map.webp"
       }
     ],
     "viewStates": {
@@ -478,17 +478,17 @@
     "id": "island8",
     "group": "太平洋",
     "name": "island8",
-    "baseImage": "map.png",
+    "baseImage": "map.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map.png"
+        "image": "map.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map.png"
+        "image": "map.webp"
       }
     ],
     "viewStates": {
@@ -507,17 +507,17 @@
     "id": "island9",
     "group": "太平洋",
     "name": "island9",
-    "baseImage": "map_usmc.png",
+    "baseImage": "map_usmc.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map_usmc.png"
+        "image": "map_usmc.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map_ija.png"
+        "image": "map_ija.webp"
       }
     ],
     "viewStates": {
@@ -536,17 +536,17 @@
     "id": "island10",
     "group": "太平洋",
     "name": "island10",
-    "baseImage": "map_usmc.png",
+    "baseImage": "map_usmc.webp",
     "factions": [
       {
         "id": "USMC",
         "label": "美军",
-        "image": "map_usmc.png"
+        "image": "map_usmc.webp"
       },
       {
         "id": "IJA",
         "label": "日军",
-        "image": "map_ija.png"
+        "image": "map_ija.webp"
       }
     ],
     "viewStates": {

@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DLC参数查询器</title>
-  <link rel="icon" type="image/png" href="ico.png">
-  <link rel="preload" href="data/vehicles.json" as="fetch" crossorigin>
-  <link rel="preload" href="data/weapons.json" as="fetch" crossorigin>
-  <link rel="preload" href="data/maps.json" as="fetch" crossorigin>
+  <link rel="icon" type="image/webp" href="ico.webp">
+  <link rel="preload" href="data/vehicles.json" as="fetch" type="application/json" crossorigin>
+  <link rel="preload" href="data/weapons.json" as="fetch" type="application/json" crossorigin>
+  <link rel="preload" href="data/maps.json" as="fetch" type="application/json" crossorigin>
   <style>
     :root {
       color-scheme: light;
@@ -2550,12 +2550,12 @@
 
     function assetIconHtml(src, alt, className) {
       if (!src) return '<span class="muted">-</span>';
-      return `<img class="${escapeHtml(className)}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}">`;
+      return `<img class="${escapeHtml(className)}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" fetchpriority="low">`;
     }
 
     function vehicleIconSrc(vehicle) {
       const icon = vehicle?.icon ?? vehicle?.["图标号"];
-      return icon === null || icon === undefined || icon === "" ? "" : `vehicles_textures/${encodeURIComponent(String(icon))}.png`;
+      return icon === null || icon === undefined || icon === "" ? "" : `vehicles_textures/${encodeURIComponent(String(icon))}.webp`;
     }
 
     function weaponIconSrc(weapon) {
@@ -2629,10 +2629,10 @@
 
     function factionMeta(factionId) {
       return {
-        Axis: { id: "Axis", label: "德军", image: "map_axis.png" },
-        Allies: { id: "Allies", label: "盟军", image: "map_allies.png" },
-        USMC: { id: "USMC", label: "美军", image: "map_usmc.png" },
-        IJA: { id: "IJA", label: "日军", image: "map_ija.png" }
+        Axis: { id: "Axis", label: "德军", image: "map_axis.webp" },
+        Allies: { id: "Allies", label: "盟军", image: "map_allies.webp" },
+        USMC: { id: "USMC", label: "美军", image: "map_usmc.webp" },
+        IJA: { id: "IJA", label: "日军", image: "map_ija.webp" }
       }[factionId] || null;
     }
 
@@ -2848,7 +2848,7 @@
         normalized.factions = mapData.factions;
       } else if (mapData.views) {
         normalized.factions = Object.keys(mapData.views).map((id) => {
-          return summaryFactions.find((item) => item.id === id) || factionMeta(id) || { id, label: id, image: `map_${String(id).toLowerCase()}.png` };
+          return summaryFactions.find((item) => item.id === id) || factionMeta(id) || { id, label: id, image: `map_${String(id).toLowerCase()}.webp` };
         });
       } else {
         normalized.factions = summaryFactions;
@@ -2880,7 +2880,7 @@
         if (name && !names.includes(name)) names.push(name);
       };
       add(mapData?.baseImage);
-      add("map.png");
+      add("map.webp");
       (mapData?.factions || []).forEach((faction) => {
         mapImageNames(faction).forEach(add);
       });
@@ -2893,16 +2893,16 @@
         if (name && !names.includes(name)) names.push(name);
       };
       add(faction?.image);
-      if (faction?.id) add(`map_${String(faction.id).toLowerCase()}.png`);
-      if (faction?.id === "Axis") add("map_axis.png");
-      if (faction?.id === "Allies") add("map_allies.png");
-      if (faction?.id === "USMC") add("map_usmc.png");
-      if (faction?.id === "IJA") add("map_ija.png");
-      add("map_axis.png");
-      add("map_allies.png");
-      add("map_usmc.png");
-      add("map_ija.png");
-      add("map.png");
+      if (faction?.id) add(`map_${String(faction.id).toLowerCase()}.webp`);
+      if (faction?.id === "Axis") add("map_axis.webp");
+      if (faction?.id === "Allies") add("map_allies.webp");
+      if (faction?.id === "USMC") add("map_usmc.webp");
+      if (faction?.id === "IJA") add("map_ija.webp");
+      add("map_axis.webp");
+      add("map_allies.webp");
+      add("map_usmc.webp");
+      add("map_ija.webp");
+      add("map.webp");
       return names;
     }
 
@@ -3064,7 +3064,7 @@
 
         const items = mapItemsForPerspective(mapData, factionId, state);
         for (const item of items) {
-          const iconSrc = `images/${item.atlasIndex ?? item.icon}.png`;
+          const iconSrc = `images/${item.atlasIndex ?? item.icon}.webp`;
           const icon = await loadImageElement(iconSrc).catch(() => null);
           if (!icon) continue;
           const naturalW = icon.naturalWidth || icon.width || 32;
@@ -3772,10 +3772,20 @@
       }
     });
 
+    function registerServiceWorker() {
+      if (!("serviceWorker" in navigator) || location.protocol !== "https:") return;
+      idle(() => {
+        navigator.serviceWorker.register("sw.js").catch((error) => {
+          console.warn("Service worker registration failed", error);
+        });
+      });
+    }
+
     loadData()
       .then(() => {
         applyView();
         setLoading(false);
+        registerServiceWorker();
       })
       .catch((error) => {
         console.error(error);
