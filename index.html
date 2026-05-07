@@ -1943,6 +1943,7 @@
     let scoreFrame = null;
     let pendingScoreUpdate = false;
     let sortableHeaders = [];
+    let canUseCachedResources = false;
     const imagePromiseCache = new Map();
     const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
     const antiTankWeapons = [
@@ -2061,10 +2062,11 @@
 
     async function loadData() {
       setLoading(true);
+      const cacheMode = canUseCachedResources ? "force-cache" : "no-cache";
       const [vehicleResponse, weaponResponse, mapResponse] = await Promise.all([
-        fetch("data/vehicles.json", { cache: "no-cache" }),
-        fetch("data/weapons.json", { cache: "no-cache" }),
-        fetch("data/maps.json", { cache: "no-cache" })
+        fetchWithTimeout("data/vehicles.json", { cache: cacheMode }, 10000),
+        fetchWithTimeout("data/weapons.json", { cache: cacheMode }, 10000),
+        fetchWithTimeout("data/maps.json", { cache: cacheMode }, 10000)
       ]);
       if (!vehicleResponse.ok) throw new Error(`载具数据加载失败：${vehicleResponse.status}`);
       if (!weaponResponse.ok) throw new Error(`枪械数据加载失败：${weaponResponse.status}`);
@@ -2810,9 +2812,9 @@
       const summary = mapLookup.get(mapId);
       if (!summary) return null;
       if (mapDataCache.has(mapId)) return mapDataCache.get(mapId);
-      const response = await fetch(summary.data, { cache: "no-cache" });
+      const response = await fetchWithTimeout(summary.data, { cache: canUseCachedResources ? "force-cache" : "no-cache" }, 10000);
       if (!response.ok) {
-        showToast("地图数据加载失败");
+        showToast(`网络错误：地图数据加载失败（${response.status}）`);
         return null;
       }
       const mapData = normalizeMapData(await response.json(), summary);
@@ -3775,7 +3777,9 @@
     function registerServiceWorker() {
       if (!("serviceWorker" in navigator) || location.protocol !== "https:") return;
       idle(() => {
-        navigator.serviceWorker.register("sw.js").catch((error) => {
+        navigator.serviceWorker.register("sw.js").then((registration) => {
+          registration.update().catch(() => {});
+        }).catch((error) => {
           console.warn("Service worker registration failed", error);
         });
       });
@@ -3795,23 +3799,40 @@
 
     async function checkAssetManifest() {
       if (!/^https?:$/.test(location.protocol)) return false;
-      try {
-        const response = await fetch("asset-manifest.json", { cache: "no-store" });
-        if (!response.ok) return false;
-        const manifest = await response.json();
-        if (!manifest.version) return false;
-        const key = "rwrAssetManifestVersion";
-        const previous = localStorage.getItem(key);
-        localStorage.setItem(key, manifest.version);
-        if (previous && previous !== manifest.version) {
-          await clearAppCaches();
-          location.reload();
-          return true;
-        }
-      } catch (error) {
-        console.warn("Asset manifest check failed", error);
+      const response = await fetchWithTimeout("asset-manifest.json", { cache: "no-store" }, 8000);
+      if (!response.ok) {
+        throw new Error(`网络错误：资源清单加载失败（${response.status}）`);
+      }
+      const manifest = await response.json();
+      if (!manifest.version) {
+        throw new Error("网络错误：资源清单格式错误");
+      }
+      const key = "rwrAssetManifestVersion";
+      const previous = localStorage.getItem(key);
+      const refreshedKey = "rwrAssetManifestRefreshed";
+      const refreshedVersion = sessionStorage.getItem(refreshedKey);
+      localStorage.setItem(key, manifest.version);
+      canUseCachedResources = Boolean(previous && previous === manifest.version && refreshedVersion !== manifest.version);
+      if (refreshedVersion === manifest.version) sessionStorage.removeItem(refreshedKey);
+      if (previous && previous !== manifest.version) {
+        await clearAppCaches();
+        sessionStorage.setItem(refreshedKey, manifest.version);
+        location.reload();
+        return true;
       }
       return false;
+    }
+
+    async function fetchWithTimeout(url, options = {}, timeout = 10000) {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), timeout);
+      try {
+        return await fetch(url, { ...options, signal: controller.signal });
+      } catch (error) {
+        throw new Error(error.name === "AbortError" ? "网络错误：请求超时" : "网络错误：请求失败");
+      } finally {
+        window.clearTimeout(timer);
+      }
     }
 
     checkAssetManifest()
@@ -3828,7 +3849,7 @@
       .catch((error) => {
         console.error(error);
         setLoading(false);
-        showToast("数据加载失败，请通过本地服务器打开页面");
+        showToast(error.message && error.message.startsWith("网络错误") ? error.message : "网络错误：数据加载失败");
       });
   </script>
 </body>
