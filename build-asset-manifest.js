@@ -13,11 +13,10 @@ const roots = [
 const rootFiles = [
   "index.html",
   "sw.js",
-  "ico.png",
   "ico.webp"
 ];
 
-const includeExt = new Set([".html", ".js", ".json", ".png", ".webp", ".ico"]);
+const includeExt = new Set([".html", ".js", ".json", ".webp", ".ico"]);
 const outputFile = "asset-manifest.json";
 
 function walk(dir) {

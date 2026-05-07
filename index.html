@@ -289,6 +289,17 @@
       display: grid;
     }
 
+    .loading-panel.error .loading-spinner {
+      animation: none;
+      border-color: rgba(220, 77, 77, 0.18);
+      border-top-color: var(--bad);
+      border-right-color: var(--bad);
+    }
+
+    .loading-panel.error .loading-title {
+      color: var(--bad);
+    }
+
     .loading-card {
       display: grid;
       justify-items: center;
@@ -2055,9 +2066,21 @@
 
     function setLoading(loading, subtitle = "正在请求并解析载具、枪械和地图数据") {
       if (!loadingPanel) return;
+      loadingPanel.classList.remove("error");
       loadingPanel.classList.toggle("open", loading);
+      const titleEl = loadingPanel.querySelector(".loading-title");
+      if (titleEl) titleEl.textContent = "正在加载数据";
       const subtitleEl = loadingPanel.querySelector(".loading-subtitle");
       if (subtitleEl) subtitleEl.textContent = subtitle;
+    }
+
+    function showNetworkError(message) {
+      if (!loadingPanel) return;
+      loadingPanel.classList.add("open", "error");
+      const titleEl = loadingPanel.querySelector(".loading-title");
+      const subtitleEl = loadingPanel.querySelector(".loading-subtitle");
+      if (titleEl) titleEl.textContent = "网络错误";
+      if (subtitleEl) subtitleEl.textContent = message || "资源加载失败，请检查网络后刷新页面";
     }
 
     async function loadData() {
@@ -3848,8 +3871,9 @@
       })
       .catch((error) => {
         console.error(error);
-        setLoading(false);
-        showToast(error.message && error.message.startsWith("网络错误") ? error.message : "网络错误：数据加载失败");
+        const message = error.message && error.message.startsWith("网络错误") ? error.message : "网络错误：数据加载失败";
+        showNetworkError(message);
+        showToast(message);
       });
   </script>
 </body>
