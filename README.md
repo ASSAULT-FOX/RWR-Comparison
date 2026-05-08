@@ -23,11 +23,10 @@ http://127.0.0.1:8765/index.html
 ├── index.html                    页面入口，HTML、CSS、JavaScript 都在这里
 ├── sw.js                         Service Worker，用于缓存静态资源
 ├── ico.webp                      网页图标
-├── asset-manifest.json           静态资源哈希清单，由脚本生成
-├── build-asset-manifest.js       生成 asset-manifest.json 的脚本
 ├── update-assets-and-upload.bat  更新数据、刷新资源清单并上传的脚本
 ├── scripts/
 │   └── sync-csv-json.js          CSV 和 JSON 同步脚本
+│   └── build-asset-manifest.js   生成 asset-manifest.json 的脚本
 ├── csv/
 │   ├── weapons.csv               枪械源数据，开发时主要编辑它
 │   └── vehicles.csv              载具源数据，开发时主要编辑它
@@ -35,8 +34,9 @@ http://127.0.0.1:8765/index.html
 │   ├── weapons.json              枪械发布数据，由 CSV 生成
 │   ├── vehicles.json             载具发布数据，由 CSV 生成
 │   └── maps.json                 地图摘要数据
+│   └── asset-manifest.json       静态资源哈希清单，由脚本生成
 ├── maps/                         每张地图的图片和 map-data.json
-├── images/                       地图叠加用的小图标
+├── maps_textures/                地图上载具设施用的小图标
 ├── weapons_textures/             枪械图标
 └── vehicles_textures/            载具图标
 ```
