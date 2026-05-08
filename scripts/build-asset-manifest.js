@@ -4,7 +4,7 @@ const path = require("path");
 
 const roots = [
   "data",
-  "images",
+  "maps_textures",
   "maps",
   "vehicles_textures",
   "weapons_textures"

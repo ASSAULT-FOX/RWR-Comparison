@@ -3089,7 +3089,7 @@
 
         const items = mapItemsForPerspective(mapData, factionId, state);
         for (const item of items) {
-          const iconSrc = `images/${item.atlasIndex ?? item.icon}.webp`;
+          const iconSrc = `maps_textures/${item.atlasIndex ?? item.icon}.webp`;
           const icon = await loadImageElement(iconSrc).catch(() => null);
           if (!icon) continue;
           const naturalW = icon.naturalWidth || icon.width || 32;
