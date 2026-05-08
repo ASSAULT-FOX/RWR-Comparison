@@ -47,7 +47,12 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== location.origin) return;
 
-  if (request.mode === "navigate" || url.pathname.endsWith("/index.html") || url.pathname.endsWith("/asset-manifest.json")) {
+  if (url.pathname.endsWith("/asset-manifest.json")) {
+    event.respondWith(networkOnly(request));
+    return;
+  }
+
+  if (request.mode === "navigate" || url.pathname.endsWith("/index.html")) {
     event.respondWith(networkFirst(request));
     return;
   }
@@ -89,7 +94,7 @@ async function networkFirst(request) {
 }
 
 async function networkOnly(request) {
-  const response = await fetch(request, { cache: "no-cache" });
+  const response = await fetch(request, { cache: "no-store" });
   if (response.ok) {
     const cache = await caches.open(RUNTIME_CACHE);
     cache.put(request, response.clone());
@@ -141,7 +146,6 @@ async function manifestAwareCache(request) {
     }
     return response;
   } catch (error) {
-    if (cached && !manifests.latest) return cached;
     throw error;
   }
 }
@@ -197,16 +201,12 @@ async function loadAssetManifestPair() {
   const cache = await caches.open(STATIC_CACHE);
   const cachedResponse = await cache.match(MANIFEST_URL);
   const cached = cachedResponse ? await cachedResponse.clone().json().catch(() => null) : null;
-  let latest = null;
-  try {
-    const response = await fetch(MANIFEST_URL, { cache: "no-store" });
-    if (response.ok) {
-      latest = await response.clone().json();
-      await cache.put(MANIFEST_URL, response);
-    }
-  } catch (error) {
-    latest = null;
+  const response = await fetch(MANIFEST_URL, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Asset manifest request failed: ${response.status}`);
   }
+  const latest = await response.clone().json();
+  await cache.put(MANIFEST_URL, response);
   manifestState = {
     checkedAt: Date.now(),
     latest,

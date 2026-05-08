@@ -1,10 +1,10 @@
 ﻿# RWR 参数查询器
 
-这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端工具。项目把枪械、载具、地图和地图设施点位整理成静态网页，打开后可以查询参数、排序、对比，并生成带设施图标的地图视图。
+这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息和地图设施点位，并支持排序、搜索、详情弹窗、双对象对比、索敌优先级计算，以及生成带设施图标的地图视图。
 
-项目没有后端，也没有前端构建流程。浏览器直接打开 `index.html`，然后通过 `fetch()` 读取 `data/` 和 `maps/` 目录中的 JSON 文件。
+项目没有后端，也没有前端打包流程。浏览器加载 `index.html` 后，通过 `fetch()` 读取 `data/` 和 `maps/` 目录中的 JSON 文件，再在前端完成渲染和交互。
 
-推荐本地运行方式：
+本地推荐运行方式：
 
 ```powershell
 python -m http.server 8765 --bind 127.0.0.1
@@ -16,36 +16,53 @@ python -m http.server 8765 --bind 127.0.0.1
 http://127.0.0.1:8765/index.html
 ```
 
+## 当前数据规模
+
+当前数据大致为：
+
+```text
+枪械数据      144 条，来源 csv/weapons.csv，发布到 data/weapons.json
+载具数据       34 条，来源 csv/vehicles.csv，发布到 data/vehicles.json
+地图摘要       20 条，保存在 data/maps.json
+地图点位文件   20 个，保存在 maps/<地图名>/map-data.json
+地图点位     3054 个，按阵营和视图状态分组
+```
+
 ## 项目结构
 
 ```text
 .
 ├── index.html                    页面入口，HTML、CSS、JavaScript 都在这里
-├── sw.js                         Service Worker，用于缓存静态资源
+├── sw.js                         Service Worker，负责静态资源缓存和哈希校验
 ├── ico.webp                      网页图标
 ├── update-assets-and-upload.bat  更新数据、刷新资源清单并上传的脚本
+├── convert_png_to_webp.py        PNG 转 WebP 的辅助脚本
+├── README.md                     当前说明文档，UTF-8 with BOM 编码
 ├── scripts/
-│   └── sync-csv-json.js          CSV 和 JSON 同步脚本
-│   └── build-asset-manifest.js   生成 asset-manifest.json 的脚本
+│   ├── sync-csv-json.js          CSV 和 JSON 同步脚本
+│   └── build-asset-manifest.js   生成 data/asset-manifest.json 的脚本
 ├── csv/
 │   ├── weapons.csv               枪械源数据，开发时主要编辑它
 │   └── vehicles.csv              载具源数据，开发时主要编辑它
 ├── data/
-│   ├── weapons.json              枪械发布数据，由 CSV 生成
-│   ├── vehicles.json             载具发布数据，由 CSV 生成
-│   └── maps.json                 地图摘要数据
-│   └── asset-manifest.json       静态资源哈希清单，由脚本生成
-├── maps/                         每张地图的图片和 map-data.json
-├── maps_textures/                地图上载具设施用的小图标
-├── weapons_textures/             枪械图标
-└── vehicles_textures/            载具图标
+│   ├── weapons.json              枪械发布数据，由 csv/weapons.csv 生成
+│   ├── vehicles.json             载具发布数据，由 csv/vehicles.csv 生成
+│   ├── maps.json                 地图摘要数据
+│   └── asset-manifest.json       静态资源 SHA-256 哈希清单，由脚本生成
+├── maps/
+│   └── <地图名>/
+│       ├── map-data.json         单张地图的设施点位数据
+│       └── map*.webp             地图图片，可能按阵营区分
+├── maps_textures/                地图叠加视图使用的设施和载具图标
+├── vehicles_textures/            载具表格和详情使用的图标
+└── weapons_textures/             枪械表格和详情使用的图标
 ```
 
-## 数据维护流程
+## 数据维护方式
 
-当前项目采用“CSV 作为源数据，JSON 作为发布数据”的方式。
+项目现在采用“CSV 是源数据，JSON 是发布产物”的流程。
 
-开发时主要修改：
+开发者修改枪械和载具数据时，主要编辑：
 
 ```text
 csv/weapons.csv
@@ -61,11 +78,13 @@ data/maps.json
 maps/<地图名>/map-data.json
 ```
 
-也就是说，开发者不需要手工维护大量 JSON。修改枪械或载具数据时，直接编辑 CSV 文件即可。上传前点击 `update-assets-and-upload.bat`，脚本会自动把 CSV 内容更新到对应 JSON 中。
+这样做的原因是：CSV 更适合人工增删改查，Excel 或表格编辑器可以直接筛选、排序、批量编辑；JSON 更适合网页读取，结构稳定，浏览器可以直接解析。
+
+不建议手工编辑 `data/weapons.json` 和 `data/vehicles.json`，因为下次执行 CSV 同步时会用 CSV 重新生成它们。
 
 ## 上传脚本流程
 
-`update-assets-and-upload.bat` 当前流程如下：
+点击 `update-assets-and-upload.bat` 时，当前流程是：
 
 ```text
 1. node scripts/sync-csv-json.js csv-to-json
@@ -87,17 +106,17 @@ data/weapons.json
 data/vehicles.json
 ```
 
-如果 CSV 转换后的 JSON 内容和现有 JSON 完全一致，脚本不会重写 JSON 文件。这样资源哈希不会无意义变化，也就不会让用户浏览器因为哈希变化而重新请求没有变化的数据资源。
+如果 CSV 转换后的 JSON 内容和现有 JSON 完全一致，脚本会输出 `Unchanged`，不会重写 JSON 文件。因此对应文件的 SHA-256 哈希不会变化，也不会让用户浏览器重新请求没有变化的数据资源。
 
-第二步会更新 `data/asset-manifest.json`。如果所有资源文件的哈希都没有变化，`data/asset-manifest.json` 也不会仅因为生成时间不同而重写。
+第二步会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
 
-第三步执行 `git upup`，用于上传当前变更。
+第三步执行 `git upup`，用于把当前变更上传到 Git。
 
 ## CSV 编辑说明
 
 ### weapons.csv
 
-`csv/weapons.csv` 是枪械数据源。常见字段包括：
+`csv/weapons.csv` 是枪械数据源。当前字段包括：
 
 ```text
 id
@@ -132,11 +151,11 @@ id
 图标
 ```
 
-新增枪械时，在 CSV 中增加一行即可。建议保持 `id` 唯一，并确认 `图标` 对应 `weapons_textures/` 中存在的文件。
+新增枪械时，在 CSV 中增加一行即可。建议保持 `id` 唯一，并确认 `图标` 对应 `weapons_textures/` 中存在的 WebP 文件。
 
 ### vehicles.csv
 
-`csv/vehicles.csv` 是载具数据源。常见字段包括：
+`csv/vehicles.csv` 是载具数据源。当前字段包括：
 
 ```text
 阵营
@@ -155,64 +174,58 @@ id
 图标号
 ```
 
-新增载具时，在 CSV 中增加一行即可。`图标号` 对应 `vehicles_textures/` 中的图标编号。
+新增载具时，在 CSV 中增加一行即可。`图标号` 对应 `vehicles_textures/<编号>.webp`。
 
-### 空值规则
+### 空值和类型规则
 
 CSV 中留空的单元格会转换成 JSON 的 `null`。
 
-例如：
+数字字段会根据现有 JSON 中的字段类型转换成数字。比如 `生命值`、`最大速度`、`弹容` 会生成数字。
 
-```csv
-炮塔转速,装填速度
-,
-```
+文本字段保持文本。比如 `视野修正` 里的 `1x` 会保留为字符串，不会被转换成数字。
 
-会生成：
-
-```json
-{
-  "炮塔转速": null,
-  "装填速度": null
-}
-```
-
-数字字段会按现有 JSON 的字段类型转换成数字。文本字段保持文本。比如 `视野修正` 中的 `1x` 会保留为字符串。
-
-建议使用支持 UTF-8 CSV 的编辑器或 Excel 打开。当前 CSV 文件带 UTF-8 BOM，正常情况下 Excel 可以识别中文。
+CSV 文件使用 UTF-8 with BOM 编码，Excel 通常可以正常识别中文。保存时建议继续使用 CSV UTF-8。
 
 ## JSON 数据说明
 
 ### data/weapons.json
 
-这是网页运行时读取的枪械数据。它由 `csv/weapons.csv` 生成，不建议手工编辑。
-
-网页中的枪械页会用它渲染：
+这是网页运行时读取的枪械发布数据，由 `csv/weapons.csv` 生成。枪械页会用它渲染：
 
 ```text
 枪械列表
 枪械详情
 枪械对比
-搜索和排序
+搜索
+排序
 ```
 
 ### data/vehicles.json
 
-这是网页运行时读取的载具数据。它由 `csv/vehicles.csv` 生成，不建议手工编辑。
-
-网页中的载具页会用它渲染：
+这是网页运行时读取的载具发布数据，由 `csv/vehicles.csv` 生成。载具页会用它渲染：
 
 ```text
 载具列表
 载具详情
 载具对比
 索敌优先级工具
-搜索和排序
+搜索
+排序
 ```
 
 ### data/maps.json
 
-这是地图摘要数据。它负责告诉页面有哪些地图、地图属于哪个系列、每张地图有哪些阵营视角，以及详细点位 JSON 在哪里。
+这是地图摘要数据，负责告诉页面：
+
+```text
+有哪些地图
+地图属于哪个系列
+地图列表显示什么名称
+基础地图图片优先使用哪个文件
+每张地图有哪些阵营视角
+每个阵营视角有哪些状态
+详细点位 JSON 在哪里
+```
 
 典型结构：
 
@@ -244,7 +257,7 @@ CSV 中留空的单元格会转换成 JSON 的 `null`。
 
 ### maps/<地图名>/map-data.json
 
-这是某张地图的完整设施点位数据。地图详情不是启动时全部加载，而是在用户打开某张地图时按需读取。
+这是某张地图的完整设施点位数据。地图详情不是启动时全部加载，只有用户打开地图或生成阵营视角时才会按需读取。
 
 典型结构：
 
@@ -277,22 +290,36 @@ CSV 中留空的单元格会转换成 JSON 的 `null`。
 }
 ```
 
-字段说明：
+字段含义：
 
 ```text
 map           地图 id
-source        点位来源文件记录
+source        点位来源记录
 spawn_ranges  阵营刷新区域
-views         按阵营和视图状态分组的点位
+views         按阵营和视图状态分组的设施点位
 key           设施或载具 key
 icon          地图图标编号，对应 maps_textures/<编号>.webp
 x, y          地图坐标
 layer         原始图层信息
 ```
 
-## 前端加载流程
+## 前端功能
 
-页面启动时会并行读取三个主 JSON：
+`index.html` 包含页面结构、样式和全部前端逻辑。页面主要分为三个功能区：
+
+```text
+载具查询
+枪械查询
+地图查询
+```
+
+载具查询支持列表、搜索、排序、详情、对比和索敌优先级工具。
+
+枪械查询支持列表、搜索、排序、详情和对比。
+
+地图查询支持地图列表、基础地图预览、按阵营和占领状态生成带设施图标的地图视图。
+
+页面启动时会先检查资源清单，再并行读取三个主 JSON：
 
 ```js
 fetch("data/vehicles.json")
@@ -300,21 +327,19 @@ fetch("data/weapons.json")
 fetch("data/maps.json")
 ```
 
-然后执行数据规范化，建立搜索文本、排序字段和查找表。
-
-地图详情数据不会启动时全部读取。用户打开地图或生成某个阵营视角时，页面才读取：
+地图详情数据按需读取：
 
 ```text
 maps/<地图名>/map-data.json
 ```
 
-这样可以避免首次加载过重。
+这样可以避免首次加载一次性请求所有地图点位。
 
-## 缓存和资源哈希
+## 资源清单和缓存策略
 
-`data/asset-manifest.json` 保存静态资源的 SHA-256 哈希和整体版本号。页面启动和 Service Worker 都会使用它判断资源是否变化。
+`data/asset-manifest.json` 是静态资源哈希清单。它保存每个参与缓存管理的文件路径和 SHA-256 哈希，并根据所有文件路径和哈希生成整体 `version`。
 
-生成规则：
+当前参与清单的资源包括：
 
 ```text
 data/
@@ -327,20 +352,40 @@ sw.js
 ico.webp
 ```
 
-如果文件内容没变，对应哈希不变。现在 `scripts/build-asset-manifest.js` 会在资源哈希完全一致时保持 `data/asset-manifest.json` 不变，避免无意义刷新版本。
+`README.md`、`csv/` 和 `scripts/` 不参与网页运行时加载，因此不写入资源清单。
 
-页面启动时会先用 `cache: "no-store"` 请求 `data/asset-manifest.json`。如果清单版本和上次记录一致，页面可以继续使用浏览器缓存；如果版本变化，页面会清理 `rwr-cache-*` 缓存并刷新一次，避免用户继续看到旧数据或旧图片。
-
-Service Worker 处理资源请求时会读取最新清单，并按文件路径比较 SHA-256：
+页面启动时会使用 `cache: "no-store"` 请求：
 
 ```text
-缓存文件哈希等于最新清单哈希      使用缓存
-缓存文件不存在或哈希不一致        请求 GitHub 上的新资源并写入缓存
-旧清单中存在但新清单中已删除      删除缓存并返回 410
-清单请求失败但本地有缓存          离线降级使用缓存
+data/asset-manifest.json
 ```
 
-对于已经更新过的缓存文件，Service Worker 会重新计算缓存响应内容的 SHA-256。如果缓存内容已经和最新清单一致，就不会重复请求同一个资源。
+如果清单请求失败，页面应当失败并显示网络错误，不允许使用旧缓存降级运行。原因是：清单是判断所有资源是否过期的根依据，请求失败时无法证明本地缓存仍然是最新版本。
+
+如果清单版本和上次记录一致，页面可以继续使用缓存资源。
+
+如果清单版本变化，页面会清理 `rwr-cache-*` 缓存，记录本次刷新版本，然后刷新一次页面，确保用户看到的是新资源。
+
+Service Worker 处理普通静态资源时，也会先请求最新清单，并按清单中的 SHA-256 校验缓存内容：
+
+```text
+缓存文件存在，且内容哈希等于最新清单哈希      使用缓存
+缓存文件不存在，或内容哈希不一致              请求网络资源
+网络资源内容哈希等于最新清单哈希              写入缓存并返回
+网络资源内容哈希不等于最新清单哈希            失败，不写入缓存
+旧清单存在但新清单中已删除该文件              删除缓存并返回 410
+清单请求失败                                  失败，不使用旧缓存降级
+```
+
+`data/asset-manifest.json` 本身使用 network-only 策略。请求失败就是失败，不从缓存返回旧清单。
+
+## Service Worker 注意事项
+
+`sw.js` 只在 HTTPS 环境注册。GitHub Pages 符合这个条件，本地 `http://127.0.0.1` 调试时不会注册 Service Worker。
+
+Service Worker 的缓存名以 `rwr-cache-` 开头。页面检测到资源清单版本变化时，会删除这些缓存。
+
+如果修改了 `sw.js` 自身，记得运行上传脚本生成新的 `data/asset-manifest.json`，因为 `sw.js` 也在资源清单中。
 
 ## 常用命令
 
@@ -368,7 +413,7 @@ node scripts/build-asset-manifest.js
 python -m http.server 8765 --bind 127.0.0.1
 ```
 
-完整上传流程：
+执行完整上传流程：
 
 ```powershell
 .\update-assets-and-upload.bat
@@ -377,8 +422,9 @@ python -m http.server 8765 --bind 127.0.0.1
 ## 维护建议
 
 - 修改枪械和载具数据时，优先编辑 `csv/` 目录下的 CSV。
-- 不建议直接编辑 `data/weapons.json` 和 `data/vehicles.json`，因为下次从 CSV 生成时会覆盖它们。
-- 新增枪械或载具后，检查图标文件是否存在。
-- 修改地图点位时，确认 `map-data.json` 中的 `icon` 能在 `maps_textures/` 中找到对应图标。
-- 上传前运行 BAT，让 CSV、JSON 和资源清单保持一致。
-- 如果只是重新运行脚本但数据没有变化，JSON 和资源清单不会被重写，用户浏览器也不会因为哈希变化而重新请求资源。
+- 不建议直接编辑 `data/weapons.json` 和 `data/vehicles.json`。
+- 新增枪械后，检查 `weapons_textures/` 中是否存在对应图标。
+- 新增载具后，检查 `vehicles_textures/` 中是否存在对应编号图标。
+- 修改地图点位后，检查 `map-data.json` 中的 `icon` 是否能在 `maps_textures/` 中找到。
+- 上传前运行 `update-assets-and-upload.bat`，让 CSV、JSON、资源清单和 Git 上传保持同一流程。
+- 如果数据和资源没有变化，JSON 和资源清单都不会被重写，用户浏览器也不会因为无意义哈希变化重新请求资源。
