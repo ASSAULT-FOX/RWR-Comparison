@@ -61,13 +61,6 @@
     "Allies": {
       "friendly_all": [
         {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
-        {
           "key": "universal_carrier.vehicle",
           "icon": 58,
           "x": 2374.83,
@@ -180,13 +173,6 @@
           "layer": "layer.allies"
         },
         {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 864.03,
-          "y": 1422.9,
-          "layer": "layer_invasion.allies"
-        },
-        {
           "key": "wasp.vehicle",
           "icon": 68,
           "x": 930.69,
@@ -202,13 +188,6 @@
         }
       ],
       "enemy_all": [
-        {
-          "key": "kubelwagen.vehicle",
-          "icon": 62,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
         {
           "key": "sdkfz251.vehicle",
           "icon": 55,
@@ -331,29 +310,8 @@
         {
           "key": "stug_iii_fastrespawn.vehicle",
           "icon": 31,
-          "x": 1383.78,
-          "y": 512.28,
-          "layer": "layer.allies"
-        },
-        {
-          "key": "luchs.vehicle",
-          "icon": 71,
-          "x": 903.72,
-          "y": 1493.7,
-          "layer": "layer.allies"
-        },
-        {
-          "key": "stug_iii_fastrespawn.vehicle",
-          "icon": 31,
           "x": 1371.92,
           "y": 552.8,
-          "layer": "layer.allies"
-        },
-        {
-          "key": "sdkfz251_fastrespawn.vehicle",
-          "icon": 55,
-          "x": 1482.7,
-          "y": 524.46,
           "layer": "layer.allies"
         },
         {
@@ -369,25 +327,11 @@
           "x": 1483.29,
           "y": 543.44,
           "layer": "layer_campaign.allies"
-        },
-        {
-          "key": "opel_blitz_1.vehicle",
-          "icon": 1,
-          "x": 865.2,
-          "y": 1423.35,
-          "layer": "layer_campaign.allies"
         }
       ]
     },
     "Axis": {
       "friendly_all": [
-        {
-          "key": "kubelwagen.vehicle",
-          "icon": 62,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
         {
           "key": "sdkfz251.vehicle",
           "icon": 55,
@@ -492,30 +436,9 @@
           "x": 1371.62,
           "y": 553.24,
           "layer": "layer.axis"
-        },
-        {
-          "key": "luchs.vehicle",
-          "icon": 71,
-          "x": 903.72,
-          "y": 1493.7,
-          "layer": "layer_campaign.axis"
-        },
-        {
-          "key": "kubelwagen.vehicle",
-          "icon": 62,
-          "x": 820.92,
-          "y": 363.9,
-          "layer": "layer_campaign.axis"
         }
       ],
       "enemy_all": [
-        {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 2374.87,
-          "y": 3.16,
-          "layer": "unlayered"
-        },
         {
           "key": "universal_carrier.vehicle",
           "icon": 58,
@@ -622,13 +545,6 @@
           "layer": "unlayered"
         },
         {
-          "key": "austin_k5.vehicle",
-          "icon": 56,
-          "x": 1383.78,
-          "y": 512.28,
-          "layer": "layer.axis"
-        },
-        {
           "key": "m4_V_fastrespawn.vehicle",
           "icon": 60,
           "x": 763.9,
@@ -678,31 +594,10 @@
           "layer": "layer.axis"
         },
         {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 560.3,
-          "y": 849.63,
-          "layer": "layer.axis"
-        },
-        {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 1371.62,
-          "y": 553.24,
-          "layer": "layer.axis"
-        },
-        {
           "key": "m4_firefly_fastrespawn.vehicle",
           "icon": 59,
           "x": 820.69,
           "y": 365.04,
-          "layer": "layer_invasion.axis"
-        },
-        {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 908.61,
-          "y": 1490.7,
           "layer": "layer_invasion.axis"
         },
         {
@@ -717,13 +612,6 @@
           "icon": 33,
           "x": 903.72,
           "y": 1493.7,
-          "layer": "layer_campaign.axis"
-        },
-        {
-          "key": "jeep.vehicle",
-          "icon": 0,
-          "x": 820.92,
-          "y": 363.9,
           "layer": "layer_campaign.axis"
         }
       ]

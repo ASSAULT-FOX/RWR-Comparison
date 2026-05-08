@@ -241,8 +241,8 @@
           "layer": "layer_invasion.allies"
         },
         {
-          "key": "m4_V.vehicle",
-          "icon": 60,
+          "key": "churchill_mkvii.vehicle",
+          "icon": 73,
           "x": 1437.93,
           "y": 1906.71,
           "layer": "layer_campaign.allies"
@@ -255,8 +255,8 @@
           "layer": "layer_campaign.allies"
         },
         {
-          "key": "m4_V.vehicle",
-          "icon": 60,
+          "key": "churchill_mkvii.vehicle",
+          "icon": 73,
           "x": 1234.95,
           "y": 2195.1,
           "layer": "layer_campaign.allies"
@@ -705,7 +705,7 @@
           "key": "opel_blitz_1.vehicle",
           "icon": 1,
           "x": 1762.67,
-          "y": 2787.0,
+          "y": 2787,
           "layer": "layer.axis"
         },
         {
@@ -1036,7 +1036,7 @@
           "key": "austin_k5.vehicle",
           "icon": 56,
           "x": 1762.67,
-          "y": 2787.0,
+          "y": 2787,
           "layer": "layer.axis"
         },
         {

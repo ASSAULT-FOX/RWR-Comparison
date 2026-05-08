@@ -238,13 +238,6 @@
           "x": 338.51,
           "y": 1231.39,
           "layer": "layer_campaign.allies"
-        },
-        {
-          "key": "m10.vehicle",
-          "icon": 63,
-          "x": 319.37,
-          "y": 1312.25,
-          "layer": "layer_campaign.allies"
         }
       ],
       "enemy_all": [
@@ -568,13 +561,6 @@
           "icon": 55,
           "x": 351.95,
           "y": 1305.25,
-          "layer": "layer.allies"
-        },
-        {
-          "key": "luchs.vehicle",
-          "icon": 71,
-          "x": 453.1,
-          "y": 632.68,
           "layer": "layer.allies"
         },
         {

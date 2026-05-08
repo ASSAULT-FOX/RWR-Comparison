@@ -808,7 +808,7 @@
         {
           "key": "mg42_hmg.vehicle",
           "icon": 28,
-          "x": 1257.0,
+          "x": 1257,
           "y": 685.74,
           "layer": "layer.axis"
         },
@@ -932,13 +932,6 @@
           "layer": "layer.axis"
         },
         {
-          "key": "luchs.vehicle",
-          "icon": 71,
-          "x": 358.68,
-          "y": 1335.68,
-          "layer": "layer.axis"
-        },
-        {
           "key": "opel_blitz_armoury.vehicle",
           "icon": 2,
           "x": 359.78,
@@ -971,13 +964,6 @@
           "icon": 54,
           "x": 1017.92,
           "y": 1811.68,
-          "layer": "layer.axis"
-        },
-        {
-          "key": "luchs.vehicle",
-          "icon": 71,
-          "x": 1507.73,
-          "y": 1429.11,
           "layer": "layer.axis"
         },
         {
@@ -1202,7 +1188,7 @@
         {
           "key": "vickers_hmg.vehicle",
           "icon": 7,
-          "x": 1257.0,
+          "x": 1257,
           "y": 685.74,
           "layer": "layer.axis"
         },
