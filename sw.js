@@ -127,11 +127,6 @@ async function manifestAwareCache(request) {
     return cached;
   }
 
-  if (latestHash === null && previousHash !== null) {
-    await cache.delete(request);
-    return new Response("Resource removed", { status: 410, statusText: "Gone" });
-  }
-
   try {
     const response = await fetch(request, { cache: "no-store" });
     if (response.ok) {
@@ -220,8 +215,9 @@ function requestPath(requestUrl) {
   const url = new URL(requestUrl);
   const scope = new URL(self.registration.scope);
   let pathname = decodeURIComponent(url.pathname);
-  if (pathname.startsWith(scope.pathname)) {
-    pathname = pathname.slice(scope.pathname.length);
+  const scopePath = decodeURIComponent(scope.pathname);
+  if (pathname.startsWith(scopePath)) {
+    pathname = pathname.slice(scopePath.length);
   } else {
     pathname = pathname.replace(/^\/+/, "");
   }
