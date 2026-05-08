@@ -1,4 +1,4 @@
-const CACHE_VERSION = "rwr-cache-2026-05-08-2";
+const CACHE_VERSION = "rwr-cache-2026-05-08-3";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const MANIFEST_URL = "./data/asset-manifest.json";
@@ -119,7 +119,7 @@ async function manifestAwareCache(request) {
   const path = requestPath(request.url);
   const cache = await caches.open(RUNTIME_CACHE);
   const cached = await cache.match(request);
-  const manifests = await getManifests();
+  const manifests = await getManifests().catch(() => ({ latest: null, cached: null }));
   const previousHash = manifests.cached?.files?.[path] || null;
   const latestHash = manifests.latest?.files?.[path] || null;
 
@@ -127,12 +127,16 @@ async function manifestAwareCache(request) {
     return cached;
   }
 
+  if (latestHash === null && previousHash !== null) {
+    await cache.delete(request);
+  }
+
   try {
     const response = await fetch(request, { cache: "no-store" });
     if (response.ok) {
       if (latestHash && !await responseMatchesHash(response.clone(), latestHash)) {
         await cache.delete(request);
-        throw new Error(`Hash mismatch for ${path}`);
+        return response;
       }
       rememberVerified(request.url, latestHash);
       cache.put(request, response.clone());
@@ -141,6 +145,7 @@ async function manifestAwareCache(request) {
     }
     return response;
   } catch (error) {
+    if (cached && !manifests.latest) return cached;
     throw error;
   }
 }
@@ -196,12 +201,16 @@ async function loadAssetManifestPair() {
   const cache = await caches.open(STATIC_CACHE);
   const cachedResponse = await cache.match(MANIFEST_URL);
   const cached = cachedResponse ? await cachedResponse.clone().json().catch(() => null) : null;
-  const response = await fetch(MANIFEST_URL, { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error(`Asset manifest request failed: ${response.status}`);
+  let latest = null;
+  try {
+    const response = await fetch(MANIFEST_URL, { cache: "no-store" });
+    if (response.ok) {
+      latest = await response.clone().json();
+      await cache.put(MANIFEST_URL, response);
+    }
+  } catch (error) {
+    latest = null;
   }
-  const latest = await response.clone().json();
-  await cache.put(MANIFEST_URL, response);
   manifestState = {
     checkedAt: Date.now(),
     latest,
