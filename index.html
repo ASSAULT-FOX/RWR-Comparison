@@ -890,6 +890,18 @@
       text-align: center;
     }
 
+    .map-stage.error {
+      width: min(720px, 100%);
+      min-height: min(520px, calc(100vh - 170px));
+      background: rgba(255, 245, 247, 0.88);
+      border-color: rgba(221, 69, 96, 0.28);
+      box-shadow: 0 12px 28px rgba(165, 42, 68, 0.12);
+    }
+
+    .map-stage.error[data-message]::before {
+      color: #c52f4e;
+    }
+
     .map-stage.loading {
       width: min(720px, 100%);
       min-height: min(520px, calc(100vh - 170px));
@@ -910,6 +922,26 @@
 
     .map-stage.loading .map-loading {
       display: grid;
+    }
+
+    .map-stage.loading.error .map-loading {
+      background: rgba(255, 245, 247, 0.78);
+    }
+
+    .map-stage.loading.error .loading-card {
+      border-color: rgba(221, 69, 96, 0.34);
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    .map-stage.loading.error .loading-spinner {
+      animation: none;
+      border-color: rgba(221, 69, 96, 0.18);
+      border-top-color: #dd4560;
+      border-right-color: #dd4560;
+    }
+
+    .map-stage.loading.error .loading-title {
+      color: #c52f4e;
     }
 
     .map-stage.loading img#mapImage {
@@ -2817,15 +2849,15 @@
       resetDialogScroll(mapModal);
       currentMap = await loadMapData(mapId);
       if (!currentMap) {
-        showMapError("地图数据加载失败");
+        showMapError("地图数据请求失败", "请检查网络连接后重新打开地图详情。");
         return;
       }
       mapTitle.textContent = `${currentMap.group} / ${currentMap.name}`;
       try {
-        renderMapDetail();
+        await renderMapDetail();
       } catch (error) {
         console.error(error);
-        showMapError("地图图片加载失败");
+        showMapError("地图图片请求失败", "请检查网络连接后重新打开地图详情。");
       }
     }
 
@@ -2881,14 +2913,17 @@
 
     function renderMapDetail() {
       if (!currentMap) return;
-      setMapImageWithFallback(mapImage, null, overviewMapImageSources(currentMap));
       mapImage.alt = `${currentMap.name} 原始地图`;
+      return setMapImageWithFallback(mapImage, null, overviewMapImageSources(currentMap));
     }
 
     function showMapLoading(subtitle = "正在读取地图图片") {
+      mapStage.classList.remove("error");
       mapStage.classList.add("loading");
       mapStage.removeAttribute("data-message");
       mapImage.hidden = false;
+      const titleEl = mapStage.querySelector(".loading-title");
+      if (titleEl) titleEl.textContent = "正在加载地图";
       if (mapLoadingSubtitle) mapLoadingSubtitle.textContent = subtitle;
     }
 
@@ -2896,10 +2931,13 @@
       mapStage.classList.remove("loading");
     }
 
-    function showMapError(message) {
-      hideMapLoading();
+    function showMapError(title, subtitle = "请检查网络连接后重试。") {
+      mapStage.classList.add("loading", "error");
       mapImage.hidden = true;
-      mapStage.dataset.message = message;
+      mapStage.removeAttribute("data-message");
+      const titleEl = mapStage.querySelector(".loading-title");
+      if (titleEl) titleEl.textContent = title;
+      if (mapLoadingSubtitle) mapLoadingSubtitle.textContent = subtitle;
     }
 
     function overviewMapImageSources(mapData = currentMap) {
@@ -2942,28 +2980,34 @@
     function setMapImageWithFallback(imageElement, faction, sourceList = null) {
       const sources = sourceList || mapImageSources(faction);
       if (!sources.length) {
-        showMapError("未找到地图图片");
-        return;
+        showMapError("地图图片请求失败", "没有可用的地图图片路径。");
+        return Promise.reject(new Error("No map image source available"));
       }
       let index = 0;
       showMapLoading("正在读取地图图片");
       imageElement.hidden = false;
-      imageElement.onload = () => {
-        imageElement.onerror = null;
-        imageElement.onload = null;
-        hideMapLoading();
-      };
-      imageElement.onerror = () => {
-        index += 1;
-        if (index < sources.length) {
-          imageElement.src = sources[index];
-        } else {
+      imageElement.removeAttribute("src");
+      return new Promise((resolve, reject) => {
+        imageElement.onload = () => {
           imageElement.onerror = null;
           imageElement.onload = null;
-          showMapError(`未找到地图图片：${sources.map((src) => src.split("/").pop()).join(" / ")}`);
-        }
-      };
-      imageElement.src = sources[index];
+          hideMapLoading();
+          resolve(imageElement);
+        };
+        imageElement.onerror = () => {
+          index += 1;
+          if (index < sources.length) {
+            imageElement.src = sources[index];
+          } else {
+            imageElement.onerror = null;
+            imageElement.onload = null;
+            const names = sources.map((src) => src.split("/").pop()).join(" / ");
+            showMapError("地图图片请求失败", `没有成功加载的地图图片：${names}`);
+            reject(new Error(`No available map image: ${names}`));
+          }
+        };
+        imageElement.src = sources[index];
+      });
     }
 
     function loadImageElement(src) {
@@ -3005,6 +3049,62 @@
       popup.document.body.style.font = "16px Microsoft YaHei UI, Microsoft YaHei, sans-serif";
       popup.document.body.style.padding = "24px";
       popup.document.body.textContent = message;
+    }
+
+    function showPopupError(popup, title, message) {
+      popup.document.title = title;
+      popup.document.head.innerHTML = `
+        <style>
+          body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            color: #182838;
+            background: #101820;
+            font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+          }
+          .loading-card {
+            display: grid;
+            justify-items: center;
+            gap: 14px;
+            min-width: min(300px, 84vw);
+            max-width: min(520px, 88vw);
+            padding: 26px 30px;
+            border-radius: 14px;
+            border: 1px solid rgba(221, 69, 96, 0.34);
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.24);
+          }
+          .loading-spinner {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 4px solid rgba(221, 69, 96, 0.18);
+            border-top-color: #dd4560;
+            border-right-color: #dd4560;
+          }
+          .loading-title {
+            color: #c52f4e;
+            font-weight: 900;
+            line-height: 1.3;
+          }
+          .loading-subtitle {
+            color: #66788d;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: center;
+          }
+        </style>
+      `;
+      popup.document.body.innerHTML = `
+        <div class="loading-card" role="alert" aria-live="assertive">
+          <div class="loading-spinner" aria-hidden="true"></div>
+          <div class="loading-title">${escapeHtml(title)}</div>
+          <div class="loading-subtitle">${escapeHtml(message)}</div>
+        </div>
+      `;
     }
 
     function showPopupLoading(popup, title, subtitle = "正在读取地图图片和图标") {
@@ -3104,7 +3204,7 @@
 
         canvas.toBlob((blob) => {
           if (!blob) {
-            popup.close();
+            showPopupError(popup, "地图图片生成失败", "请关闭这个页面后，回到主页面重新点击阵营视角按钮生成一次。");
             showToast("地图图片生成失败");
             return;
           }
@@ -3143,7 +3243,7 @@
         }, "image/png");
       } catch (error) {
         console.error(error);
-        showPopupMessage(popup, pageTitle, "地图图片生成失败，请刷新页面后重试。");
+        showPopupError(popup, "地图图片生成失败", "请关闭这个页面后，回到主页面重新点击阵营视角按钮生成一次。");
         showToast("地图图片生成失败");
       }
     }
@@ -3712,8 +3812,8 @@
       if (openButton) {
         openMapDetail(openButton.dataset.mapId).catch((error) => {
           console.error(error);
-          showMapError("地图详情打开失败");
-          showToast("地图详情打开失败");
+          showMapError("地图数据请求失败", "请检查网络连接后重新打开地图详情。");
+          showToast("网络错误：地图数据请求失败");
         });
         return;
       }
@@ -3727,10 +3827,10 @@
       showPopupLoading(popup, "正在生成地图图片");
       loadMapData(perspectiveButton.dataset.mapId).then((mapData) => {
         if (mapData) return openProcessedMap(perspectiveButton.dataset.faction, mapData, popup, perspectiveButton.dataset.state || "friendly_all");
-        showPopupMessage(popup, "地图图片生成失败", "地图数据加载失败，请刷新页面后重试。");
+        showPopupError(popup, "地图图片生成失败", "请关闭这个页面后，回到主页面重新点击阵营视角按钮生成一次。");
       }).catch((error) => {
         console.error(error);
-        showPopupMessage(popup, "地图图片生成失败", "地图图片生成失败，请刷新页面后重试。");
+        showPopupError(popup, "地图图片生成失败", "请关闭这个页面后，回到主页面重新点击阵营视角按钮生成一次。");
         showToast("地图图片生成失败");
       });
     });
