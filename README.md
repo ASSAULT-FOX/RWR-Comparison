@@ -69,7 +69,7 @@ maps/<地图名>/map-data.json
 
 ```text
 1. node scripts/sync-csv-json.js csv-to-json
-2. node build-asset-manifest.js
+2. node scripts/build-asset-manifest.js
 3. git upup
 ```
 
@@ -89,7 +89,7 @@ data/vehicles.json
 
 如果 CSV 转换后的 JSON 内容和现有 JSON 完全一致，脚本不会重写 JSON 文件。这样资源哈希不会无意义变化，也就不会让用户浏览器因为哈希变化而重新请求没有变化的数据资源。
 
-第二步会更新 `asset-manifest.json`。如果所有资源文件的哈希都没有变化，`asset-manifest.json` 也不会仅因为生成时间不同而重写。
+第二步会更新 `data/asset-manifest.json`。如果所有资源文件的哈希都没有变化，`data/asset-manifest.json` 也不会仅因为生成时间不同而重写。
 
 第三步执行 `git upup`，用于上传当前变更。
 
@@ -285,7 +285,7 @@ source        点位来源文件记录
 spawn_ranges  阵营刷新区域
 views         按阵营和视图状态分组的点位
 key           设施或载具 key
-icon          地图图标编号，对应 images/<编号>.webp
+icon          地图图标编号，对应 maps_textures/<编号>.webp
 x, y          地图坐标
 layer         原始图层信息
 ```
@@ -312,13 +312,13 @@ maps/<地图名>/map-data.json
 
 ## 缓存和资源哈希
 
-`asset-manifest.json` 保存静态资源的 SHA-256 哈希和整体版本号。Service Worker 会使用它判断资源是否变化。
+`data/asset-manifest.json` 保存静态资源的 SHA-256 哈希和整体版本号。页面启动和 Service Worker 都会使用它判断资源是否变化。
 
 生成规则：
 
 ```text
 data/
-images/
+maps_textures/
 maps/
 vehicles_textures/
 weapons_textures/
@@ -327,7 +327,20 @@ sw.js
 ico.webp
 ```
 
-如果文件内容没变，对应哈希不变。现在 `build-asset-manifest.js` 会在资源哈希完全一致时保持 `asset-manifest.json` 不变，避免无意义刷新版本。
+如果文件内容没变，对应哈希不变。现在 `scripts/build-asset-manifest.js` 会在资源哈希完全一致时保持 `data/asset-manifest.json` 不变，避免无意义刷新版本。
+
+页面启动时会先用 `cache: "no-store"` 请求 `data/asset-manifest.json`。如果清单版本和上次记录一致，页面可以继续使用浏览器缓存；如果版本变化，页面会清理 `rwr-cache-*` 缓存并刷新一次，避免用户继续看到旧数据或旧图片。
+
+Service Worker 处理资源请求时会读取最新清单，并按文件路径比较 SHA-256：
+
+```text
+缓存文件哈希等于最新清单哈希      使用缓存
+缓存文件不存在或哈希不一致        请求 GitHub 上的新资源并写入缓存
+旧清单中存在但新清单中已删除      删除缓存并返回 410
+清单请求失败但本地有缓存          离线降级使用缓存
+```
+
+对于已经更新过的缓存文件，Service Worker 会重新计算缓存响应内容的 SHA-256。如果缓存内容已经和最新清单一致，就不会重复请求同一个资源。
 
 ## 常用命令
 
@@ -346,7 +359,7 @@ node scripts/sync-csv-json.js csv-to-json
 更新资源清单：
 
 ```powershell
-node build-asset-manifest.js
+node scripts/build-asset-manifest.js
 ```
 
 本地启动静态服务器：
@@ -366,6 +379,6 @@ python -m http.server 8765 --bind 127.0.0.1
 - 修改枪械和载具数据时，优先编辑 `csv/` 目录下的 CSV。
 - 不建议直接编辑 `data/weapons.json` 和 `data/vehicles.json`，因为下次从 CSV 生成时会覆盖它们。
 - 新增枪械或载具后，检查图标文件是否存在。
-- 修改地图点位时，确认 `map-data.json` 中的 `icon` 能在 `images/` 中找到对应图标。
+- 修改地图点位时，确认 `map-data.json` 中的 `icon` 能在 `maps_textures/` 中找到对应图标。
 - 上传前运行 BAT，让 CSV、JSON 和资源清单保持一致。
 - 如果只是重新运行脚本但数据没有变化，JSON 和资源清单不会被重写，用户浏览器也不会因为哈希变化而重新请求资源。

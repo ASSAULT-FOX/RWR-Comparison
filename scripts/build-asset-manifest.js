@@ -16,7 +16,7 @@ const rootFiles = [
   "ico.webp"
 ];
 
-const includeExt = new Set([".html", ".js", ".json", ".webp", ".ico"]);
+const includeExt = new Set([".html", ".js", ".json", ".webp", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico"]);
 const outputFile = path.join("data", "asset-manifest.json");
 
 function walk(dir) {

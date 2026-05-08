@@ -1,4 +1,4 @@
-const CACHE_VERSION = "rwr-cache-2026-05-07-6";
+const CACHE_VERSION = "rwr-cache-2026-05-08-2";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const MANIFEST_URL = "./data/asset-manifest.json";
@@ -10,6 +10,7 @@ let manifestState = {
   cached: null,
   promise: null
 };
+const verifiedResponses = new Map();
 
 const APP_SHELL = [
   "./",
@@ -117,7 +118,7 @@ async function manifestAwareCache(request) {
   const previousHash = manifests.cached?.files?.[path] || null;
   const latestHash = manifests.latest?.files?.[path] || null;
 
-  if (cached && latestHash && previousHash === latestHash) {
+  if (cached && latestHash && await cachedResponseMatches(request.url, cached.clone(), latestHash)) {
     return cached;
   }
 
@@ -127,8 +128,13 @@ async function manifestAwareCache(request) {
   }
 
   try {
-    const response = await fetch(request, { cache: "no-cache" });
+    const response = await fetch(request, { cache: "no-store" });
     if (response.ok) {
+      if (latestHash && !await responseMatchesHash(response.clone(), latestHash)) {
+        await cache.delete(request);
+        throw new Error(`Hash mismatch for ${path}`);
+      }
+      rememberVerified(request.url, latestHash);
       cache.put(request, response.clone());
     } else if (response.status === 404 || response.status === 410) {
       await cache.delete(request);
@@ -138,6 +144,42 @@ async function manifestAwareCache(request) {
     if (cached && !manifests.latest) return cached;
     throw error;
   }
+}
+
+async function cachedResponseMatches(requestUrl, response, expectedHash) {
+  const cacheKey = verifiedCacheKey(requestUrl, expectedHash);
+  if (verifiedResponses.get(cacheKey)) return true;
+  const matches = await responseMatchesHash(response, expectedHash);
+  if (matches) rememberVerified(requestUrl, expectedHash);
+  return matches;
+}
+
+function rememberVerified(requestUrl, expectedHash) {
+  if (!expectedHash) return;
+  verifiedResponses.set(verifiedCacheKey(requestUrl, expectedHash), true);
+  if (verifiedResponses.size > 500) {
+    verifiedResponses.delete(verifiedResponses.keys().next().value);
+  }
+}
+
+function verifiedCacheKey(requestUrl, expectedHash) {
+  return `${requestPath(requestUrl)}:${expectedHash}`;
+}
+
+async function responseMatchesHash(response, expectedHash) {
+  try {
+    const buffer = await response.arrayBuffer();
+    const digest = await crypto.subtle.digest("SHA-256", buffer);
+    return hexDigest(digest) === expectedHash;
+  } catch (error) {
+    return false;
+  }
+}
+
+function hexDigest(buffer) {
+  return Array.from(new Uint8Array(buffer))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 async function getManifests() {
