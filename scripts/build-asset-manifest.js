@@ -17,7 +17,7 @@ const rootFiles = [
 ];
 
 const includeExt = new Set([".html", ".js", ".json", ".webp", ".ico"]);
-const outputFile = "asset-manifest.json";
+const outputFile = path.join("data", "asset-manifest.json");
 
 function walk(dir) {
   if (!fs.existsSync(dir)) return [];
@@ -52,6 +52,21 @@ const manifest = {
   generatedAt: new Date().toISOString(),
   files: hashes
 };
+
+if (fs.existsSync(outputFile)) {
+  try {
+    const current = JSON.parse(fs.readFileSync(outputFile, "utf8").replace(/^\uFEFF/, ""));
+    if (
+      current.version === version &&
+      JSON.stringify(current.files) === JSON.stringify(hashes)
+    ) {
+      console.log(`Unchanged ${outputFile}, version ${version.slice(0, 12)}`);
+      process.exit(0);
+    }
+  } catch {
+    // Regenerate the manifest if the existing file cannot be parsed.
+  }
+}
 
 fs.writeFileSync(outputFile, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 console.log(`Wrote ${outputFile} with ${files.length} files, version ${version.slice(0, 12)}`);

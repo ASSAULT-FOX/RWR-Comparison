@@ -20,17 +20,20 @@ http://127.0.0.1:8765/index.html
 
 ## 项目概览
 
-项目现在主要由五类内容组成：
+项目现在主要由几类内容组成：
 
 ```text
 .
 ├── index.html          页面入口，HTML、CSS、JavaScript 都在这里
-├── ico.png             浏览器标签页图标
-├── data/               三个主数据摘要文件
+├── ico.webp            浏览器标签页图标
+├── csv/                可编辑的枪械、载具源数据表
+├── data/               前端读取的 JSON 数据和 asset-manifest.json
 ├── images/             地图叠加图标，按数字编号命名
 ├── maps/               每张地图的图片和 map-data.json
-├── vehicles/           原始 .vehicle 文件，用来核对载具 key 和图标号
-└── maps.rar            地图资源压缩包，作为资源包留在目录中
+├── scripts/            数据同步和资源清单维护脚本
+├── vehicles_textures/  载具图标资源
+├── weapons_textures/   枪械图标资源
+└── update-assets-and-upload.bat
 ```
 
 这个项目有一个很明显的特点：它把页面结构、样式和逻辑都集中在 `index.html` 里。这样做的好处是复制和运行都很直接，不需要安装依赖，也不需要先构建。代价是这个文件会比较长，读代码时最好按功能块来读，而不是从第一行一路看到最后一行。
@@ -44,6 +47,30 @@ http://127.0.0.1:8765/index.html
 载具和枪械界面主要是参数表和对比工具。地图界面负责展示地图列表，打开基础地图，以及按“阵营视角 + 占领状态”生成带设施图标的地图图片。
 
 ## 文件职责
+
+### csv/
+
+`csv` 目录是枪械和载具的人工编辑源数据：
+
+- `csv/weapons.csv`
+- `csv/vehicles.csv`
+
+开发者需要增删或修改枪械、载具数据时，优先编辑这两个 CSV。上传前运行 `update-assets-and-upload.bat`，脚本会先执行：
+
+```bat
+node scripts/sync-csv-json.js csv-to-json
+```
+
+这一步会把 CSV 同步回 `data/weapons.json` 和 `data/vehicles.json`。如果 CSV 内容没有导致 JSON 变化，脚本不会重写 JSON 文件，资源哈希也不会因为这一步改变。
+
+### scripts/
+
+`scripts` 目录保存项目维护脚本：
+
+- `sync-csv-json.js`：负责 `data/*.json` 和 `csv/*.csv` 之间的转换。
+- `build-asset-manifest.js`：扫描静态资源并生成 `data/asset-manifest.json`。
+
+Service Worker 位于根目录的 `sw.js`。浏览器要求 Service Worker 的控制范围不能高于入口脚本所在目录，所以根目录页面需要直接注册根目录下的 `sw.js`。
 
 ### index.html
 
@@ -175,6 +202,12 @@ http://127.0.0.1:8765/index.html
 ```
 
 旧版 `maps.json` 曾经保存过无线电干扰器、坦克、反坦克炮、重机枪数量。现在这些统计列已经从地图主界面移除，所以摘要里也不再保存 `counts`。地图页只关心地图列表和操作按钮，设施刷新明细全部以地图目录里的 `map-data.json` 为准。
+
+### data/asset-manifest.json
+
+`asset-manifest.json` 保存静态资源路径和对应的 SHA-256 哈希。页面和 Service Worker 用它判断资源是否真的变化，避免用户浏览器重复请求没有变化的 JSON、图片和脚本。
+
+这个文件由 `scripts/build-asset-manifest.js` 生成，不需要手工编辑。生成脚本会比较现有清单中的 `version` 和 `files`，如果资源内容没有变化，就不会只因为生成时间不同而重写清单。
 
 ### images/
 
@@ -909,4 +942,3 @@ images/<icon>.png
 8. 最后再看载具对比和索敌工具，因为这两块逻辑更细。
 
 这样读下来，不太容易被 `index.html` 的长度吓住。它虽然长，但大部分函数都是按功能顺序摆着的，真正跨模块耦合的地方并不多。
-

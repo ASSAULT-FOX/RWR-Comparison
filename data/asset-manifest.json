@@ -1,6 +1,6 @@
 {
-  "version": "f083df5b79c9a4a3edcfe8c84f8af562c85bb4eacdf05ce6c6ce1bf26fcdf386",
-  "generatedAt": "2026-05-07T07:49:50.572Z",
+  "version": "4b80f25310d77f3c1ebea5799a03fb766ff65f8f13212d8100e3714daa3399f3",
+  "generatedAt": "2026-05-08T02:10:21.499Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
@@ -82,7 +82,7 @@
     "images/73.webp": "e3f13d5f89c897e52261c2fa74e074517139daeb28ee255fcf1118b542bc9313",
     "images/74.webp": "f6203b8f4e3ac35a004c7a37e6c126dd350e9889a1a00cea03aed7ec42fc8756",
     "images/75.webp": "3553101f65f4d191e3b7ea246c5129008d37c522612cc816d01a6a9c8eea6977",
-    "index.html": "345364f0812758ce3b9bf03b6fdc2720f66bf8440cc6809915146f978f73a519",
+    "index.html": "3cc466f21f6e373baa159f5ae7d0ddc1e0de110e029d0d6c851b9dd51c2761ad",
     "maps/edelweiss1/map_allies.webp": "90dd4fcdd42a01b0f903182fc8e14ff2825cc13b4f0b5f1c40ebf0c94bee4991",
     "maps/edelweiss1/map_axis.webp": "d3fd9006ec268c20a4ab336b5d10dc2bdf7e750c83898b11f24a675f508a2d0a",
     "maps/edelweiss1/map-data.json": "3dbf3f7fe66a24210986a4d984558cc6025d7e20ef981f185f5b012b296ebf73",
@@ -138,7 +138,7 @@
     "maps/island10/map_ija.webp": "3bccf5258a787c5a348fd766ee5e0b374e7442ef5760d0254152efd8031a06b8",
     "maps/island10/map_usmc.webp": "3bccf5258a787c5a348fd766ee5e0b374e7442ef5760d0254152efd8031a06b8",
     "maps/island10/map-data.json": "fab6e1d7f268685a7c3ffd5eae26bac79b0ebf268e76b0e9edc61a2a5125f290",
-    "sw.js": "0417fedede079766d0ea84175739e24a9f7436ee2e731d76798fffcbf8c947cc",
+    "sw.js": "c57c43ac22fb7d29aef5ecfb69ea313000605de0bba8fc73419f2a1b2bfcdbb8",
     "vehicles_textures/0.webp": "f15787f9c25d3522b5ec686316e79a68629ddc9a4d7e197ef3ec56c5e0f0f89e",
     "vehicles_textures/1.webp": "dce5d0cf7f6c68cfc805ba14db887a992974018e3b056bef798a39b6a8361998",
     "vehicles_textures/2.webp": "e441346912be37d51e7543bb99a50b87051097413396a001dcf169ba0bc2a498",

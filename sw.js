@@ -1,7 +1,7 @@
 const CACHE_VERSION = "rwr-cache-2026-05-07-6";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
-const MANIFEST_URL = "./asset-manifest.json";
+const MANIFEST_URL = "./data/asset-manifest.json";
 const MANIFEST_TTL = 30000;
 
 let manifestState = {
@@ -15,7 +15,7 @@ const APP_SHELL = [
   "./",
   "./index.html",
   "./ico.webp",
-  "./asset-manifest.json",
+  "./data/asset-manifest.json",
   "./data/vehicles.json",
   "./data/weapons.json",
   "./data/maps.json"
