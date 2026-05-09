@@ -473,6 +473,20 @@
           "layer": "layer.allies"
         },
         {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1686.66,
+          "y": 366.63,
+          "layer": "layer.allies"
+        },
+        {
+          "key": "at_gun_pak40.vehicle",
+          "icon": 13,
+          "x": 1719.83,
+          "y": 447.85,
+          "layer": "layer.allies"
+        },
+        {
           "key": "radio_jammer_3.vehicle",
           "icon": 9,
           "x": 1608.19,
