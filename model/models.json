@@ -1,0 +1,134 @@
+[
+  {
+    "id": "chi_ha",
+    "name": "97式中型坦克",
+    "model": "model/chi_ha/chi_ha.glb",
+    "sourceBlend": "model/chi_ha/chi_ha.blend"
+  },
+  {
+    "id": "king_tiger_boss",
+    "name": "精英虎王重型坦克",
+    "model": "model/king_tiger_boss/king_tiger_boss.glb",
+    "sourceBlend": "model/king_tiger_boss/king_tiger_boss.blend"
+  },
+  {
+    "id": "m4_75",
+    "name": "美军M4中型坦克",
+    "model": "model/m4_75/m4_75.glb",
+    "sourceBlend": "model/m4_75/m4_75.blend"
+  },
+  {
+    "id": "churchill_mkvii",
+    "name": "丘吉尔步兵坦克",
+    "model": "model/churchill_mkvii/churchill_mkvii.glb",
+    "sourceBlend": "model/churchill_mkvii/churchill_mkvii.blend"
+  },
+  {
+    "id": "churchill_crocodile",
+    "name": "丘吉尔喷火坦克",
+    "model": "model/churchill_crocodile/churchill_crocodile.glb",
+    "sourceBlend": "model/churchill_crocodile/churchill_crocodile.blend"
+  },
+  {
+    "id": "stug_iii_base",
+    "name": "三号突击炮",
+    "model": "model/stug_iii_base/stug_iii_base.glb",
+    "sourceBlend": "model/stug_iii_base/stug_iii_base.blend"
+  },
+  {
+    "id": "luchs",
+    "name": "山猫轻型坦克",
+    "model": "model/luchs/luchs.glb",
+    "sourceBlend": "model/luchs/luchs.blend"
+  },
+  {
+    "id": "maus_boss",
+    "name": "鼠式超重型坦克",
+    "model": "model/maus_boss/maus_boss.glb",
+    "sourceBlend": "model/maus_boss/maus_boss.blend"
+  },
+  {
+    "id": "panzer_iv_base",
+    "name": "四号中型坦克",
+    "model": "model/panzer_iv_base/panzer_iv_base.glb",
+    "sourceBlend": "model/panzer_iv_base/panzer_iv_base.blend"
+  },
+  {
+    "id": "katsu",
+    "name": "特四式内火艇",
+    "model": "model/katsu/katsu.glb",
+    "sourceBlend": "model/katsu/katsu.blend"
+  },
+  {
+    "id": "king_tiger_player",
+    "name": "玩家虎王重型坦克",
+    "model": "model/king_tiger_player/king_tiger_player.glb",
+    "sourceBlend": "model/king_tiger_player/king_tiger_player.blend"
+  },
+  {
+    "id": "hoha",
+    "name": "一式装甲运兵车",
+    "model": "model/hoha/hoha.glb",
+    "sourceBlend": "model/hoha/hoha.blend"
+  },
+  {
+    "id": "m4_v_base",
+    "name": "英军M4中型坦克",
+    "model": "model/m4_v_base/m4_V_base.glb",
+    "sourceBlend": "model/m4_v_base/m4_V_base.blend"
+  },
+  {
+    "id": "king_tiger",
+    "name": "AI虎王重型坦克",
+    "model": "model/king_tiger/king_tiger.glb",
+    "sourceBlend": "model/king_tiger/king_tiger.blend"
+  },
+  {
+    "id": "lvt4",
+    "name": "LVT4两栖战车",
+    "model": "model/lvt4/lvt4.glb",
+    "sourceBlend": "model/lvt4/lvt4.blend"
+  },
+  {
+    "id": "m3_halftrack_base",
+    "name": "M3半履带车",
+    "model": "model/m3_halftrack_base/m3_halftrack_base.glb",
+    "sourceBlend": "model/m3_halftrack_base/m3_halftrack_base.blend"
+  },
+  {
+    "id": "m4_rhino",
+    "name": "M4犀牛中型坦克",
+    "model": "model/m4_rhino/m4_rhino.glb",
+    "sourceBlend": "model/m4_rhino/m4_rhino.blend"
+  },
+  {
+    "id": "m4_firefly_base",
+    "name": "M4萤火虫中型坦克",
+    "model": "model/m4_firefly_base/m4_firefly_base.glb",
+    "sourceBlend": "model/m4_firefly_base/m4_firefly_base.blend"
+  },
+  {
+    "id": "m10",
+    "name": "M10坦克歼击车",
+    "model": "model/m10/m10.glb",
+    "sourceBlend": "model/m10/m10.blend"
+  },
+  {
+    "id": "sdkfz251_base",
+    "name": "sdkfz251半履带车",
+    "model": "model/sdkfz251_base/sdkfz251_base.glb",
+    "sourceBlend": "model/sdkfz251_base/sdkfz251_base.blend"
+  },
+  {
+    "id": "sdkfz251_flak",
+    "name": "sdkfz251半履带防空车",
+    "model": "model/sdkfz251_flak/sdkfz251_flak.glb",
+    "sourceBlend": "model/sdkfz251_flak/sdkfz251_flak.blend"
+  },
+  {
+    "id": "tog2_boss",
+    "name": "TOGII超重型坦克",
+    "model": "model/tog2_boss/tog2_boss.glb",
+    "sourceBlend": "model/tog2_boss/tog2_boss.blend"
+  }
+]

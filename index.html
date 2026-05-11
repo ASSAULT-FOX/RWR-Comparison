@@ -8,6 +8,7 @@
   <link rel="preload" href="data/vehicles.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="data/weapons.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="data/maps.json" as="fetch" type="application/json" crossorigin>
+  <link rel="preload" href="model/models.json" as="fetch" type="application/json" crossorigin>
   <style>
     :root {
       color-scheme: light;
@@ -418,6 +419,18 @@
       width: 68%;
     }
 
+    col.model-name-col {
+      width: 46%;
+    }
+
+    col.model-icon-col {
+      width: 18%;
+    }
+
+    col.model-actions-col {
+      width: 36%;
+    }
+
     thead th {
       position: relative;
       color: #3d515d;
@@ -520,7 +533,8 @@
     }
 
     #vehicleTable tbody td,
-    #weaponTable tbody td {
+    #weaponTable tbody td,
+    #modelTable tbody td {
       padding-top: 16px;
       padding-bottom: 16px;
       font-size: 15px;
@@ -528,7 +542,8 @@
     }
 
     #vehicleTable tbody tr,
-    #weaponTable tbody tr {
+    #weaponTable tbody tr,
+    #modelTable tbody tr {
       min-height: 82px;
     }
 
@@ -1661,10 +1676,11 @@
 
       .tag-tabs {
         width: 100%;
+        overflow-x: auto;
       }
 
       .tag-tab {
-        flex: 1;
+        flex: 1 0 auto;
       }
 
       .metric-labels {
@@ -1699,6 +1715,7 @@
           <button class="tag-tab active" data-tab="vehicles" type="button">载具查询</button>
           <button class="tag-tab" data-tab="weapons" type="button">枪械查询</button>
           <button class="tag-tab" data-tab="maps" type="button">地图查询</button>
+          <button class="tag-tab" data-tab="models" type="button">模型查询</button>
         </nav>
         <label class="search">
           <span>⌕</span>
@@ -1719,7 +1736,7 @@
           <div class="loading-card">
             <div class="loading-spinner" aria-hidden="true"></div>
             <div class="loading-title">正在加载数据</div>
-            <div class="loading-subtitle">正在请求并解析载具、枪械和地图数据</div>
+            <div class="loading-subtitle">正在请求并解析载具、枪械、地图和模型数据</div>
           </div>
         </div>
         <table id="vehicleTable">
@@ -1794,6 +1811,21 @@
             </tr>
           </thead>
           <tbody id="mapRows"></tbody>
+        </table>
+        <table id="modelTable" class="hidden">
+          <colgroup>
+            <col class="model-name-col">
+            <col class="model-icon-col">
+            <col class="model-actions-col">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>载具名</th>
+              <th>图标</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody id="modelRows"></tbody>
         </table>
       </section>
     </main>
@@ -1880,6 +1912,7 @@
     let vehicles = [];
     let weapons = [];
     let maps = [];
+    let models = [];
     let currentMap = null;
     const mapDataCache = new Map();
 
@@ -1887,9 +1920,11 @@
     const vehicleTable = document.getElementById("vehicleTable");
     const weaponTable = document.getElementById("weaponTable");
     const mapTable = document.getElementById("mapTable");
+    const modelTable = document.getElementById("modelTable");
     const rowsEl = document.getElementById("vehicleRows");
     const weaponRowsEl = document.getElementById("weaponRows");
     const mapRowsEl = document.getElementById("mapRows");
+    const modelRowsEl = document.getElementById("modelRows");
     const loadingPanel = document.getElementById("loadingPanel");
     const searchInput = document.getElementById("searchInput");
     const compareBtn = document.getElementById("compareBtn");
@@ -1980,6 +2015,8 @@
     let filteredWeaponList = [];
     let weaponLookup = new Map();
     let mapLookup = new Map();
+    let vehicleNameLookup = new Map();
+    let vehicleLooseNameLookup = new Map();
     let sortState = { key: null, mode: null };
     let weaponSortState = { key: null, mode: null };
     let viewFrame = null;
@@ -2096,7 +2133,7 @@
       };
     }
 
-    function setLoading(loading, subtitle = "正在请求并解析载具、枪械和地图数据") {
+    function setLoading(loading, subtitle = "正在请求并解析载具、枪械、地图和模型数据") {
       if (!loadingPanel) return;
       loadingPanel.classList.remove("error");
       loadingPanel.classList.toggle("open", loading);
@@ -2118,20 +2155,24 @@
     async function loadData() {
       setLoading(true);
       const cacheMode = canUseCachedResources ? "force-cache" : "no-cache";
-      const [vehicleResponse, weaponResponse, mapResponse] = await Promise.all([
+      const [vehicleResponse, weaponResponse, mapResponse, modelResponse] = await Promise.all([
         fetchWithTimeout("data/vehicles.json", { cache: cacheMode }, 10000),
         fetchWithTimeout("data/weapons.json", { cache: cacheMode }, 10000),
-        fetchWithTimeout("data/maps.json", { cache: cacheMode }, 10000)
+        fetchWithTimeout("data/maps.json", { cache: cacheMode }, 10000),
+        fetchWithTimeout("model/models.json", { cache: cacheMode }, 10000)
       ]);
       if (!vehicleResponse.ok) throw new Error(`载具数据加载失败：${vehicleResponse.status}`);
       if (!weaponResponse.ok) throw new Error(`枪械数据加载失败：${weaponResponse.status}`);
       if (!mapResponse.ok) throw new Error(`地图数据加载失败：${mapResponse.status}`);
+      if (!modelResponse.ok) throw new Error(`模型数据加载失败：${modelResponse.status}`);
       const vehicleData = await vehicleResponse.json();
       const weaponData = await weaponResponse.json();
       const mapData = await mapResponse.json();
+      const modelData = await modelResponse.json();
       if (!Array.isArray(vehicleData)) throw new Error("载具数据格式错误：根节点必须是数组");
       if (!Array.isArray(weaponData)) throw new Error("枪械数据格式错误：根节点必须是数组");
       if (!Array.isArray(mapData)) throw new Error("地图数据格式错误：根节点必须是数组");
+      if (!Array.isArray(modelData)) throw new Error("模型数据格式错误：根节点必须是数组");
       vehicles = vehicleData.map((vehicle, index) => {
         const normalized = normalizeVehicle(vehicle);
         return {
@@ -2150,8 +2191,20 @@
         searchText: [map.group, map.name, map.id].join("\n").toLowerCase(),
         actionsHtml: null
       }));
+      models = modelData.map((model, index) => ({
+        ...model,
+        id: model.id || String(index),
+        index,
+        searchText: [model.name, model.id, model.model].join("\n").toLowerCase()
+      }));
       weaponLookup = new Map(weapons.map((weapon) => [weapon.id, weapon]));
       mapLookup = new Map(maps.map((map) => [map.id, map]));
+      vehicleNameLookup = new Map(vehicles.map((vehicle) => [vehicle.name, vehicle]));
+      vehicleLooseNameLookup = new Map();
+      vehicles.forEach((vehicle) => {
+        const key = looseVehicleName(vehicle.name);
+        if (key && !vehicleLooseNameLookup.has(key)) vehicleLooseNameLookup.set(key, vehicle);
+      });
       currentList = vehicles;
       filteredList = vehicles;
       currentWeaponList = weapons;
@@ -2223,6 +2276,61 @@
       return `<span class="faction ${escapeHtml(mapGroupClass(group))}">${escapeHtml(group)}</span>`;
     }
 
+    function looseVehicleName(name) {
+      return String(name || "")
+        .toLowerCase()
+        .replace(/[“”"'\s.（）()\/-]/g, "")
+        .replace(/^ai/, "")
+        .replace(/^玩家/, "")
+        .replace(/^精英/, "")
+        .replace(/^美军/, "")
+        .replace(/^英军/, "")
+        .replace(/^sdkfz/, "sdkfz.")
+        .replace(/mk\.?vii/g, "")
+        .replace(/ii/g, "2")
+        .replace(/狼獾/g, "")
+        .replace(/谢尔曼/g, "m4")
+        .replace(/犀牛/g, "")
+        .replace(/萤火虫/g, "firefly")
+        .replace(/改/g, "")
+        .replace(/式/g, "")
+        .replace(/型/g, "");
+    }
+
+    function modelVehicle(model) {
+      if (!model) return null;
+      const exact = vehicleNameLookup.get(model.name);
+      if (exact) return exact;
+      const alias = modelVehicleAlias(model.name);
+      if (alias) return alias;
+      const key = looseVehicleName(model.name);
+      const looseExact = vehicleLooseNameLookup.get(key);
+      if (looseExact) return looseExact;
+      if (!key) return null;
+      return vehicles.find((vehicle) => {
+        const vehicleKey = looseVehicleName(vehicle.name);
+        return vehicleKey && (vehicleKey.includes(key) || key.includes(vehicleKey));
+      }) || null;
+    }
+
+    function modelVehicleAlias(name) {
+      const text = String(name || "").toLowerCase();
+      const rules = [
+        { test: (value) => value.includes("97") || value.includes("九七"), match: (vehicle) => vehicle.name.includes("九七") },
+        { test: (value) => value.includes("丘吉尔") && value.includes("步兵"), match: (vehicle) => vehicle.name.includes("丘吉尔") && vehicle.name.includes("步兵") },
+        { test: (value) => value.includes("丘吉尔") && value.includes("喷火"), match: (vehicle) => vehicle.name.includes("喷火") },
+        { test: (value) => value.includes("一式") && value.includes("装甲"), match: (vehicle) => vehicle.name.includes("一式") && vehicle.name.includes("装甲") },
+        { test: (value) => value.includes("萤火虫") || value.includes("firefly"), match: (vehicle) => vehicle.name.includes("萤火虫") },
+        { test: (value) => value.includes("sdkfz251") && value.includes("防空"), match: (vehicle) => vehicle.name.toLowerCase().includes("251/17") || (vehicle.name.toLowerCase().includes("251") && vehicle.name.includes("防空")) },
+        { test: (value) => value.includes("sdkfz251"), match: (vehicle) => vehicle.name.toLowerCase().includes("251") && !vehicle.name.includes("防空") },
+        { test: (value) => value.includes("m10"), match: (vehicle) => vehicle.name.toLowerCase().includes("m10") || vehicle.name.includes("狼獾") },
+        { test: (value) => value.includes("tog"), match: (vehicle) => vehicle.name.toLowerCase().includes("tog") },
+        { test: (value) => value.includes("lvt4"), match: (vehicle) => vehicle.name.toLowerCase().includes("lvt4") }
+      ];
+      const rule = rules.find((item) => item.test(text));
+      return rule ? vehicles.find(rule.match) || null : null;
+    }
+
     function isUnarmedVehicle(vehicle) {
       return !vehicle.weapon || vehicle.weapon === "—";
     }
@@ -2247,6 +2355,12 @@
       const keyword = searchInput.value.trim().toLowerCase();
       if (!keyword) return maps;
       return maps.filter((map) => map.searchText.includes(keyword));
+    }
+
+    function getFilteredModels() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      if (!keyword) return models;
+      return models.filter((model) => model.searchText.includes(keyword));
     }
 
     function countDisplay(value) {
@@ -2307,6 +2421,11 @@
       viewFrame = null;
       if (activeTab === "maps") {
         renderMapTable(getFilteredMaps());
+        updateSortHeaders();
+        return;
+      }
+      if (activeTab === "models") {
+        renderModelTable(getFilteredModels());
         updateSortHeaders();
         return;
       }
@@ -2605,6 +2724,25 @@
       `).join("");
     }
 
+    function renderModelTable(list) {
+      modelRowsEl.innerHTML = list.map((model) => {
+        const vehicle = modelVehicle(model);
+        const iconHtml = vehicle
+          ? assetIconHtml(vehicleIconSrc(vehicle), model.name, "row-icon")
+          : '<span class="muted">-</span>';
+        const disabled = model.model ? "" : " disabled";
+        return `
+          <tr data-model-id="${escapeHtml(model.id)}">
+            <td>${escapeHtml(model.name)}</td>
+            <td class="table-icon-cell">${iconHtml}</td>
+            <td>
+              <button class="map-action-button model-open-button" data-model-id="${escapeHtml(model.id)}" type="button"${disabled}>查看模型</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
     function assetIconHtml(src, alt, className) {
       if (!src) return '<span class="muted">-</span>';
       return `<img class="${escapeHtml(className)}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" fetchpriority="low">`;
@@ -2803,16 +2941,20 @@
       vehicleTable.classList.toggle("hidden", tab !== "vehicles");
       weaponTable.classList.toggle("hidden", tab !== "weapons");
       mapTable.classList.toggle("hidden", tab !== "maps");
+      modelTable.classList.toggle("hidden", tab !== "models");
       targetModeBtn.classList.toggle("hidden", tab !== "vehicles");
       targetHint.classList.toggle("hidden", tab !== "vehicles");
       targetModeBtn.disabled = tab !== "vehicles";
-      compareBtn.disabled = tab === "maps";
-      compareBtn.classList.toggle("hidden", tab === "maps");
-      confirmCompareBtn.classList.toggle("hidden", tab === "maps");
+      const comparisonEnabled = tab === "vehicles" || tab === "weapons";
+      compareBtn.disabled = !comparisonEnabled;
+      compareBtn.classList.toggle("hidden", !comparisonEnabled);
+      confirmCompareBtn.classList.toggle("hidden", !comparisonEnabled);
       compareHint.textContent = tab === "maps"
         ? "点击按钮查看地图或阵营视角"
-        : (tab === "weapons" ? "在列表中选两个枪械进行对比" : "在列表中选两个载具进行对比");
-      searchInput.placeholder = tab === "maps" ? "在地图页中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索");
+        : (tab === "models" ? "点击按钮打开模型查看页" : (tab === "weapons" ? "在列表中选两个枪械进行对比" : "在列表中选两个载具进行对比"));
+      searchInput.placeholder = tab === "maps"
+        ? "在地图页中搜索"
+        : (tab === "models" ? "在模型页中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索"));
       applyView();
       if (tab === "maps") warmMapAssets();
     }
@@ -3833,6 +3975,22 @@
         showPopupError(popup, "地图图片生成失败", "请关闭这个页面后，回到主页面重新点击阵营视角按钮生成一次。");
         showToast("地图图片生成失败");
       });
+    });
+    modelRowsEl.addEventListener("click", (event) => {
+      const openButton = event.target.closest(".model-open-button");
+      if (!openButton) return;
+      const model = models.find((item) => item.id === openButton.dataset.modelId);
+      if (!model?.model) {
+        showToast("该模型资源不可用");
+        return;
+      }
+      const url = `model-viewer.html?id=${encodeURIComponent(model.id)}`;
+      const popup = window.open(url, "_blank");
+      if (popup) {
+        popup.opener = null;
+      } else {
+        showToast("浏览器阻止了新窗口，请允许弹窗后重试");
+      }
     });
     threatButtons.addEventListener("click", (event) => {
       const button = event.target.closest(".threat-button");

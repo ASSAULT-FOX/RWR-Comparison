@@ -12,7 +12,6 @@ if errorlevel 1 (
   exit /b 1
 )
 
-echo.
 echo Updating asset-manifest.json...
 node scripts/build-asset-manifest.js
 if errorlevel 1 (

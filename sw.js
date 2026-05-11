@@ -15,11 +15,13 @@ const verifiedResponses = new Map();
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./model-viewer.html",
   "./ico.webp",
   "./data/asset-manifest.json",
   "./data/vehicles.json",
   "./data/weapons.json",
-  "./data/maps.json"
+  "./data/maps.json",
+  "./model/models.json"
 ];
 
 self.addEventListener("install", (event) => {
@@ -52,7 +54,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (request.mode === "navigate" || url.pathname.endsWith("/index.html")) {
+  if (request.mode === "navigate" || url.pathname.endsWith("/index.html") || url.pathname.endsWith("/model-viewer.html")) {
     event.respondWith(networkFirst(request));
     return;
   }
@@ -62,7 +64,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (/\.(html|js|json|png|jpg|jpeg|webp|gif|svg|ico)$/i.test(url.pathname)) {
+  if (/\.(html|js|json|png|jpg|jpeg|webp|gif|svg|ico|glb|blend)$/i.test(url.pathname)) {
     event.respondWith(manifestAwareCache(request));
     return;
   }
@@ -89,7 +91,10 @@ async function networkFirst(request) {
     }
     return response;
   } catch (error) {
-    return (await cache.match(request)) || (await caches.match("./index.html")) || Response.error();
+    const fallbackPage = requestPath(request.url) === "model-viewer.html"
+      ? "./model-viewer.html"
+      : "./index.html";
+    return (await cache.match(request)) || (await caches.match(fallbackPage)) || (await caches.match("./index.html")) || Response.error();
   }
 }
 

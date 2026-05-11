@@ -4,6 +4,7 @@ const path = require("path");
 
 const roots = [
   "data",
+  "model",
   "maps_textures",
   "maps",
   "vehicles_textures",
@@ -12,11 +13,12 @@ const roots = [
 
 const rootFiles = [
   "index.html",
+  "model-viewer.html",
   "sw.js",
   "ico.webp"
 ];
 
-const includeExt = new Set([".html", ".js", ".json", ".webp", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico"]);
+const includeExt = new Set([".html", ".js", ".json", ".webp", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".glb", ".blend"]);
 const outputFile = path.join("data", "asset-manifest.json");
 
 function walk(dir) {

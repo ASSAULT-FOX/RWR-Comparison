@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>模型查看</title>
+  <link rel="icon" type="image/webp" href="ico.webp">
+  <style>
+    :root {
+      color-scheme: dark;
+      --panel: rgba(14, 24, 35, 0.78);
+      --panel-strong: rgba(18, 31, 44, 0.92);
+      --line: rgba(180, 207, 235, 0.18);
+      --text: #edf6ff;
+      --muted: #9fb4c8;
+      --good: #16a36b;
+      --bad: #dc4d4d;
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      color: var(--text);
+      background: #111923;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .top-left,
+    .parts-panel,
+    .status-panel {
+      position: fixed;
+      z-index: 10;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(14px) saturate(130%);
+      -webkit-backdrop-filter: blur(14px) saturate(130%);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    }
+
+    .top-left {
+      left: 16px;
+      top: 16px;
+      max-width: min(520px, calc(100vw - 32px));
+      padding: 12px 14px;
+      border-radius: 8px;
+      display: grid;
+      gap: 5px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .parts-panel {
+      right: 16px;
+      top: 16px;
+      width: min(360px, calc(100vw - 32px));
+      max-height: min(66vh, 620px);
+      border-radius: 8px;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .parts-head {
+      padding: 12px 12px 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-strong);
+      font-weight: 850;
+      font-size: 13px;
+    }
+
+    .part-buttons {
+      min-height: 0;
+      overflow: auto;
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+      gap: 8px;
+      scrollbar-gutter: stable;
+    }
+
+    .part-button {
+      border: 0;
+      border-radius: 8px;
+      min-height: 34px;
+      max-width: 100%;
+      padding: 0 10px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transition: transform 0.14s ease, filter 0.14s ease;
+    }
+
+    .part-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.06);
+    }
+
+    .part-button.visible {
+      background: linear-gradient(135deg, #22bd7e, var(--good));
+    }
+
+    .part-button.hidden-part {
+      background: linear-gradient(135deg, #ef6464, var(--bad));
+    }
+
+    .status-panel {
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      max-width: min(560px, calc(100vw - 32px));
+      padding: 12px 16px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .status-panel.error {
+      color: #ffdada;
+      border-color: rgba(220, 77, 77, 0.45);
+      background: rgba(88, 28, 35, 0.9);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 720px) {
+      .top-left {
+        right: 12px;
+        left: 12px;
+        top: 12px;
+      }
+
+      .parts-panel {
+        top: auto;
+        right: 12px;
+        bottom: 12px;
+        left: 12px;
+        width: auto;
+        max-height: 32vh;
+      }
+
+      .status-panel {
+        bottom: calc(32vh + 24px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-left">
+    <h1 id="modelTitle">模型查看</h1>
+    <div class="meta" id="modelMeta">正在加载模型清单</div>
+  </div>
+
+  <aside class="parts-panel hidden" id="partsPanel" aria-label="模型部件显示控制">
+    <div class="parts-head">部件显示</div>
+    <div class="part-buttons" id="partButtons"></div>
+  </aside>
+
+  <div class="status-panel" id="statusPanel">正在读取模型资源</div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from "three";
+    import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+    const titleEl = document.getElementById("modelTitle");
+    const metaEl = document.getElementById("modelMeta");
+    const statusEl = document.getElementById("statusPanel");
+    const partsPanel = document.getElementById("partsPanel");
+    const partButtons = document.getElementById("partButtons");
+
+    const params = new URLSearchParams(location.search);
+    const requestedId = params.get("id");
+    const requestedName = params.get("name");
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x111923);
+
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.screenSpacePanning = true;
+    controls.mouseButtons = {
+      LEFT: THREE.MOUSE.ROTATE,
+      MIDDLE: THREE.MOUSE.PAN,
+      RIGHT: THREE.MOUSE.PAN
+    };
+    controls.touches = {
+      ONE: THREE.TOUCH.ROTATE,
+      TWO: THREE.TOUCH.DOLLY_PAN
+    };
+
+    scene.add(new THREE.HemisphereLight(0xdceeff, 0x314253, 2.3));
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(4, 6, 5);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0xaed5ff, 1.1);
+    fillLight.position.set(-5, 3, -4);
+    scene.add(fillLight);
+
+    let activeModel = null;
+    let animationFrame = null;
+
+    init().catch((error) => {
+      console.error(error);
+      showError(error.message || "模型加载失败");
+    });
+
+    async function init() {
+      resize();
+      window.addEventListener("resize", resize);
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && activeModel) resetCamera(activeModel);
+      });
+      renderer.domElement.addEventListener("contextmenu", (event) => event.preventDefault());
+
+      const response = await fetch("model/models.json", { cache: "no-cache" });
+      if (!response.ok) throw new Error(`模型清单加载失败：${response.status}`);
+      const models = await response.json();
+      if (!Array.isArray(models)) throw new Error("模型清单格式错误");
+
+      const model = models.find((item) => requestedId && item.id === requestedId)
+        || models.find((item) => requestedName && item.name === requestedName);
+      if (!model) throw new Error("未找到指定模型");
+      if (!model.model) throw new Error("该模型没有可加载的 GLB 文件");
+
+      titleEl.textContent = model.name || "模型查看";
+      metaEl.textContent = model.model;
+      statusEl.textContent = "正在加载 GLB 模型";
+
+      const gltf = await loadGltf(model.model);
+      activeModel = gltf.scene;
+      activeModel.name = activeModel.name || model.name || "model";
+      scene.add(activeModel);
+      normalizeMaterials(activeModel);
+      resetCamera(activeModel);
+      buildPartButtons(activeModel);
+      statusEl.classList.add("hidden");
+      animate();
+    }
+
+    function loadGltf(url) {
+      const loader = new GLTFLoader();
+      return new Promise((resolve, reject) => {
+        loader.load(url, resolve, undefined, (error) => reject(new Error(error.message || "GLB 模型加载失败")));
+      });
+    }
+
+    function normalizeMaterials(root) {
+      root.traverse((node) => {
+        if (!node.isMesh) return;
+        node.frustumCulled = false;
+        if (node.material) {
+          const materials = Array.isArray(node.material) ? node.material : [node.material];
+          materials.forEach((material) => {
+            material.side = THREE.DoubleSide;
+            material.needsUpdate = true;
+          });
+        }
+      });
+    }
+
+    function resetCamera(root) {
+      const box = new THREE.Box3().setFromObject(root);
+      if (box.isEmpty()) {
+        camera.position.set(4, 3, 5);
+        controls.target.set(0, 0, 0);
+        controls.update();
+        return;
+      }
+
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxSize = Math.max(size.x, size.y, size.z) || 1;
+      const fitHeightDistance = maxSize / (2 * Math.atan((Math.PI * camera.fov) / 360));
+      const fitWidthDistance = fitHeightDistance / camera.aspect;
+      const distance = Math.max(fitHeightDistance, fitWidthDistance) * 1.65;
+      const direction = new THREE.Vector3(1, 0.72, 1).normalize();
+
+      camera.near = Math.max(distance / 100, 0.01);
+      camera.far = Math.max(distance * 100, 1000);
+      camera.updateProjectionMatrix();
+      camera.position.copy(center).add(direction.multiplyScalar(distance));
+      controls.target.copy(center);
+      controls.minDistance = distance / 20;
+      controls.maxDistance = distance * 12;
+      controls.update();
+    }
+
+    function buildPartButtons(root) {
+      const parts = collectTopLevelParts(root);
+      if (!parts.length) return;
+      partsPanel.classList.remove("hidden");
+      partButtons.innerHTML = "";
+      parts.forEach((node, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "part-button visible";
+        button.textContent = node.name || `部件 ${index + 1}`;
+        button.title = button.textContent;
+        button.addEventListener("click", () => {
+          node.visible = !node.visible;
+          button.classList.toggle("visible", node.visible);
+          button.classList.toggle("hidden-part", !node.visible);
+        });
+        partButtons.appendChild(button);
+      });
+    }
+
+    function collectTopLevelParts(root) {
+      const direct = root.children.filter((node) => hasRenderable(node));
+      if (direct.length > 1) return direct;
+      if (direct.length === 1 && direct[0].children.some(hasRenderable)) {
+        return direct[0].children.filter(hasRenderable);
+      }
+      return direct;
+    }
+
+    function hasRenderable(node) {
+      let found = Boolean(node.isMesh);
+      if (found) return true;
+      node.traverse((child) => {
+        if (child !== node && child.isMesh) found = true;
+      });
+      return found;
+    }
+
+    function resize() {
+      const width = window.innerWidth || 1;
+      const height = window.innerHeight || 1;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height, false);
+      if (activeModel) resetCamera(activeModel);
+    }
+
+    function animate() {
+      animationFrame = requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function showError(message) {
+      statusEl.textContent = message;
+      statusEl.classList.remove("hidden");
+      statusEl.classList.add("error");
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    }
+  </script>
+</body>
+</html>

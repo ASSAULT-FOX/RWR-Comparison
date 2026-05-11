@@ -1,8 +1,8 @@
 ﻿# RWR 参数查询器
 
-这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息和地图设施点位，并支持排序、搜索、详情弹窗、双对象对比、索敌优先级计算，以及生成带设施图标的地图视图。
+这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息、地图设施点位和载具模型，并支持排序、搜索、详情弹窗、双对象对比、索敌优先级计算、生成带设施图标的地图视图，以及在独立页面中查看 GLB 模型。
 
-项目没有后端，也没有前端打包流程。浏览器加载 `index.html` 后，通过 `fetch()` 读取 `data/` 和 `maps/` 目录中的 JSON 文件，再在前端完成渲染和交互。
+项目没有后端，也没有前端打包流程。浏览器加载 `index.html` 后，通过 `fetch()` 读取 `data/`、`maps/` 和 `model/` 目录中的 JSON 文件，再在前端完成渲染和交互。
 
 本地推荐运行方式：
 
@@ -26,6 +26,7 @@ http://127.0.0.1:8765/index.html
 地图摘要       20 条，保存在 data/maps.json
 地图点位文件   20 个，保存在 maps/<地图名>/map-data.json
 地图点位     3054 个，按阵营和视图状态分组
+模型数据       22 条，保存在 model/models.json，模型文件保存在 model/<安全英文id>/
 ```
 
 ## 项目结构
@@ -53,6 +54,11 @@ http://127.0.0.1:8765/index.html
 │   └── <地图名>/
 │       ├── map-data.json         单张地图的设施点位数据
 │       └── map*.webp             地图图片，可能按阵营区分
+├── model/
+│   ├── models.json               模型查询清单，网页运行时读取它
+│   └── <安全英文id>/
+│       ├── *.glb                 网页实际加载的 GLB 模型
+│       └── *.blend               源文件归档，网页不直接渲染
 ├── maps_textures/                地图叠加视图使用的设施和载具图标
 ├── vehicles_textures/            载具表格和详情使用的图标
 └── weapons_textures/             枪械表格和详情使用的图标
@@ -75,6 +81,7 @@ csv/vehicles.csv
 data/weapons.json
 data/vehicles.json
 data/maps.json
+model/models.json
 maps/<地图名>/map-data.json
 ```
 
@@ -303,14 +310,34 @@ x, y          地图坐标
 layer         原始图层信息
 ```
 
+### model/models.json
+
+这是模型查询页运行时读取的模型清单。清单中的 `name` 是模型查询页显示的中文载具名，建议对应 `data/vehicles.json` 中的 `载具名`，这样可以精确匹配载具图标。
+
+典型结构：
+
+```json
+[
+  {
+    "id": "maus_boss",
+    "name": "鼠式超重型坦克",
+    "model": "model/maus_boss/maus_boss.glb",
+    "sourceBlend": "model/maus_boss/maus_boss.blend"
+  }
+]
+```
+
+网页查看器通过 `model-viewer.html?id=<id>` 打开，并实际加载 `model` 指向的 `.glb`。浏览器不能直接渲染 `.blend`，`sourceBlend` 只用于源文件归档。
+
 ## 前端功能
 
-`index.html` 包含页面结构、样式和全部前端逻辑。页面主要分为三个功能区：
+`index.html` 包含页面结构、样式和全部前端逻辑。页面主要分为四个功能区：
 
 ```text
 载具查询
 枪械查询
 地图查询
+模型查询
 ```
 
 载具查询支持列表、搜索、排序、详情、对比和索敌优先级工具。
@@ -319,12 +346,15 @@ layer         原始图层信息
 
 地图查询支持地图列表、基础地图预览、按阵营和占领状态生成带设施图标的地图视图。
 
-页面启动时会先检查资源清单，再并行读取三个主 JSON：
+模型查询支持从 `model/models.json` 列出模型、按载具名匹配 `data/vehicles.json` 中的 `图标号` 并显示 `vehicles_textures/<图标号>.webp`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。
+
+页面启动时会先检查资源清单，再并行读取四个主 JSON：
 
 ```js
 fetch("data/vehicles.json")
 fetch("data/weapons.json")
 fetch("data/maps.json")
+fetch("model/models.json")
 ```
 
 地图详情数据按需读取：
@@ -343,11 +373,13 @@ maps/<地图名>/map-data.json
 
 ```text
 data/
+model/
 maps_textures/
 maps/
 vehicles_textures/
 weapons_textures/
 index.html
+model-viewer.html
 sw.js
 ico.webp
 ```
@@ -425,6 +457,8 @@ python -m http.server 8765 --bind 127.0.0.1
 - 不建议直接编辑 `data/weapons.json` 和 `data/vehicles.json`。
 - 新增枪械后，检查 `weapons_textures/` 中是否存在对应图标。
 - 新增载具后，检查 `vehicles_textures/` 中是否存在对应编号图标。
+- 新增模型时，在 `model/` 下创建安全英文 id 子目录，放入同一模型对应的 `.glb` 和可选 `.blend`，然后手动在 `model/models.json` 中增加对应条目。
+- 模型查询页的图标来自 `data/vehicles.json` 的 `图标号`，如果 `model/models.json` 中的 `name` 和载具表中的 `载具名` 不完全一致，页面会尝试宽松匹配；精确显示建议保持二者一致。
 - 修改地图点位后，检查 `map-data.json` 中的 `icon` 是否能在 `maps_textures/` 中找到。
 - 上传前运行 `update-assets-and-upload.bat`，让 CSV、JSON、资源清单和 Git 上传保持同一流程。
 - 如果数据和资源没有变化，JSON 和资源清单都不会被重写，用户浏览器也不会因为无意义哈希变化重新请求资源。
