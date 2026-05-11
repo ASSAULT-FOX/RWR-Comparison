@@ -383,7 +383,7 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.65;
+    renderer.toneMappingExposure = 1.1;
     document.body.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -400,17 +400,17 @@
       TWO: THREE.TOUCH.DOLLY_PAN
     };
 
-    scene.add(new THREE.HemisphereLight(0xf4fbff, 0x6a7f92, 3.8));
+    scene.add(new THREE.HemisphereLight(0xf4fbff, 0x6a7f92, 2.53));
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 3.8);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.53);
     keyLight.position.set(4, 7, 5);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xd9edff, 2.4);
+    const fillLight = new THREE.DirectionalLight(0xd9edff, 1.6);
     fillLight.position.set(-5, 3, -4);
     scene.add(fillLight);
 
-    const frontLight = new THREE.DirectionalLight(0xffffff, 1.4);
+    const frontLight = new THREE.DirectionalLight(0xffffff, 0.93);
     frontLight.position.set(0, 2, 6);
     scene.add(frontLight);
 
