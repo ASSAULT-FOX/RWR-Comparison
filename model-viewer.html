@@ -42,6 +42,7 @@
     }
 
     .top-left,
+    .light-panel,
     .help-panel,
     .parts-panel,
     .loading-panel {
@@ -133,6 +134,37 @@
       font-size: 12px;
       line-height: 1.35;
       overflow-wrap: anywhere;
+    }
+
+    .light-control {
+      display: grid;
+      grid-template-columns: auto minmax(120px, 1fr) 44px;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .light-panel {
+      top: 16px;
+      left: 50%;
+      width: min(360px, calc(100vw - 32px));
+      padding: 12px 14px;
+      border-radius: 8px;
+      transform: translateX(-50%);
+    }
+
+    .light-control input {
+      width: 100%;
+      accent-color: #20c8d4;
+      cursor: pointer;
+    }
+
+    .light-value {
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      text-align: right;
     }
 
     .parts-panel {
@@ -273,7 +305,7 @@
       }
 
       .help-panel {
-        top: 92px;
+        top: 150px;
         right: 12px;
         left: 12px;
         width: auto;
@@ -282,6 +314,14 @@
 
       .help-title {
         grid-column: 1 / -1;
+      }
+
+      .light-panel {
+        top: 84px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        transform: none;
       }
 
       .parts-panel {
@@ -303,6 +343,14 @@
   <div class="top-left">
     <h1 id="modelTitle">模型查看</h1>
     <div class="meta" id="modelMeta">正在加载模型清单</div>
+  </div>
+
+  <div class="light-panel" aria-label="模型光照控制">
+    <label class="light-control">
+      <span>光照</span>
+      <input id="lightSlider" type="range" min="35" max="135" value="82" step="1">
+      <span class="light-value" id="lightValue">82%</span>
+    </label>
   </div>
 
   <aside class="help-panel" aria-label="模型查看操作说明">
@@ -370,6 +418,8 @@
     const loadingSubtitle = document.getElementById("loadingSubtitle");
     const partsPanel = document.getElementById("partsPanel");
     const partButtons = document.getElementById("partButtons");
+    const lightSlider = document.getElementById("lightSlider");
+    const lightValue = document.getElementById("lightValue");
 
     const params = new URLSearchParams(location.search);
     const requestedId = params.get("id");
@@ -383,7 +433,7 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 0.9;
     document.body.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -400,19 +450,31 @@
       TWO: THREE.TOUCH.DOLLY_PAN
     };
 
-    scene.add(new THREE.HemisphereLight(0xf4fbff, 0x6a7f92, 2.53));
+    const lights = {
+      hemi: new THREE.HemisphereLight(0xf4fbff, 0x6a7f92, 2.0),
+      key: new THREE.DirectionalLight(0xffffff, 2.05),
+      fill: new THREE.DirectionalLight(0xd9edff, 1.25),
+      front: new THREE.DirectionalLight(0xffffff, 0.7)
+    };
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.53);
-    keyLight.position.set(4, 7, 5);
-    scene.add(keyLight);
+    scene.add(lights.hemi);
 
-    const fillLight = new THREE.DirectionalLight(0xd9edff, 1.6);
-    fillLight.position.set(-5, 3, -4);
-    scene.add(fillLight);
+    lights.key.position.set(4, 7, 5);
+    scene.add(lights.key);
 
-    const frontLight = new THREE.DirectionalLight(0xffffff, 0.93);
-    frontLight.position.set(0, 2, 6);
-    scene.add(frontLight);
+    lights.fill.position.set(-5, 3, -4);
+    scene.add(lights.fill);
+
+    lights.front.position.set(0, 2, 6);
+    scene.add(lights.front);
+
+    const baseLight = {
+      exposure: 0.9,
+      hemi: lights.hemi.intensity,
+      key: lights.key.intensity,
+      fill: lights.fill.intensity,
+      front: lights.front.intensity
+    };
 
     let activeModel = null;
     let animationFrame = null;
@@ -429,6 +491,8 @@
         if (event.key === "Escape" && activeModel) resetCamera(activeModel);
       });
       renderer.domElement.addEventListener("contextmenu", (event) => event.preventDefault());
+      lightSlider.addEventListener("input", () => applyLightLevel(Number(lightSlider.value)));
+      applyLightLevel(Number(lightSlider.value));
 
       const response = await fetch("model/models.json", { cache: "no-cache" });
       if (!response.ok) throw new Error(`模型清单加载失败：${response.status}`);
@@ -460,6 +524,17 @@
       return new Promise((resolve, reject) => {
         loader.load(url, resolve, undefined, (error) => reject(new Error(error.message || "GLB 模型加载失败")));
       });
+    }
+
+    function applyLightLevel(value) {
+      const level = Math.max(35, Math.min(135, Number(value) || 82));
+      const multiplier = level / 82;
+      renderer.toneMappingExposure = baseLight.exposure * Math.pow(multiplier, 0.75);
+      lights.hemi.intensity = baseLight.hemi * multiplier;
+      lights.key.intensity = baseLight.key * multiplier;
+      lights.fill.intensity = baseLight.fill * multiplier;
+      lights.front.intensity = baseLight.front * multiplier;
+      lightValue.textContent = `${Math.round(level)}%`;
     }
 
     function normalizeMaterials(root) {
