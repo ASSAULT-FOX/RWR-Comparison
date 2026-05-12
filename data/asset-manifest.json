@@ -1,6 +1,6 @@
 {
-  "version": "630cedec153cb925fa29a6a8ab3bb09b44030eefab92848d09a6d6feb23e89b7",
-  "generatedAt": "2026-05-11T08:31:40.288Z",
+  "version": "d12650569c3136156210bb471dbfb0a1765ac1edc7322bd5bef4a7c34886d056",
+  "generatedAt": "2026-05-12T14:06:42.092Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
@@ -138,7 +138,7 @@
     "maps/island10/map_ija.webp": "3bccf5258a787c5a348fd766ee5e0b374e7442ef5760d0254152efd8031a06b8",
     "maps/island10/map_usmc.webp": "3bccf5258a787c5a348fd766ee5e0b374e7442ef5760d0254152efd8031a06b8",
     "maps/island10/map-data.json": "fab6e1d7f268685a7c3ffd5eae26bac79b0ebf268e76b0e9edc61a2a5125f290",
-    "model-viewer.html": "6066706a4b90109cc477f571df242268e5da51eb0182141558d474fc7e6dca4f",
+    "model-viewer.html": "22c854b0a0d23400598d73502813dbd86dab5234db9f6939ef1bea021141dae5",
     "model/chi_ha/chi_ha.blend": "14e2d486db67fd4078ebc0a34baee5d89082a689743f90dca9d0408c72053e89",
     "model/chi_ha/chi_ha.glb": "4c1b25587638ca5969253a6560e30808025045d88ab6107045e9589a8068565f",
     "model/churchill_crocodile/churchill_crocodile.blend": "448de7978ab95eef24db09b53aa19eae0d40fa7dd75f703c9c21b46b1f0f3b00",

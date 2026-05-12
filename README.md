@@ -346,7 +346,7 @@ layer         原始图层信息
 
 地图查询支持地图列表、基础地图预览、按阵营和占领状态生成带设施图标的地图视图。
 
-模型查询支持从 `model/models.json` 列出模型、按载具名匹配 `data/vehicles.json` 中的 `图标号` 并显示 `vehicles_textures/<图标号>.webp`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。
+模型查询支持从 `model/models.json` 列出模型、按载具名匹配 `data/vehicles.json` 中的 `图标号` 并显示 `vehicles_textures/<图标号>.webp`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。模型查看页右侧的部件显示控制为单列纵向列表，按钮列宽按最长部件名收缩，部件较多时在面板内上下滚动；渲染器会在低 DPR 屏幕上使用轻量超采样，并保留贴图原始分辨率和各向异性过滤。
 
 页面启动时会先检查资源清单，再并行读取四个主 JSON：
 
