@@ -1659,7 +1659,9 @@
     }
 
     @media (max-width: 860px) {
+      html,
       body {
+        height: 100%;
         overflow: hidden;
       }
 
@@ -1675,8 +1677,10 @@
       .main {
         min-height: 0;
         height: 100%;
+        grid-template-rows: auto auto minmax(0, 1fr);
         border-radius: 14px;
         isolation: isolate;
+        background: #fff;
       }
 
       .topbar {
@@ -1688,6 +1692,7 @@
         padding: 12px;
         gap: 10px;
         background: #fff;
+        box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.06);
       }
 
       .search {
@@ -1702,6 +1707,7 @@
         gap: 8px;
         padding: 0 12px 12px;
         background: #fff;
+        box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.05);
       }
 
       .primary,
@@ -1726,6 +1732,7 @@
         overscroll-behavior-y: contain;
         touch-action: pan-x pan-y;
         isolation: isolate;
+        clip-path: inset(0);
       }
 
       table,

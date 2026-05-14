@@ -128,6 +128,10 @@
       display: none;
     }
 
+    .mobile-help-icon {
+      display: none;
+    }
+
     .help-text strong {
       font-size: 12px;
       line-height: 1.25;
@@ -204,8 +208,17 @@
       padding: 12px 12px 8px;
       border-bottom: 1px solid var(--line);
       background: var(--panel-strong);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
       font-weight: 850;
       font-size: 13px;
+    }
+
+    .parts-close,
+    .module-panel-button {
+      display: none;
     }
 
     .part-buttons {
@@ -374,6 +387,11 @@
         pointer-events: auto;
       }
 
+      body.parts-open .viewer-control-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
       .viewer-control-drawer {
         position: fixed;
         z-index: 23;
@@ -436,12 +454,17 @@
       }
 
       .light-panel {
-        position: static;
+        position: fixed;
+        z-index: 12;
+        top: auto;
+        right: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        left: 12px;
         width: auto;
         padding: 10px 12px;
         transform: none;
         border-radius: 8px;
-        box-shadow: none;
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
       }
 
       .help-panel {
@@ -470,23 +493,90 @@
       }
 
       .parts-panel {
-        position: static;
-        width: auto;
+        position: fixed;
+        z-index: 24;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: auto;
+        width: 76px;
         min-width: 0;
         max-width: none;
         max-height: none;
-        border-width: 1px;
-        border-radius: 8px;
-        box-shadow: none;
+        border-width: 0 0 0 1px;
+        border-radius: 0;
+        box-shadow: -18px 0 42px rgba(0, 0, 0, 0.28);
+        transform: translateX(100%);
+        transition: transform 0.18s ease;
+      }
+
+      body.parts-open .parts-panel {
+        transform: translateX(0);
       }
 
       .parts-head {
-        padding: 10px 12px 8px;
+        min-height: 48px;
+        padding: 0 6px 0 10px;
+        font-size: 12px;
+      }
+
+      .parts-close {
+        width: 30px;
+        height: 30px;
+        border: 1px solid rgba(180, 207, 235, 0.2);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
       }
 
       .part-buttons {
-        padding: 10px 12px 12px;
-        max-height: 34dvh;
+        padding: 10px;
+        grid-template-columns: 44px;
+        justify-content: center;
+        max-height: none;
+      }
+
+      .part-button {
+        width: 44px;
+        height: 44px;
+        min-height: 44px;
+        padding: 0;
+        display: grid;
+        place-items: center;
+        font-size: 0;
+      }
+
+      .part-button::before {
+        content: attr(data-part-index);
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .module-panel-button {
+        min-height: 44px;
+        border: 1px solid rgba(180, 207, 235, 0.2);
+        border-radius: 8px;
+        padding: 0 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--text);
+        background: rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+        font-weight: 900;
+      }
+
+      .module-panel-button::after {
+        content: "›";
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1;
       }
 
       .loading-card {
@@ -524,22 +614,23 @@
     <div class="meta" id="modelMeta">正在加载模型清单</div>
   </div>
 
-  <button class="viewer-control-toggle" id="viewerControlToggle" type="button" aria-expanded="false" aria-controls="viewerControlDrawer">控制面板</button>
+  <button class="viewer-control-toggle" id="viewerControlToggle" type="button" aria-expanded="false" aria-controls="viewerControlDrawer">操作说明</button>
   <div class="viewer-control-backdrop" id="viewerControlBackdrop" aria-hidden="true"></div>
-  <section class="viewer-control-drawer" id="viewerControlDrawer" aria-label="模型控制面板">
+
+  <div class="light-panel" aria-label="模型光照控制">
+    <label class="light-control">
+      <span>光照</span>
+      <input id="lightSlider" type="range" min="35" max="135" value="82" step="1">
+      <span class="light-value" id="lightValue">82%</span>
+    </label>
+  </div>
+
+  <section class="viewer-control-drawer" id="viewerControlDrawer" aria-label="模型操作说明">
     <div class="viewer-control-head">
-      <span>控制面板</span>
-      <button class="viewer-control-close" id="viewerControlClose" type="button" aria-label="关闭控制面板">×</button>
+      <span>操作说明</span>
+      <button class="viewer-control-close" id="viewerControlClose" type="button" aria-label="关闭操作说明">×</button>
     </div>
     <div class="viewer-control-body">
-      <div class="light-panel" aria-label="模型光照控制">
-        <label class="light-control">
-          <span>光照</span>
-          <input id="lightSlider" type="range" min="35" max="135" value="82" step="1">
-          <span class="light-value" id="lightValue">82%</span>
-        </label>
-      </div>
-
       <aside class="help-panel" aria-label="模型查看操作说明">
         <h2 class="help-title">操作说明</h2>
         <div class="help-row">
@@ -574,18 +665,23 @@
           <div class="help-text">
             <strong class="desktop-help">重置视角</strong>
             <span class="desktop-help">按 Esc 回到初始视角</span>
-            <strong class="mobile-help">显示设置</strong>
-            <span class="mobile-help">在控制面板中调光照和部件显示</span>
+            <strong class="mobile-help">模块显示</strong>
+            <span class="mobile-help">点击下方按钮打开右侧模块栏</span>
           </div>
         </div>
       </aside>
 
-      <aside class="parts-panel hidden" id="partsPanel" aria-label="模型部件显示控制">
-        <div class="parts-head">部件显示</div>
-        <div class="part-buttons" id="partButtons"></div>
-      </aside>
-      </div>
+      <button class="module-panel-button hidden" id="modulePanelBtn" type="button" aria-expanded="false" aria-controls="partsPanel">模块显示</button>
+    </div>
   </section>
+
+  <aside class="parts-panel hidden" id="partsPanel" aria-label="模型模块显示控制">
+    <div class="parts-head">
+      <span>模块</span>
+      <button class="parts-close" id="partsClose" type="button" aria-label="关闭模块显示">×</button>
+    </div>
+    <div class="part-buttons" id="partButtons"></div>
+  </aside>
 
   <div class="loading-panel" id="loadingPanel" role="status" aria-live="polite">
     <div class="loading-card">
@@ -616,6 +712,8 @@
     const viewerControlToggle = document.getElementById("viewerControlToggle");
     const viewerControlBackdrop = document.getElementById("viewerControlBackdrop");
     const viewerControlClose = document.getElementById("viewerControlClose");
+    const modulePanelBtn = document.getElementById("modulePanelBtn");
+    const partsClose = document.getElementById("partsClose");
     const partsPanel = document.getElementById("partsPanel");
     const partButtons = document.getElementById("partButtons");
     const lightSlider = document.getElementById("lightSlider");
@@ -694,6 +792,10 @@
       resize();
       window.addEventListener("resize", resize);
       window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && document.body.classList.contains("parts-open")) {
+          setPartsPanelOpen(false);
+          return;
+        }
         if (event.key === "Escape" && document.body.classList.contains("controls-open")) {
           setControlPanelOpen(false);
           return;
@@ -704,8 +806,16 @@
       viewerControlToggle.addEventListener("click", () => {
         setControlPanelOpen(!document.body.classList.contains("controls-open"));
       });
-      viewerControlBackdrop.addEventListener("click", () => setControlPanelOpen(false));
+      viewerControlBackdrop.addEventListener("click", () => {
+        setControlPanelOpen(false);
+        setPartsPanelOpen(false);
+      });
       viewerControlClose.addEventListener("click", () => setControlPanelOpen(false));
+      modulePanelBtn.addEventListener("click", () => {
+        setControlPanelOpen(false);
+        setPartsPanelOpen(true);
+      });
+      partsClose.addEventListener("click", () => setPartsPanelOpen(false));
       lightSlider.addEventListener("input", () => applyLightLevel(Number(lightSlider.value)));
       applyLightLevel(Number(lightSlider.value));
 
@@ -755,6 +865,12 @@
     function setControlPanelOpen(open) {
       document.body.classList.toggle("controls-open", open);
       viewerControlToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    function setPartsPanelOpen(open) {
+      if (partsPanel.classList.contains("hidden")) open = false;
+      document.body.classList.toggle("parts-open", open);
+      modulePanelBtn.setAttribute("aria-expanded", open ? "true" : "false");
     }
 
     function normalizeMaterials(root) {
@@ -814,11 +930,13 @@
       const parts = collectTopLevelParts(root);
       if (!parts.length) return;
       partsPanel.classList.remove("hidden");
+      modulePanelBtn.classList.remove("hidden");
       partButtons.innerHTML = "";
       parts.forEach((node, index) => {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "part-button visible";
+        button.dataset.partIndex = String(index + 1);
         button.textContent = node.name || `部件 ${index + 1}`;
         button.title = button.textContent;
         button.addEventListener("click", () => {
