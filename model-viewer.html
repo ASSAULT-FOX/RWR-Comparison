@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>模型查看</title>
   <link rel="icon" type="image/webp" href="ico.webp">
   <style>
@@ -65,6 +65,16 @@
       gap: 5px;
     }
 
+    .viewer-control-toggle,
+    .viewer-control-backdrop,
+    .viewer-control-head {
+      display: none;
+    }
+
+    .viewer-control-drawer {
+      display: contents;
+    }
+
     .help-panel {
       left: 16px;
       top: 100px;
@@ -108,6 +118,14 @@
       min-width: 0;
       display: grid;
       gap: 2px;
+    }
+
+    .mobile-help {
+      display: none;
+    }
+
+    .mobile-help-icon {
+      display: none;
     }
 
     .help-text strong {
@@ -306,44 +324,196 @@
 
     @media (max-width: 720px) {
       .top-left {
-        right: 12px;
+        right: 134px;
         left: 12px;
         top: 12px;
+        padding: 10px 12px;
       }
 
-      .help-panel {
-        top: 150px;
+      .viewer-control-toggle {
+        position: fixed;
+        z-index: 24;
+        top: 12px;
+        right: 12px;
+        min-height: 44px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 0 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--text);
+        background: var(--panel-strong);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+        backdrop-filter: blur(14px) saturate(130%);
+        -webkit-backdrop-filter: blur(14px) saturate(130%);
+        cursor: pointer;
+        font-weight: 900;
+      }
+
+      .viewer-control-toggle::before {
+        content: "☰";
+        font-size: 17px;
+        line-height: 1;
+      }
+
+      .viewer-control-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: block;
+        background: rgba(0, 0, 0, 0.34);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.18s ease;
+      }
+
+      body.controls-open .viewer-control-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .viewer-control-drawer {
+        position: fixed;
+        z-index: 23;
+        top: 64px;
         right: 12px;
         left: 12px;
-        width: auto;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-height: min(72dvh, calc(100dvh - 82px));
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(14, 24, 35, 0.94);
+        box-shadow: 0 24px 54px rgba(0, 0, 0, 0.32);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-8px);
+        pointer-events: none;
+        transition: opacity 0.18s ease, transform 0.18s ease;
       }
 
-      .help-title {
-        grid-column: 1 / -1;
+      body.controls-open .viewer-control-drawer {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .viewer-control-head {
+        min-height: 46px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel-strong);
+        font-weight: 900;
+      }
+
+      .viewer-control-close {
+        width: 36px;
+        height: 36px;
+        border: 1px solid rgba(180, 207, 235, 0.2);
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        background: rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .viewer-control-body {
+        min-height: 0;
+        overflow: auto;
+        padding: 12px;
+        display: grid;
+        gap: 10px;
+        -webkit-overflow-scrolling: touch;
       }
 
       .light-panel {
-        top: 84px;
-        right: 12px;
-        left: 12px;
+        position: static;
         width: auto;
+        padding: 10px 12px;
         transform: none;
+        border-radius: 8px;
+        box-shadow: none;
+      }
+
+      .help-panel {
+        position: static;
+        width: auto;
+        padding: 12px;
+        border-radius: 8px;
+        display: grid;
+        box-shadow: none;
+      }
+
+      .desktop-help {
+        display: none;
+      }
+
+      .mobile-help {
+        display: block;
+      }
+
+      .desktop-help-icon {
+        display: none;
+      }
+
+      .mobile-help-icon {
+        display: inline;
       }
 
       .parts-panel {
-        top: auto;
-        right: 0;
-        bottom: 0;
-        left: 0;
+        position: static;
         width: auto;
-        max-height: 42vh;
-        border-width: 1px 0 0;
-        border-radius: 0;
+        min-width: 0;
+        max-width: none;
+        max-height: none;
+        border-width: 1px;
+        border-radius: 8px;
+        box-shadow: none;
+      }
+
+      .parts-head {
+        padding: 10px 12px 8px;
+      }
+
+      .part-buttons {
+        padding: 10px 12px 12px;
+        max-height: 34dvh;
       }
 
       .loading-card {
         padding: 22px 24px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      h1 {
+        font-size: 16px;
+      }
+
+      .meta,
+      .light-control {
+        font-size: 11px;
+      }
+
+      .light-control {
+        grid-template-columns: auto minmax(0, 1fr) 38px;
+      }
+
+      .part-button {
+        max-width: calc(100vw - 32px);
+      }
+
+      .top-left {
+        right: 120px;
       }
     }
   </style>
@@ -354,50 +524,68 @@
     <div class="meta" id="modelMeta">正在加载模型清单</div>
   </div>
 
-  <div class="light-panel" aria-label="模型光照控制">
-    <label class="light-control">
-      <span>光照</span>
-      <input id="lightSlider" type="range" min="35" max="135" value="82" step="1">
-      <span class="light-value" id="lightValue">82%</span>
-    </label>
-  </div>
+  <button class="viewer-control-toggle" id="viewerControlToggle" type="button" aria-expanded="false" aria-controls="viewerControlDrawer">控制面板</button>
+  <div class="viewer-control-backdrop" id="viewerControlBackdrop" aria-hidden="true"></div>
+  <section class="viewer-control-drawer" id="viewerControlDrawer" aria-label="模型控制面板">
+    <div class="viewer-control-head">
+      <span>控制面板</span>
+      <button class="viewer-control-close" id="viewerControlClose" type="button" aria-label="关闭控制面板">×</button>
+    </div>
+    <div class="viewer-control-body">
+      <div class="light-panel" aria-label="模型光照控制">
+        <label class="light-control">
+          <span>光照</span>
+          <input id="lightSlider" type="range" min="35" max="135" value="82" step="1">
+          <span class="light-value" id="lightValue">82%</span>
+        </label>
+      </div>
 
-  <aside class="help-panel" aria-label="模型查看操作说明">
-    <h2 class="help-title">操作说明</h2>
-    <div class="help-row">
-      <div class="help-icon">↻</div>
-      <div class="help-text">
-        <strong>旋转模型</strong>
-        <span>按住鼠标左键拖拽</span>
-      </div>
-    </div>
-    <div class="help-row">
-      <div class="help-icon">＋</div>
-      <div class="help-text">
-        <strong>缩放视图</strong>
-        <span>滚动鼠标滚轮</span>
-      </div>
-    </div>
-    <div class="help-row">
-      <div class="help-icon">↔</div>
-      <div class="help-text">
-        <strong>平移视图</strong>
-        <span>右键或中键拖拽</span>
-      </div>
-    </div>
-    <div class="help-row">
-      <div class="help-icon">Esc</div>
-      <div class="help-text">
-        <strong>重置视角</strong>
-        <span>按 Esc 回到初始视角</span>
-      </div>
-    </div>
-  </aside>
+      <aside class="help-panel" aria-label="模型查看操作说明">
+        <h2 class="help-title">操作说明</h2>
+        <div class="help-row">
+          <div class="help-icon"><span class="desktop-help-icon">↻</span><span class="mobile-help-icon">☝</span></div>
+          <div class="help-text">
+            <strong class="desktop-help">旋转模型</strong>
+            <span class="desktop-help">按住鼠标左键拖拽</span>
+            <strong class="mobile-help">旋转模型</strong>
+            <span class="mobile-help">单指滑动屏幕查看模型</span>
+          </div>
+        </div>
+        <div class="help-row">
+          <div class="help-icon"><span class="desktop-help-icon">＋</span><span class="mobile-help-icon">⤢</span></div>
+          <div class="help-text">
+            <strong class="desktop-help">缩放视图</strong>
+            <span class="desktop-help">滚动鼠标滚轮</span>
+            <strong class="mobile-help">缩放视图</strong>
+            <span class="mobile-help">双指张合放大或缩小</span>
+          </div>
+        </div>
+        <div class="help-row">
+          <div class="help-icon"><span class="desktop-help-icon">↔</span><span class="mobile-help-icon">⇄</span></div>
+          <div class="help-text">
+            <strong class="desktop-help">平移视图</strong>
+            <span class="desktop-help">右键或中键拖拽</span>
+            <strong class="mobile-help">移动视角</strong>
+            <span class="mobile-help">双指同时拖动</span>
+          </div>
+        </div>
+        <div class="help-row">
+          <div class="help-icon"><span class="desktop-help-icon">Esc</span><span class="mobile-help-icon">☰</span></div>
+          <div class="help-text">
+            <strong class="desktop-help">重置视角</strong>
+            <span class="desktop-help">按 Esc 回到初始视角</span>
+            <strong class="mobile-help">显示设置</strong>
+            <span class="mobile-help">在控制面板中调光照和部件显示</span>
+          </div>
+        </div>
+      </aside>
 
-  <aside class="parts-panel hidden" id="partsPanel" aria-label="模型部件显示控制">
-    <div class="parts-head">部件显示</div>
-    <div class="part-buttons" id="partButtons"></div>
-  </aside>
+      <aside class="parts-panel hidden" id="partsPanel" aria-label="模型部件显示控制">
+        <div class="parts-head">部件显示</div>
+        <div class="part-buttons" id="partButtons"></div>
+      </aside>
+      </div>
+  </section>
 
   <div class="loading-panel" id="loadingPanel" role="status" aria-live="polite">
     <div class="loading-card">
@@ -425,7 +613,10 @@
     const loadingPanel = document.getElementById("loadingPanel");
     const loadingTitle = document.getElementById("loadingTitle");
     const loadingSubtitle = document.getElementById("loadingSubtitle");
-      const partsPanel = document.getElementById("partsPanel");
+    const viewerControlToggle = document.getElementById("viewerControlToggle");
+    const viewerControlBackdrop = document.getElementById("viewerControlBackdrop");
+    const viewerControlClose = document.getElementById("viewerControlClose");
+    const partsPanel = document.getElementById("partsPanel");
     const partButtons = document.getElementById("partButtons");
     const lightSlider = document.getElementById("lightSlider");
     const lightValue = document.getElementById("lightValue");
@@ -503,9 +694,18 @@
       resize();
       window.addEventListener("resize", resize);
       window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && document.body.classList.contains("controls-open")) {
+          setControlPanelOpen(false);
+          return;
+        }
         if (event.key === "Escape" && activeModel) resetCamera(activeModel);
       });
       renderer.domElement.addEventListener("contextmenu", (event) => event.preventDefault());
+      viewerControlToggle.addEventListener("click", () => {
+        setControlPanelOpen(!document.body.classList.contains("controls-open"));
+      });
+      viewerControlBackdrop.addEventListener("click", () => setControlPanelOpen(false));
+      viewerControlClose.addEventListener("click", () => setControlPanelOpen(false));
       lightSlider.addEventListener("input", () => applyLightLevel(Number(lightSlider.value)));
       applyLightLevel(Number(lightSlider.value));
 
@@ -550,6 +750,11 @@
       lights.fill.intensity = baseLight.fill * multiplier;
       lights.front.intensity = baseLight.front * multiplier;
       lightValue.textContent = `${Math.round(level)}%`;
+    }
+
+    function setControlPanelOpen(open) {
+      document.body.classList.toggle("controls-open", open);
+      viewerControlToggle.setAttribute("aria-expanded", open ? "true" : "false");
     }
 
     function normalizeMaterials(root) {

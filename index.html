@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>DLC参数查询器</title>
   <link rel="icon" type="image/webp" href="ico.webp">
   <link rel="preload" href="data/vehicles.json" as="fetch" type="application/json" crossorigin>
@@ -34,9 +34,14 @@
       box-sizing: border-box;
     }
 
+    html {
+      overflow-x: hidden;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
+      max-width: 100%;
       color: var(--text);
       background:
         linear-gradient(120deg, rgba(240, 250, 255, 0.96) 0%, rgba(245, 249, 255, 0.9) 42%, rgba(255, 248, 251, 0.72) 100%),
@@ -82,6 +87,28 @@
       background: rgba(255, 255, 255, 0.92);
       box-shadow: none;
       backdrop-filter: blur(14px) saturate(130%);
+    }
+
+    .mobile-menu-button {
+      display: none;
+      min-height: 44px;
+      border: 0;
+      border-radius: 8px;
+      padding: 0 14px;
+      color: #345365;
+      background: rgba(235, 244, 252, 0.86);
+      box-shadow: inset 0 1px 2px rgba(35, 76, 124, 0.06);
+      cursor: pointer;
+      font-weight: 900;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mobile-menu-button::before {
+      content: "☰";
+      font-size: 18px;
+      line-height: 1;
     }
 
     .tag-tabs {
@@ -1633,23 +1660,34 @@
 
     @media (max-width: 860px) {
       body {
-        overflow: auto;
+        overflow: hidden;
       }
 
       .shell {
         min-height: 100vh;
-        height: auto;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
         grid-template-columns: 1fr;
         padding: 10px;
       }
 
       .main {
-        min-height: calc(100vh - 20px);
+        min-height: 0;
+        height: 100%;
+        border-radius: 14px;
+        isolation: isolate;
       }
 
       .topbar {
+        position: relative;
+        z-index: 30;
         align-items: stretch;
         flex-direction: column;
+        min-height: 0;
+        padding: 12px;
+        gap: 10px;
+        background: #fff;
       }
 
       .search {
@@ -1658,25 +1696,182 @@
       }
 
       .compare-bar {
+        position: relative;
+        z-index: 29;
         grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 0 12px 12px;
+        background: #fff;
       }
 
-      .primary {
+      .primary,
+      .confirm,
+      .target-mode-button {
         min-height: 44px;
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        justify-content: center;
       }
 
       .table-wrap {
-        overflow-x: hidden;
+        position: relative;
+        z-index: 1;
+        overflow-x: auto;
         overflow-y: auto;
+        padding: 10px 10px 72px;
+        background: rgba(255, 255, 255, 0.78);
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        overscroll-behavior-y: contain;
+        touch-action: pan-x pan-y;
+        isolation: isolate;
       }
 
-    .compare-grid {
-      grid-template-columns: 1fr;
-    }
+      table,
+      tbody,
+      tr,
+      td {
+        display: block;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      colgroup,
+      thead {
+        display: none;
+      }
+
+      tbody {
+        display: grid;
+        gap: 10px;
+      }
+
+      tbody tr,
+      #vehicleTable tbody tr,
+      #weaponTable tbody tr,
+      #modelTable tbody tr {
+        display: grid;
+        min-height: 0;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 8px 20px rgba(35, 76, 124, 0.08);
+        overflow: hidden;
+      }
+
+      tbody tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.82);
+      }
+
+      body:not(.compare-mode) tbody tr:hover {
+        transform: none;
+        box-shadow: 0 8px 20px rgba(35, 76, 124, 0.08);
+      }
+
+      body:not(.compare-mode) tbody tr:hover td {
+        font-size: inherit;
+        font-weight: inherit;
+      }
+
+      tbody td,
+      #vehicleTable tbody td,
+      #weaponTable tbody td,
+      #modelTable tbody td {
+        min-height: 42px;
+        padding: 10px 12px;
+        border-bottom: 0;
+        border-top: 1px solid rgba(118, 140, 153, 0.14);
+        display: grid;
+        grid-template-columns: 96px minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+        text-align: right;
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      tbody td:first-child {
+        border-top: 0;
+      }
+
+      tbody td::before {
+        content: attr(data-label);
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+        line-height: 1.25;
+        text-align: left;
+      }
+
+      tbody td[data-mobile-role="title"] {
+        order: -2;
+        grid-template-columns: minmax(0, 1fr);
+        min-height: 50px;
+        border-top: 0;
+        background: linear-gradient(135deg, rgba(236, 248, 255, 0.96), rgba(243, 250, 255, 0.86));
+        color: var(--text);
+        font-size: 17px;
+        font-weight: 950;
+        text-align: left;
+      }
+
+      tbody td[data-mobile-role="title"]::before {
+        display: none;
+      }
+
+      tbody td[data-mobile-role="actions"] {
+        grid-template-columns: minmax(0, 1fr);
+        text-align: left;
+      }
+
+      tbody td[data-mobile-role="actions"]::before {
+        display: none;
+      }
+
+      .table-icon-cell {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+      }
+
+      .row-icon {
+        width: 58px;
+        height: 58px;
+        justify-self: end;
+      }
+
+      .faction {
+        justify-self: end;
+      }
+
+      .map-actions {
+        justify-content: stretch;
+        gap: 8px;
+      }
+
+      tbody td[data-mobile-role="actions"] > .map-action-button {
+        width: 100%;
+      }
+
+      .map-action-button {
+        min-height: 40px;
+        flex: 1 1 132px;
+      }
+
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
 
       .tag-tabs {
         width: 100%;
         overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .tag-tabs::-webkit-scrollbar {
+        display: none;
       }
 
       .tag-tab {
@@ -1704,6 +1899,361 @@
       .metric-card {
         grid-template-columns: 1fr 88px 44px 88px;
       }
+
+      .table-wrap::before {
+        content: "左右滑动查看完整参数";
+        position: static;
+        left: 0;
+        display: block;
+        width: max-content;
+        margin: 0 0 8px;
+        padding: 5px 9px;
+        border-radius: 8px;
+        color: #3d6675;
+        background: rgba(235, 244, 252, 0.92);
+        font-size: 12px;
+        font-weight: 850;
+        box-shadow: 0 4px 12px rgba(35, 76, 124, 0.08);
+      }
+
+      table {
+        display: table;
+        width: max-content;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+
+      #vehicleTable {
+        min-width: 1060px;
+      }
+
+      #weaponTable {
+        min-width: 840px;
+      }
+
+      #mapTable {
+        min-width: 760px;
+      }
+
+      #modelTable {
+        min-width: 620px;
+      }
+
+      colgroup {
+        display: table-column-group;
+      }
+
+      thead {
+        display: table-header-group;
+        position: sticky;
+        top: 0;
+        z-index: 12;
+        background: #fbfdff;
+        box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.055);
+      }
+
+      thead th {
+        background: #fbfdff;
+      }
+
+      tbody {
+        display: table-row-group;
+      }
+
+      tr,
+      tbody tr,
+      #vehicleTable tbody tr,
+      #weaponTable tbody tr,
+      #modelTable tbody tr {
+        display: table-row;
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.42);
+        box-shadow: none;
+        overflow: visible;
+      }
+
+      tbody tr:nth-child(even) {
+        background: rgba(250, 253, 255, 0.58);
+      }
+
+      td,
+      tbody td,
+      #vehicleTable tbody td,
+      #weaponTable tbody td,
+      #modelTable tbody td {
+        display: table-cell;
+        min-height: 0;
+        padding: 12px 8px;
+        border-top: 0;
+        border-bottom: 1px solid rgba(118, 140, 153, 0.16);
+        text-align: center;
+        font-size: 14px;
+      }
+
+      tbody td::before,
+      tbody td[data-mobile-role="title"]::before,
+      tbody td[data-mobile-role="actions"]::before {
+        content: none;
+        display: none;
+      }
+
+      tbody td[data-mobile-role="title"],
+      tbody td[data-mobile-role="actions"] {
+        display: table-cell;
+        min-height: 0;
+        background: transparent;
+        color: inherit;
+        font-size: 14px;
+        font-weight: inherit;
+        text-align: center;
+      }
+
+      tbody td[data-mobile-role="actions"] > .map-action-button {
+        width: auto;
+      }
+
+      .row-icon {
+        width: 58px;
+        height: 58px;
+      }
+
+      .faction {
+        justify-self: center;
+      }
+
+      #compareModal .dialog-body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #compareModal .compare-grid {
+        grid-template-columns: minmax(220px, 1fr) 220px minmax(220px, 1fr);
+        min-width: 720px;
+      }
+
+      #compareModal .metric-labels {
+        display: grid;
+      }
+
+      #compareModal .side-value,
+      #compareModal .side-value.right {
+        grid-template-columns: minmax(0, 1fr) 34px;
+      }
+
+      #compareModal .side-value::before {
+        display: none;
+      }
+
+      #compareModal .metrics {
+        min-width: 720px;
+      }
+
+      #compareModal .metric-card {
+        grid-template-columns: minmax(140px, 1fr) 130px 54px 130px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 0;
+      }
+
+      .main {
+        min-height: 0;
+        border-width: 0;
+        border-radius: 0;
+      }
+
+      .mobile-menu-button {
+        display: inline-flex;
+      }
+
+      .tag-tabs {
+        display: none;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 6px;
+        width: 100%;
+        padding: 6px;
+        overflow: visible;
+      }
+
+      body.mobile-nav-open .tag-tabs {
+        display: grid;
+      }
+
+      .tag-tab {
+        min-height: 40px;
+        padding: 0 14px;
+      }
+
+      .search input {
+        min-height: 42px;
+      }
+
+      .compare-hint,
+      .target-hint {
+        font-size: 12px;
+      }
+
+      .modal {
+        padding: 0;
+      }
+
+      .dialog,
+      .detail-dialog,
+      .target-dialog,
+      .map-dialog {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-width: 0;
+        border-radius: 0;
+        background: #fff;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+      }
+
+      .dialog-head {
+        min-height: 56px;
+        padding: 12px;
+        gap: 10px;
+        background: #fff;
+      }
+
+      .dialog-head h2 {
+        font-size: 16px;
+      }
+
+      .dialog-body {
+        scrollbar-gutter: auto;
+      }
+
+      .icon-button {
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+      }
+
+      .detail-hero,
+      .detail-icon-panel,
+      .detail-rows {
+        margin: 10px;
+      }
+
+      .detail-hero {
+        padding: 14px;
+      }
+
+      .detail-hero h3 {
+        font-size: 20px;
+      }
+
+      .hero-head {
+        grid-template-columns: minmax(0, 1fr) 84px;
+        gap: 12px;
+      }
+
+      .hero-icon {
+        width: 78px;
+        height: 78px;
+      }
+
+      .detail-icon-panel {
+        min-height: 150px;
+      }
+
+      .detail-large-icon {
+        width: min(210px, 70vw);
+        height: 140px;
+      }
+
+      .detail-large-icon.weapon-icon {
+        width: min(280px, 76vw);
+        height: 190px;
+      }
+
+      .detail-rows {
+        padding: 0 0 12px;
+        gap: 10px;
+      }
+
+      .detail-row,
+      .detail-row.at-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .detail-name {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .detail-row.at-row .detail-value {
+        border-right: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .metric-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      #compareModal .metric-card {
+        grid-template-columns: minmax(140px, 1fr) 130px 54px 130px;
+      }
+
+      .metric-name,
+      .metric-value {
+        text-align: center;
+      }
+
+      .arrow {
+        margin: 0 auto 10px;
+      }
+
+      .map-dialog .dialog-head {
+        align-items: center;
+        flex-direction: row;
+      }
+
+      .map-body {
+        padding: 8px;
+        place-items: start center;
+        overflow: auto;
+      }
+
+      .map-stage {
+        width: 100%;
+        min-width: 0;
+        align-self: start;
+        align-items: flex-start;
+      }
+
+      .map-stage img#mapImage {
+        max-height: calc(100dvh - 136px);
+      }
+
+      .target-layout {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(260px, 45vh) minmax(0, 1fr);
+        gap: 10px;
+        padding: 10px;
+      }
+
+      .tank-model {
+        transform: translate(-50%, -50%) scale(0.72);
+      }
+
+      .threat-token {
+        width: 48px;
+        height: 48px;
+        font-size: 10px;
+      }
+
+      .target-panel {
+        min-height: 0;
+      }
     }
   </style>
 </head>
@@ -1711,7 +2261,8 @@
   <div class="shell">
     <main class="main">
       <header class="topbar">
-        <nav class="tag-tabs" aria-label="参数查询分类">
+        <button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-expanded="false" aria-controls="mainTabs">菜单</button>
+        <nav class="tag-tabs" id="mainTabs" aria-label="参数查询分类">
           <button class="tag-tab active" data-tab="vehicles" type="button">载具查询</button>
           <button class="tag-tab" data-tab="weapons" type="button">枪械查询</button>
           <button class="tag-tab" data-tab="maps" type="button">地图查询</button>
@@ -1916,7 +2467,9 @@
     let currentMap = null;
     const mapDataCache = new Map();
 
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
     const tagTabs = document.querySelectorAll(".tag-tab");
+    const tableWrap = document.querySelector(".table-wrap");
     const vehicleTable = document.getElementById("vehicleTable");
     const weaponTable = document.getElementById("weaponTable");
     const mapTable = document.getElementById("mapTable");
@@ -2024,6 +2577,7 @@
     let pendingScoreUpdate = false;
     let sortableHeaders = [];
     let canUseCachedResources = false;
+    let assetManifestPaths = null;
     const imagePromiseCache = new Map();
     const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
     const antiTankWeapons = [
@@ -2456,18 +3010,18 @@
         const classAttr = rowClasses.length ? ` class="${rowClasses.join(" ")}"` : "";
         return `
         <tr data-index="${escapeHtml(index)}"${classAttr}>
-          <td>${factionBadge(vehicle)}</td>
-          <td>${escapeHtml(vehicle.name)}</td>
-          <td class="table-icon-cell">${assetIconHtml(vehicleIconSrc(vehicle), vehicle.name, "row-icon")}</td>
-          <td class="num">${fmt(vehicle.hp)}</td>
-          <td class="num">${fmt(vehicle.speed)}</td>
-          <td class="num">${fmt(vehicle.acceleration)}</td>
-          <td class="num">${fmt(vehicle.turret)}</td>
-          <td class="num">${fmt(vehicle.threshold)}</td>
-          <td class="num">${fmt(vehicle.reduction)}</td>
-          <td class="num">${fmt(vehicle.reload)}</td>
-          <td class="num">${fmt(vehicle.vision)}</td>
-          <td class="num">${fmt(vehicle.blast)}</td>
+          <td data-label="阵营">${factionBadge(vehicle)}</td>
+          <td data-label="载具名" data-mobile-role="title">${escapeHtml(vehicle.name)}</td>
+          <td class="table-icon-cell" data-label="图标">${assetIconHtml(vehicleIconSrc(vehicle), vehicle.name, "row-icon")}</td>
+          <td class="num" data-label="生命值">${fmt(vehicle.hp)}</td>
+          <td class="num" data-label="最大速度">${fmt(vehicle.speed)}</td>
+          <td class="num" data-label="加速度">${fmt(vehicle.acceleration)}</td>
+          <td class="num" data-label="炮塔转速">${fmt(vehicle.turret)}</td>
+          <td class="num" data-label="受击门槛">${fmt(vehicle.threshold)}</td>
+          <td class="num" data-label="爆炸减伤">${fmt(vehicle.reduction)}</td>
+          <td class="num" data-label="装填速度">${fmt(vehicle.reload)}</td>
+          <td class="num" data-label="玩家视野修正">${fmt(vehicle.vision)}</td>
+          <td class="num" data-label="爆炸伤害">${fmt(vehicle.blast)}</td>
         </tr>
       `;
       }).join("");
@@ -2480,14 +3034,14 @@
         const selected = selectedSet.has(weapon.id) ? " class=\"selected\"" : "";
         return `
         <tr data-index="${escapeHtml(weapon.id)}"${selected}>
-          <td>${factionBadge({ faction: weapon["阵营"] })}</td>
-          <td>${escapeHtml(displayValue(weapon["类型"]))}</td>
-          <td>${escapeHtml(displayValue(weapon["枪械名称"]))}</td>
-          <td class="table-icon-cell">${assetIconHtml(weaponIconSrc(weapon), displayValue(weapon["枪械名称"]), "row-icon weapon-icon")}</td>
-          <td class="num">${escapeHtml(weaponKillDisplay(weapon))}</td>
-          <td class="num">${escapeHtml(displayValue(weapon["射速"]))}</td>
-          <td class="num">${escapeHtml(displayValue(weapon["单发后坐力"]))}</td>
-          <td class="num">${escapeHtml(displayValue(weapon["衰减开始距离"]))}</td>
+          <td data-label="阵营">${factionBadge({ faction: weapon["阵营"] })}</td>
+          <td data-label="类型">${escapeHtml(displayValue(weapon["类型"]))}</td>
+          <td data-label="枪械名称" data-mobile-role="title">${escapeHtml(displayValue(weapon["枪械名称"]))}</td>
+          <td class="table-icon-cell" data-label="图标">${assetIconHtml(weaponIconSrc(weapon), displayValue(weapon["枪械名称"]), "row-icon weapon-icon")}</td>
+          <td class="num" data-label="致死">${escapeHtml(weaponKillDisplay(weapon))}</td>
+          <td class="num" data-label="射速">${escapeHtml(displayValue(weapon["射速"]))}</td>
+          <td class="num" data-label="单发后坐力">${escapeHtml(displayValue(weapon["单发后坐力"]))}</td>
+          <td class="num" data-label="衰减开始距离">${escapeHtml(displayValue(weapon["衰减开始距离"]))}</td>
         </tr>
       `;
       }).join("");
@@ -2712,9 +3266,9 @@
     function renderMapTable(list) {
       mapRowsEl.innerHTML = list.map((map) => `
         <tr data-map-id="${escapeHtml(map.id)}">
-          <td>${mapGroupBadge(map.group)}</td>
-          <td>${escapeHtml(map.name)}</td>
-          <td>
+          <td data-label="地图组">${mapGroupBadge(map.group)}</td>
+          <td data-label="地图名称" data-mobile-role="title">${escapeHtml(map.name)}</td>
+          <td data-label="操作" data-mobile-role="actions">
             <div class="map-actions">
               <button class="map-action-button map-open-button" data-map-id="${escapeHtml(map.id)}" type="button">查看地图</button>
               ${map.actionsHtml || (map.actionsHtml = mapPerspectiveButtons(map))}
@@ -2733,9 +3287,9 @@
         const disabled = model.model ? "" : " disabled";
         return `
           <tr data-model-id="${escapeHtml(model.id)}">
-            <td>${escapeHtml(model.name)}</td>
-            <td class="table-icon-cell">${iconHtml}</td>
-            <td>
+            <td data-label="模型名称" data-mobile-role="title">${escapeHtml(model.name)}</td>
+            <td class="table-icon-cell" data-label="图标">${iconHtml}</td>
+            <td data-label="操作" data-mobile-role="actions">
               <button class="map-action-button model-open-button" data-model-id="${escapeHtml(model.id)}" type="button"${disabled}>查看模型</button>
             </td>
           </tr>
@@ -2933,9 +3487,13 @@
     }
 
     function setActiveTab(tab) {
-      if (tab === activeTab) return;
+      if (tab === activeTab) {
+        setMobileNavOpen(false);
+        return;
+      }
       if (compareMode) setCompareMode(false);
       if (targetMode) setTargetMode(false);
+      setMobileNavOpen(false);
       activeTab = tab;
       tagTabs.forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
       vehicleTable.classList.toggle("hidden", tab !== "vehicles");
@@ -2956,7 +3514,23 @@
         ? "在地图页中搜索"
         : (tab === "models" ? "在模型页中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索"));
       applyView();
+      if (tab === "maps" || tab === "models") resetTablePosition();
       if (tab === "maps") warmMapAssets();
+    }
+
+    function setMobileNavOpen(open) {
+      document.body.classList.toggle("mobile-nav-open", open);
+      mobileMenuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+
+    function resetTablePosition() {
+      if (!tableWrap) return;
+      tableWrap.scrollTop = 0;
+      tableWrap.scrollLeft = 0;
+      requestAnimationFrame(() => {
+        tableWrap.scrollTop = 0;
+        tableWrap.scrollLeft = 0;
+      });
     }
 
     function setTargetMode(enabled) {
@@ -3093,7 +3667,7 @@
       (mapData?.factions || []).forEach((faction) => {
         mapImageNames(faction).forEach(add);
       });
-      return names.map((name) => `maps/${mapData.id}/${name}`);
+      return filterKnownAssetSources(names.map((name) => `maps/${mapData.id}/${name}`));
     }
 
     function mapImageNames(faction) {
@@ -3116,7 +3690,13 @@
     }
 
     function mapImageSources(faction, mapData = currentMap) {
-      return mapImageNames(faction).map((name) => `maps/${mapData.id}/${name}`);
+      return filterKnownAssetSources(mapImageNames(faction).map((name) => `maps/${mapData.id}/${name}`));
+    }
+
+    function filterKnownAssetSources(sources) {
+      if (!assetManifestPaths) return sources;
+      const knownSources = sources.filter((src) => assetManifestPaths.has(src.replace(/^\.?\//, "")));
+      return knownSources.length ? knownSources : sources;
     }
 
     function setMapImageWithFallback(imageElement, faction, sourceList = null) {
@@ -3874,6 +4454,10 @@
       scheduleApplyView();
     });
 
+    mobileMenuBtn.addEventListener("click", () => {
+      setMobileNavOpen(!document.body.classList.contains("mobile-nav-open"));
+    });
+
     tagTabs.forEach((button) => {
       button.addEventListener("click", () => setActiveTab(button.dataset.tab));
     });
@@ -4089,6 +4673,7 @@
       if (!manifest.version) {
         throw new Error("网络错误：资源清单格式错误");
       }
+      assetManifestPaths = manifest.files ? new Set(Object.keys(manifest.files)) : null;
       const key = "rwrAssetManifestVersion";
       const previous = localStorage.getItem(key);
       const refreshedKey = "rwrAssetManifestRefreshed";
