@@ -1705,7 +1705,7 @@
         z-index: 29;
         grid-template-columns: 1fr;
         gap: 8px;
-        padding: 0 12px 12px;
+        padding: 14px 12px 12px;
         background: #fff;
         box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.05);
       }
@@ -1725,8 +1725,8 @@
         z-index: 1;
         overflow-x: auto;
         overflow-y: auto;
-        padding: 10px 10px 72px;
-        background: rgba(255, 255, 255, 0.78);
+        padding: 0 10px 72px;
+        background: #fff;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-x: contain;
         overscroll-behavior-y: contain;
@@ -1907,22 +1907,6 @@
         grid-template-columns: 1fr 88px 44px 88px;
       }
 
-      .table-wrap::before {
-        content: "左右滑动查看完整参数";
-        position: static;
-        left: 0;
-        display: block;
-        width: max-content;
-        margin: 0 0 8px;
-        padding: 5px 9px;
-        border-radius: 8px;
-        color: #3d6675;
-        background: rgba(235, 244, 252, 0.92);
-        font-size: 12px;
-        font-weight: 850;
-        box-shadow: 0 4px 12px rgba(35, 76, 124, 0.08);
-      }
-
       table {
         display: table;
         width: max-content;
@@ -1955,12 +1939,14 @@
         display: table-header-group;
         position: sticky;
         top: 0;
-        z-index: 12;
+        z-index: 30;
         background: #fbfdff;
         box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.055);
       }
 
       thead th {
+        position: relative;
+        z-index: 31;
         background: #fbfdff;
       }
 
@@ -2102,6 +2088,7 @@
 
       .compare-hint,
       .target-hint {
+        padding-top: 2px;
         font-size: 12px;
       }
 
@@ -2243,9 +2230,11 @@
 
       .target-layout {
         grid-template-columns: minmax(0, 1fr);
-        grid-template-rows: minmax(260px, 45vh) minmax(0, 1fr);
+        grid-template-rows: minmax(220px, 38vh) auto;
         gap: 10px;
         padding: 10px;
+        height: auto;
+        min-height: 100%;
       }
 
       .tank-model {
@@ -2260,6 +2249,26 @@
 
       .target-panel {
         min-height: 0;
+        display: block;
+      }
+
+      .target-section + .target-section {
+        margin-top: 10px;
+      }
+
+      .target-section:last-child {
+        display: block;
+      }
+
+      .target-dialog .dialog-body {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .priority-list {
+        height: auto;
+        max-height: none;
+        overflow: visible;
       }
     }
   </style>
@@ -3561,6 +3570,7 @@
       renderThreatButtons();
       priorityList.innerHTML = "";
       targetModal.classList.add("open");
+      resetDialogScroll(targetModal);
       setTargetMode(false);
     }
 

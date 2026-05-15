@@ -32,6 +32,9 @@
       overflow: hidden;
       color: var(--text);
       background: #111923;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
     canvas {
@@ -39,6 +42,9 @@
       width: 100%;
       height: 100%;
       touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .top-left,
@@ -216,7 +222,6 @@
       font-size: 13px;
     }
 
-    .parts-close,
     .module-panel-button {
       display: none;
     }
@@ -234,6 +239,11 @@
       scrollbar-gutter: stable;
     }
 
+    .parts-panel.has-parts .part-buttons {
+      visibility: visible;
+      opacity: 1;
+    }
+
     .part-button {
       border: 0;
       border-radius: 8px;
@@ -249,7 +259,26 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      visibility: visible;
+      opacity: 1;
       transition: transform 0.14s ease, filter 0.14s ease;
+    }
+
+    .part-index {
+      display: none;
+      place-items: center;
+      min-width: 20px;
+      height: 20px;
+      margin-right: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      font-size: 11px;
+      font-weight: 950;
+      vertical-align: middle;
+    }
+
+    .part-name {
+      vertical-align: middle;
     }
 
     .part-button:hover {
@@ -387,18 +416,13 @@
         pointer-events: auto;
       }
 
-      body.parts-open .viewer-control-backdrop {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
       .viewer-control-drawer {
         position: fixed;
         z-index: 23;
-        top: 64px;
+        top: 116px;
         right: 12px;
         left: 12px;
-        max-height: min(72dvh, calc(100dvh - 82px));
+        max-height: min(64dvh, calc(100dvh - 134px));
         display: grid;
         grid-template-rows: auto minmax(0, 1fr);
         border: 1px solid var(--line);
@@ -495,69 +519,88 @@
       .parts-panel {
         position: fixed;
         z-index: 24;
-        top: 0;
-        right: 0;
-        bottom: 0;
+        top: 116px;
+        right: -70px;
+        bottom: max(78px, calc(env(safe-area-inset-bottom) + 78px));
         left: auto;
-        width: 76px;
+        width: 70px;
         min-width: 0;
         max-width: none;
         max-height: none;
-        border-width: 0 0 0 1px;
-        border-radius: 0;
+        border-width: 1px 0 1px 1px;
+        border-radius: 10px 0 0 10px;
         box-shadow: -18px 0 42px rgba(0, 0, 0, 0.28);
-        transform: translateX(100%);
-        transition: transform 0.18s ease;
+        transform: none;
+        transition: right 0.18s ease;
+        overflow: hidden;
       }
 
       body.parts-open .parts-panel {
-        transform: translateX(0);
+        right: 0;
+        transform: none;
+      }
+
+      body.parts-open .parts-panel.has-parts .part-buttons {
+        display: grid !important;
       }
 
       .parts-head {
-        min-height: 48px;
-        padding: 0 6px 0 10px;
-        font-size: 12px;
-      }
-
-      .parts-close {
-        width: 30px;
-        height: 30px;
-        border: 1px solid rgba(180, 207, 235, 0.2);
-        border-radius: 8px;
-        display: grid;
-        place-items: center;
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.06);
-        cursor: pointer;
-        font-size: 18px;
-        line-height: 1;
+        min-height: 44px;
+        padding: 0 12px;
+        justify-content: center;
+        font-size: 13px;
+        text-align: center;
       }
 
       .part-buttons {
-        padding: 10px;
-        grid-template-columns: 44px;
+        width: 100%;
+        min-width: 0;
+        padding: 10px 12px 12px;
+        display: grid;
+        grid-template-columns: 38px;
+        grid-auto-rows: 38px;
         justify-content: center;
+        align-content: start;
+        overflow-x: hidden;
+        overflow-y: auto;
         max-height: none;
       }
 
       .part-button {
-        width: 44px;
-        height: 44px;
-        min-height: 44px;
+        width: 38px;
+        min-width: 38px;
+        max-width: 38px;
+        height: 38px;
+        min-height: 38px;
         padding: 0;
         display: grid;
         place-items: center;
         font-size: 0;
       }
 
-      .part-button::before {
-        content: attr(data-part-index);
+      .part-index {
+        display: grid;
+        min-width: 0;
+        width: 100%;
+        height: 100%;
+        margin-right: 0;
+        border-radius: 0;
+        background: transparent;
         font-size: 14px;
+        font-weight: 900;
         line-height: 1;
       }
 
+      .part-name {
+        display: none;
+      }
+
       .module-panel-button {
+        position: fixed;
+        z-index: 24;
+        top: 64px;
+        right: 12px;
+        min-width: 98px;
         min-height: 44px;
         border: 1px solid rgba(180, 207, 235, 0.2);
         border-radius: 8px;
@@ -598,10 +641,6 @@
         grid-template-columns: auto minmax(0, 1fr) 38px;
       }
 
-      .part-button {
-        max-width: calc(100vw - 32px);
-      }
-
       .top-left {
         right: 120px;
       }
@@ -615,6 +654,7 @@
   </div>
 
   <button class="viewer-control-toggle" id="viewerControlToggle" type="button" aria-expanded="false" aria-controls="viewerControlDrawer">操作说明</button>
+  <button class="module-panel-button hidden" id="modulePanelBtn" type="button" aria-expanded="false" aria-controls="partsPanel">模块显示</button>
   <div class="viewer-control-backdrop" id="viewerControlBackdrop" aria-hidden="true"></div>
 
   <div class="light-panel" aria-label="模型光照控制">
@@ -665,20 +705,17 @@
           <div class="help-text">
             <strong class="desktop-help">重置视角</strong>
             <span class="desktop-help">按 Esc 回到初始视角</span>
-            <strong class="mobile-help">模块显示</strong>
-            <span class="mobile-help">点击下方按钮打开右侧模块栏</span>
+            <strong class="mobile-help">重置视角</strong>
+            <span class="mobile-help">重新打开模型页面回到初始视角</span>
           </div>
         </div>
       </aside>
-
-      <button class="module-panel-button hidden" id="modulePanelBtn" type="button" aria-expanded="false" aria-controls="partsPanel">模块显示</button>
     </div>
   </section>
 
   <aside class="parts-panel hidden" id="partsPanel" aria-label="模型模块显示控制">
     <div class="parts-head">
       <span>模块</span>
-      <button class="parts-close" id="partsClose" type="button" aria-label="关闭模块显示">×</button>
     </div>
     <div class="part-buttons" id="partButtons"></div>
   </aside>
@@ -713,7 +750,6 @@
     const viewerControlBackdrop = document.getElementById("viewerControlBackdrop");
     const viewerControlClose = document.getElementById("viewerControlClose");
     const modulePanelBtn = document.getElementById("modulePanelBtn");
-    const partsClose = document.getElementById("partsClose");
     const partsPanel = document.getElementById("partsPanel");
     const partButtons = document.getElementById("partButtons");
     const lightSlider = document.getElementById("lightSlider");
@@ -813,9 +849,13 @@
       viewerControlClose.addEventListener("click", () => setControlPanelOpen(false));
       modulePanelBtn.addEventListener("click", () => {
         setControlPanelOpen(false);
-        setPartsPanelOpen(true);
+        setPartsPanelOpen(!document.body.classList.contains("parts-open"));
       });
-      partsClose.addEventListener("click", () => setPartsPanelOpen(false));
+      document.addEventListener("pointerdown", (event) => {
+        if (!document.body.classList.contains("parts-open")) return;
+        if (partsPanel.contains(event.target) || modulePanelBtn.contains(event.target)) return;
+        setPartsPanelOpen(false);
+      });
       lightSlider.addEventListener("input", () => applyLightLevel(Number(lightSlider.value)));
       applyLightLevel(Number(lightSlider.value));
 
@@ -927,34 +967,95 @@
     }
 
     function buildPartButtons(root) {
-      const parts = collectTopLevelParts(root);
+      const parts = collectModelParts(root);
       if (!parts.length) return;
       partsPanel.classList.remove("hidden");
+      partsPanel.classList.add("has-parts");
       modulePanelBtn.classList.remove("hidden");
-      partButtons.innerHTML = "";
-      parts.forEach((node, index) => {
+      partButtons.replaceChildren();
+      parts.forEach((part, index) => {
         const button = document.createElement("button");
+        const number = String(index + 1);
+        const name = part.name || `部件 ${number}`;
         button.type = "button";
         button.className = "part-button visible";
-        button.dataset.partIndex = String(index + 1);
-        button.textContent = node.name || `部件 ${index + 1}`;
-        button.title = button.textContent;
+        button.dataset.partIndex = number;
+        button.title = `${number} ${name}`;
+        const indexLabel = document.createElement("span");
+        indexLabel.className = "part-index";
+        indexLabel.textContent = number;
+        const nameLabel = document.createElement("span");
+        nameLabel.className = "part-name";
+        nameLabel.textContent = name;
+        button.append(indexLabel, document.createTextNode(" "), nameLabel);
         button.addEventListener("click", () => {
-          node.visible = !node.visible;
-          button.classList.toggle("visible", node.visible);
-          button.classList.toggle("hidden-part", !node.visible);
+          part.nodes.forEach((node) => {
+            node.visible = !part.visible;
+          });
+          part.visible = !part.visible;
+          button.classList.toggle("visible", part.visible);
+          button.classList.toggle("hidden-part", !part.visible);
         });
         partButtons.appendChild(button);
       });
     }
 
-    function collectTopLevelParts(root) {
+    function collectModelParts(root) {
       const direct = root.children.filter((node) => hasRenderable(node));
-      if (direct.length > 1) return direct;
-      if (direct.length === 1 && direct[0].children.some(hasRenderable)) {
-        return direct[0].children.filter(hasRenderable);
+      if (direct.length > 1) {
+        return direct.map((node) => ({
+          name: cleanPartName(node.name),
+          nodes: [node],
+          visible: node.visible
+        }));
       }
-      return direct;
+
+      const meshNodes = [];
+      root.traverse((node) => {
+        if (node.isMesh) meshNodes.push(node);
+      });
+      if (meshNodes.length) {
+        return meshNodes.map((node) => ({
+          name: cleanPartName(node.name),
+          nodes: [node],
+          visible: node.visible
+        }));
+      }
+
+      const namedGroups = [];
+      root.traverse((node) => {
+        if (node === root || node.isMesh || !hasRenderable(node)) return;
+        if (node.name && !isStructuralNodeName(node.name)) namedGroups.push(node);
+      });
+      if (namedGroups.length > 1) {
+        return pruneNestedParts(namedGroups, root).map((node) => ({
+          name: cleanPartName(node.name),
+          nodes: [node],
+          visible: node.visible
+        }));
+      }
+
+      return [];
+    }
+
+    function pruneNestedParts(parts, root) {
+      return parts.filter((node) => {
+        let current = node.parent;
+        while (current && current !== root) {
+          if (parts.includes(current)) return false;
+          current = current.parent;
+        }
+        return true;
+      });
+    }
+
+    function isStructuralNodeName(name) {
+      return /^(scene|root|armature|skeleton|bone|empty|group)$/i.test(String(name).trim());
+    }
+
+    function cleanPartName(name) {
+      const value = String(name || "").trim();
+      return value || "未命名模块";
     }
 
     function hasRenderable(node) {
