@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <title>DLC参数查询器</title>
   <link rel="icon" type="image/webp" href="ico.webp">
   <link rel="preload" href="data/vehicles.json" as="fetch" type="application/json" crossorigin>
@@ -36,6 +36,7 @@
 
     html {
       overflow-x: hidden;
+      touch-action: pan-x pan-y;
     }
 
     body {
@@ -47,6 +48,8 @@
         linear-gradient(120deg, rgba(240, 250, 255, 0.96) 0%, rgba(245, 249, 255, 0.9) 42%, rgba(255, 248, 251, 0.72) 100%),
         linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
       overflow: hidden;
+      touch-action: pan-x pan-y;
+      -webkit-text-size-adjust: 100%;
     }
 
     button,
@@ -72,6 +75,8 @@
       display: grid;
       grid-template-rows: auto auto minmax(0, 1fr);
       overflow: hidden;
+      touch-action: pan-x pan-y;
+      -webkit-text-size-adjust: 100%;
     }
 
     .topbar {
@@ -1663,6 +1668,7 @@
       body {
         height: 100%;
         overflow: hidden;
+        touch-action: pan-x pan-y;
       }
 
       .shell {
@@ -2274,6 +2280,22 @@
   </style>
 </head>
 <body>
+  <script>
+    (() => {
+      let lastTouchEnd = 0;
+      document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("gesturechange", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("gestureend", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("touchmove", (event) => {
+        if (event.touches.length > 1) event.preventDefault();
+      }, { passive: false });
+      document.addEventListener("touchend", (event) => {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) event.preventDefault();
+        lastTouchEnd = now;
+      }, { passive: false });
+    })();
+  </script>
   <div class="shell">
     <main class="main">
       <header class="topbar">
