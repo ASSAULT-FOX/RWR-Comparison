@@ -1,4 +1,4 @@
-const CACHE_VERSION = "rwr-cache-2026-05-16-2";
+const CACHE_VERSION = "rwr-cache-2026-05-16-3";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const MANIFEST_URL = "./data/asset-manifest.json";
