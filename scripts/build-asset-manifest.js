@@ -14,7 +14,8 @@ const rootFiles = [
   "index.html",
   "model-viewer.html",
   "sw.js",
-  "ico.webp"
+  "ico.webp",
+  "splash.webp"
 ];
 
 const includeExt = new Set([".html", ".js", ".json", ".webp", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".glb", ".blend"]);

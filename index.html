@@ -67,13 +67,13 @@
 
     .main {
       min-width: 0;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 252, 255, 0.76) 30%, rgba(255, 255, 255, 0.58) 100%);
-      box-shadow: var(--shadow);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
       display: grid;
-      grid-template-rows: auto auto minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 16px;
       overflow: hidden;
       touch-action: pan-x pan-y;
       -webkit-text-size-adjust: 100%;
@@ -82,16 +82,33 @@
     .topbar {
       position: relative;
       z-index: 6;
-      min-height: 72px;
-      padding: 16px 22px;
+      min-height: 126px;
+      padding: 16px 18px;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) minmax(420px, 1.15fr) minmax(280px, 0.9fr);
+      align-items: center;
+      gap: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .brand-splash-wrap {
+      min-width: 0;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      border-bottom: 0;
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: none;
-      backdrop-filter: blur(14px) saturate(130%);
+      justify-content: center;
+      align-self: stretch;
+    }
+
+    .brand-splash {
+      display: block;
+      width: min(360px, 92%);
+      height: 88px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 16px rgba(35, 76, 124, 0.14));
     }
 
     .mobile-menu-button {
@@ -119,8 +136,13 @@
     .tag-tabs {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px;
+      justify-self: center;
+      align-self: center;
+      justify-content: center;
+      width: min(620px, 100%);
+      min-height: 58px;
+      gap: 8px;
+      padding: 6px;
       border: 0;
       border-radius: 12px;
       background: rgba(235, 244, 252, 0.72);
@@ -128,13 +150,15 @@
     }
 
     .tag-tab {
+      flex: 1 1 0;
       border: 0;
       border-radius: 8px;
-      min-height: 38px;
-      padding: 0 18px;
+      min-height: 46px;
+      padding: 0 22px;
       color: #52677a;
       background: transparent;
       cursor: pointer;
+      font-size: 17px;
       font-weight: 850;
       white-space: nowrap;
       transition: color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
@@ -151,9 +175,11 @@
     }
 
     .search {
-      width: min(320px, 36vw);
+      width: min(370px, 100%);
       position: relative;
       flex: 0 1 320px;
+      justify-self: center;
+      align-self: center;
     }
 
     .search input {
@@ -161,9 +187,11 @@
       border: 0;
       border-radius: 8px;
       background: rgba(235, 244, 252, 0.7);
-      padding: 10px 12px 10px 36px;
+      min-height: 52px;
+      padding: 12px 14px 12px 42px;
       outline: 0;
       color: var(--text);
+      font-size: 16px;
       box-shadow: inset 0 1px 2px rgba(35, 76, 124, 0.06);
       transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     }
@@ -175,10 +203,11 @@
 
     .search span {
       position: absolute;
-      left: 12px;
+      left: 16px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--muted);
+      font-size: 19px;
     }
 
     .compare-bar {
@@ -189,11 +218,22 @@
       justify-content: start;
       align-items: center;
       gap: 10px;
-      padding: 4px 22px 16px;
+      padding: 18px 22px 16px;
       border-bottom: 0;
-      background: rgba(255, 255, 255, 0.82);
+      background: #fff;
       box-shadow: none;
-      backdrop-filter: blur(12px) saturate(125%);
+      backdrop-filter: none;
+    }
+
+    .content-panel {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: none;
     }
 
     .primary {
@@ -298,7 +338,7 @@
       min-height: 0;
       overflow-x: hidden;
       overflow-y: auto;
-      background: rgba(255, 255, 255, 0.28);
+      background: #fff;
       padding-bottom: 76px;
       overscroll-behavior: contain;
       scrollbar-gutter: stable;
@@ -1801,22 +1841,32 @@
       .main {
         min-height: 0;
         height: 100%;
-        grid-template-rows: auto auto minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr);
+        gap: 10px;
         border-radius: 14px;
         isolation: isolate;
-        background: #fff;
       }
 
       .topbar {
         position: relative;
         z-index: 30;
-        align-items: stretch;
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        justify-items: stretch;
         min-height: 0;
         padding: 12px;
         gap: 10px;
         background: #fff;
-        box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.06);
+        border-radius: 14px;
+        box-shadow: 0 8px 18px rgba(35, 76, 124, 0.06);
+      }
+
+      .brand-splash-wrap {
+        height: 72px;
+      }
+
+      .brand-splash {
+        width: min(250px, 80vw);
+        height: 72px;
       }
 
       .search {
@@ -1824,14 +1874,19 @@
         flex-basis: auto;
       }
 
+      .content-panel {
+        border-radius: 14px;
+        background: #fff;
+      }
+
       .compare-bar {
         position: relative;
         z-index: 29;
         grid-template-columns: 1fr;
         gap: 8px;
-        padding: 14px 12px 12px;
+        padding: 18px 12px 12px;
         background: #fff;
-        box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.05);
+        box-shadow: 0 1px 0 var(--line);
       }
 
       .primary,
@@ -2444,6 +2499,9 @@
   <div class="shell">
     <main class="main">
       <header class="topbar">
+        <div class="brand-splash-wrap" aria-hidden="true">
+          <img class="brand-splash" src="splash.webp" alt="">
+        </div>
         <button class="mobile-menu-button" id="mobileMenuBtn" type="button" aria-expanded="false" aria-controls="mainTabs">菜单</button>
         <nav class="tag-tabs" id="mainTabs" aria-label="参数查询分类">
           <button class="tag-tab active" data-tab="vehicles" type="button">载具查询</button>
@@ -2457,6 +2515,7 @@
         </label>
       </header>
 
+      <section class="content-panel" aria-label="查询结果">
       <section class="compare-bar" aria-label="选择载具比较">
         <button class="primary" id="compareBtn">比较</button>
         <button class="confirm" id="confirmCompareBtn">确认比较</button>
@@ -2549,6 +2608,7 @@
         <section id="modelTable" class="model-panel hidden" aria-label="模型载具卡片">
           <div class="model-card-grid" id="modelRows"></div>
         </section>
+      </section>
       </section>
     </main>
   </div>
@@ -2651,6 +2711,7 @@
     const modelRowsEl = document.getElementById("modelRows");
     const loadingPanel = document.getElementById("loadingPanel");
     const searchInput = document.getElementById("searchInput");
+    const compareBar = document.querySelector(".compare-bar");
     const compareBtn = document.getElementById("compareBtn");
     const confirmCompareBtn = document.getElementById("confirmCompareBtn");
     const compareHint = document.getElementById("compareHint");
@@ -3711,12 +3772,13 @@
       targetHint.classList.toggle("hidden", tab !== "vehicles");
       targetModeBtn.disabled = tab !== "vehicles";
       const comparisonEnabled = tab === "vehicles" || tab === "weapons";
+      compareBar.classList.toggle("hidden", !comparisonEnabled);
       compareBtn.disabled = !comparisonEnabled;
       compareBtn.classList.toggle("hidden", !comparisonEnabled);
       confirmCompareBtn.classList.toggle("hidden", !comparisonEnabled);
-      compareHint.textContent = tab === "maps"
-        ? "点击按钮查看地图或阵营视角"
-        : (tab === "models" ? "点击卡片打开模型查看页" : (tab === "weapons" ? "在列表中选两个枪械进行对比" : "在列表中选两个载具进行对比"));
+      compareHint.textContent = tab === "weapons"
+        ? "在列表中选两个枪械进行对比"
+        : (tab === "vehicles" ? "在列表中选两个载具进行对比" : "");
       searchInput.placeholder = tab === "maps"
         ? "在地图页中搜索"
         : (tab === "models" ? "在模型页中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索"));

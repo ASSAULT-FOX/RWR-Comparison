@@ -1,12 +1,12 @@
 {
-  "version": "d7f1ca582d8ba04299e92d88a9fb35bc5563c1239a52ae1b9df049ac802be0e3",
-  "generatedAt": "2026-05-17T04:54:18.565Z",
+  "version": "c08589db96359aa0ced15c5130a487cf85562cd48ddc1dddd4e0952d1d269648",
+  "generatedAt": "2026-05-17T06:39:58.602Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
     "data/weapons.json": "97fa4544c7b90231511680c479060724c9bb66a69bb791c20acdcce20e8469a5",
     "ico.webp": "2a47046b17dde309cb9c8318a9d5a6f07283b5422f757de6c0be85f016dcb70d",
-    "index.html": "74f1685888b32d44223b67471018fa44ee6a6d52f5bbd180b24c93706540778e",
+    "index.html": "7b6798ac76d9718d415ce41a61fd909e73cbf317407d7e0f0405f4345b50795c",
     "maps_textures/0.webp": "f15787f9c25d3522b5ec686316e79a68629ddc9a4d7e197ef3ec56c5e0f0f89e",
     "maps_textures/1.webp": "dce5d0cf7f6c68cfc805ba14db887a992974018e3b056bef798a39b6a8361998",
     "maps_textures/2.webp": "e441346912be37d51e7543bb99a50b87051097413396a001dcf169ba0bc2a498",
@@ -283,6 +283,7 @@
     "model/willys_mb_recoilless_rifle/willys_mb_recoilless_rifle.glb": "cff91dac74fbedf8e4d9f63f9d5cbbaf2a514f2af32d57f2ee5ca4dbf7f85432",
     "model/willys_mb/willys_mb.blend": "a7ae02a0ba1e2bbfb068ecbae002dbe6f0f8dc85a595dccca25157b7c7a376a9",
     "model/willys_mb/willys_mb.glb": "ff6975747b9f6247b1aad71dbb217779e2999d5aa238c6bd9bf84e6a9001fb94",
+    "splash.webp": "86d76d62491f6288f3dc02ca6f7a99fc8c2b1feaeaa9010f66ed897bff6e7cd4",
     "sw.js": "c11f22fda850594c85f579e81cdeb65f72d4d987734f1d8c3fe2864d93649491",
     "weapons_textures/hud_austen_mki.webp": "8c44b0bf85815b253d5f6d73cb6c7e359e29a39e731cee3e26c84a847b2b0a4c",
     "weapons_textures/hud_bar_heavy.webp": "79240657ba8d9268d752be9e2cc3bfdd6a4f9181fdccbed6707ef5e420b57344",
