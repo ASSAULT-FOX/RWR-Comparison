@@ -397,7 +397,7 @@
     "model": "model/heavy_mortar/heavy_mortar.glb",
     "sourceBlend": "model/heavy_mortar/heavy_mortar.blend",
     "icon": 46,
-    "faction": "设施"
+    "faction": "通用"
   },
   {
     "id": "soukoutei",

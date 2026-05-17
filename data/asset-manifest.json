@@ -1,6 +1,6 @@
 {
-  "version": "9d3426a9cba3168af39c87653526756d24fd68495b913bc7d4637e4ac438b564",
-  "generatedAt": "2026-05-17T04:10:58.876Z",
+  "version": "17da55ac885594a39e3d63ff8d4cdfc71692a714bdbe7d374cffddc94cef9982",
+  "generatedAt": "2026-05-17T04:22:00.036Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
@@ -226,7 +226,7 @@
     "model/mg34_hmg/mg34_hmg.glb": "a007eef92da7f0f417ef21152cac0d2feafb80889847c87b35281b66f61ead40",
     "model/mg42_hmg/mg42_hmg.blend": "1b9ff99e24ae9234911477477bfb3787adbb41f513f41b3a037fc22c35c1206c",
     "model/mg42_hmg/mg42_hmg.glb": "b61eb8a59639b45c45eb96136ba3cc0135f3007afed8585c1c1b31de703923fb",
-    "model/models.json": "a3561ba2aa6f0ea540048bd8fbdaf549cf68291fd7a52a6c997ac05730b6c4d7",
+    "model/models.json": "d433edcf1889659bb0f8f60b08512cbcad8fc495db650971980aa4fffacf03f4",
     "model/mortar_ammunition_crates/mortar_ammunition_crates.blend": "6977c3cd3e77023704b7e78e069e556e528424d9a2d059e6731f0748d3e0ba9f",
     "model/mortar_ammunition_crates/mortar_ammunition_crates.glb": "e8bf56ba21024a1db8675f752e7e74c825ea6adec9b58a10a52b783c02af16b3",
     "model/normandy_turret/normandy_turret.blend": "84e4d5573bbb3330172546a0452a72a3310527fbfe94fa473a1e0b66f3d4f345",
