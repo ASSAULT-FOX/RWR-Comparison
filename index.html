@@ -2700,6 +2700,15 @@
       }
     ];
     const vehicleHigherBetter = new Set(["hp", "speed", "acceleration", "turret", "threshold", "reduction", "vision", "blast"]);
+    const modelFactionOrder = new Map([
+      ["德军", 0],
+      ["美军", 1],
+      ["英军", 2],
+      ["日军", 3],
+      ["通用", 4],
+      ["公用", 4],
+      ["设施", 5]
+    ]);
     const weaponHigherBetter = new Set([
       "致死",
       "弹容",
@@ -3086,8 +3095,10 @@
 
     function getFilteredModels() {
       const keyword = searchInput.value.trim().toLowerCase();
-      if (!keyword) return models;
-      return models.filter((model) => model.searchText.includes(keyword));
+      const list = keyword
+        ? models.filter((model) => model.searchText.includes(keyword))
+        : models;
+      return getSortedModels(list);
     }
 
     function countDisplay(value) {
@@ -3129,6 +3140,15 @@
         if (rightMissing) return -1;
         if (left === right) return a.id - b.id;
         return (left - right) * multiplier;
+      });
+    }
+
+    function getSortedModels(list) {
+      return list.slice().sort((a, b) => {
+        const left = modelFactionOrder.get(a.faction) ?? 99;
+        const right = modelFactionOrder.get(b.faction) ?? 99;
+        if (left !== right) return left - right;
+        return a.index - b.index;
       });
     }
 

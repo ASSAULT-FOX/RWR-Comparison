@@ -296,14 +296,6 @@
     "faction": "英军"
   },
   {
-    "id": "king_tiger_player",
-    "name": "玩家虎王重型坦克",
-    "model": "model/king_tiger_player/king_tiger_player.glb",
-    "sourceBlend": "model/king_tiger_player/king_tiger_player.blend",
-    "icon": 61,
-    "faction": "德军"
-  },
-  {
     "id": "jeep",
     "name": "威利斯吉普车",
     "model": "model/jeep/jeep.glb",
@@ -409,7 +401,7 @@
   },
   {
     "id": "king_tiger",
-    "name": "AI虎王重型坦克",
+    "name": "虎王重型坦克",
     "model": "model/king_tiger/king_tiger.glb",
     "sourceBlend": "model/king_tiger/king_tiger.blend",
     "icon": 61,
