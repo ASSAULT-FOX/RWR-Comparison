@@ -865,6 +865,11 @@
       color: #167d82;
     }
 
+    .faction.common {
+      background: #fff0b8;
+      color: #8a5a00;
+    }
+
     .faction.map-edelweiss {
       background: rgba(63, 124, 255, 0.13);
       color: #245ea8;
@@ -2914,8 +2919,9 @@
       models = modelData.map((model, index) => ({
         ...model,
         id: model.id || String(index),
+        icon: model.icon ?? model["图标号"] ?? null,
         index,
-        searchText: [model.name, model.id, model.model].join("\n").toLowerCase()
+        searchText: [model.name, model.id, model.model, model.icon, model["图标号"]].join("\n").toLowerCase()
       }));
       weaponLookup = new Map(weapons.map((weapon) => [weapon.id, weapon]));
       mapLookup = new Map(maps.map((map) => [map.id, map]));
@@ -2981,6 +2987,7 @@
       if (faction === "美军") return "us";
       if (faction === "日军") return "jp";
       if (faction === "英军") return "uk";
+      if (faction === "通用" || faction === "公用") return "common";
       return "";
     }
 
@@ -3451,10 +3458,13 @@
       }
       modelRowsEl.innerHTML = list.map((model) => {
         const vehicle = modelVehicle(model);
-        const iconHtml = vehicle
-          ? assetIconHtml(vehicleIconSrc(vehicle), model.name, "model-card-icon")
+        const iconSrc = modelIconSrc(model, vehicle);
+        const iconHtml = iconSrc
+          ? assetIconHtml(iconSrc, model.name, "model-card-icon")
           : '<span class="model-card-placeholder">无图标</span>';
-        const factionHtml = vehicle ? factionBadge(vehicle) : '<span class="faction">未知阵营</span>';
+        const factionHtml = vehicle
+          ? factionBadge(vehicle)
+          : (model.faction ? factionBadge({ faction: model.faction }) : '<span class="faction">未知阵营</span>');
         const disabled = model.model ? "" : " disabled";
         return `
           <button class="model-card" data-model-id="${escapeHtml(model.id)}" type="button"${disabled} title="${escapeHtml(model.name)}">
@@ -3473,7 +3483,15 @@
 
     function vehicleIconSrc(vehicle) {
       const icon = vehicle?.icon ?? vehicle?.["图标号"];
-      return icon === null || icon === undefined || icon === "" ? "" : `vehicles_textures/${encodeURIComponent(String(icon))}.webp`;
+      return icon === null || icon === undefined || icon === "" ? "" : `maps_textures/${encodeURIComponent(String(icon))}.webp`;
+    }
+
+    function modelIconSrc(model, vehicle) {
+      const icon = model?.icon ?? model?.["图标号"];
+      if (icon !== null && icon !== undefined && icon !== "") {
+        return `maps_textures/${encodeURIComponent(String(icon))}.webp`;
+      }
+      return vehicleIconSrc(vehicle);
     }
 
     function weaponIconSrc(weapon) {

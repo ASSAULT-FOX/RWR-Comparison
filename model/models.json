@@ -1,134 +1,570 @@
 [
   {
-    "id": "chi_ha",
-    "name": "97式中型坦克",
-    "model": "model/chi_ha/chi_ha.glb",
-    "sourceBlend": "model/chi_ha/chi_ha.blend"
+    "id": "normandy_turret",
+    "name": "15cm Tbts.K C／36岸防炮",
+    "model": "model/normandy_turret/normandy_turret.glb",
+    "sourceBlend": "model/normandy_turret/normandy_turret.blend",
+    "icon": 61,
+    "faction": "德军"
+  },
+  {
+    "id": "5inch_gun",
+    "name": "15CM舰炮",
+    "model": "model/5inch_gun/5inch_gun.glb",
+    "sourceBlend": "model/5inch_gun/5inch_gun.blend",
+    "icon": 41,
+    "faction": "美军"
+  },
+  {
+    "id": "type92_hmg",
+    "name": "92式重机枪",
+    "model": "model/type92_hmg/type92_hmg.glb",
+    "sourceBlend": "model/type92_hmg/type92_hmg.blend",
+    "icon": 49,
+    "faction": "日军"
+  },
+  {
+    "id": "jeep1",
+    "name": "95式轻型乘用车",
+    "model": "model/jeep1/jeep1.glb",
+    "sourceBlend": "model/jeep1/jeep1.blend",
+    "icon": 32,
+    "faction": "日军"
+  },
+  {
+    "id": "type98",
+    "name": "98式20mm高射炮",
+    "model": "model/type98/type98.glb",
+    "sourceBlend": "model/type98/type98.blend",
+    "icon": 47,
+    "faction": "日军"
+  },
+  {
+    "id": "coastal_gun",
+    "name": "岸防炮",
+    "model": "model/coastal_gun/coastal_gun.glb",
+    "sourceBlend": "model/coastal_gun/coastal_gun.blend",
+    "icon": 44,
+    "faction": "通用"
+  },
+  {
+    "id": "austin_k5_armoury",
+    "name": "奥斯汀K5军械库卡车",
+    "model": "model/austin_k5_armoury/austin_k5_armoury.glb",
+    "sourceBlend": "model/austin_k5_armoury/austin_k5_armoury.blend",
+    "icon": 57,
+    "faction": "英军"
+  },
+  {
+    "id": "austin_k5",
+    "name": "奥斯汀K5卡车",
+    "model": "model/austin_k5/austin_k5.glb",
+    "sourceBlend": "model/austin_k5/austin_k5.blend",
+    "icon": 56,
+    "faction": "英军"
+  },
+  {
+    "id": "staff_car",
+    "name": "参谋车",
+    "model": "model/staff_car/staff_car.glb",
+    "sourceBlend": "model/staff_car/staff_car.blend",
+    "icon": 76,
+    "faction": "德军"
+  },
+  {
+    "id": "landing_craft1",
+    "name": "大发登陆艇",
+    "model": "model/landing_craft1/landing_craft1.glb",
+    "sourceBlend": "model/landing_craft1/landing_craft1.blend",
+    "icon": 38,
+    "faction": "日军"
+  },
+  {
+    "id": "armory_daihatsu",
+    "name": "大发军械库船",
+    "model": "model/armory_daihatsu/armory_daihatsu.glb",
+    "sourceBlend": "model/armory_daihatsu/armory_daihatsu.blend",
+    "icon": 51,
+    "faction": "日军"
+  },
+  {
+    "id": "kubelwagen",
+    "name": "大众82式桶车",
+    "model": "model/kubelwagen/kubelwagen.glb",
+    "sourceBlend": "model/kubelwagen/kubelwagen.blend",
+    "icon": 62,
+    "faction": "德军"
+  },
+  {
+    "id": "luchs",
+    "name": "二号“山猫”轻型坦克",
+    "model": "model/luchs/luchs.glb",
+    "sourceBlend": "model/luchs/luchs.blend",
+    "icon": 71,
+    "faction": "德军"
+  },
+  {
+    "id": "suki",
+    "name": "二式两栖军械库卡车",
+    "model": "model/suki/suki.glb",
+    "sourceBlend": "model/suki/suki.blend",
+    "icon": 70,
+    "faction": "日军"
+  },
+  {
+    "id": "aa_gun",
+    "name": "防空炮",
+    "model": "model/aa_gun/aa_gun.glb",
+    "sourceBlend": "model/aa_gun/aa_gun.blend",
+    "icon": 42,
+    "faction": "通用"
+  },
+  {
+    "id": "repair_tank",
+    "name": "虎式装甲抢修车",
+    "model": "model/repair_tank/repair_tank.glb",
+    "sourceBlend": "model/repair_tank/repair_tank.blend",
+    "faction": "德军",
+    "icon": 8
   },
   {
     "id": "king_tiger_boss",
-    "name": "精英虎王重型坦克",
+    "name": "虎王重型坦克（精英）",
     "model": "model/king_tiger_boss/king_tiger_boss.glb",
-    "sourceBlend": "model/king_tiger_boss/king_tiger_boss.blend"
+    "sourceBlend": "model/king_tiger_boss/king_tiger_boss.blend",
+    "icon": 61,
+    "faction": "德军"
   },
   {
-    "id": "m4_75",
-    "name": "美军M4中型坦克",
-    "model": "model/m4_75/m4_75.glb",
-    "sourceBlend": "model/m4_75/m4_75.blend"
+    "id": "wasp",
+    "name": "黄蜂喷火型通用运载车",
+    "model": "model/wasp/wasp.glb",
+    "sourceBlend": "model/wasp/wasp.blend",
+    "icon": 68,
+    "faction": "英军"
   },
   {
-    "id": "churchill_mkvii",
-    "name": "丘吉尔步兵坦克",
-    "model": "model/churchill_mkvii/churchill_mkvii.glb",
-    "sourceBlend": "model/churchill_mkvii/churchill_mkvii.blend"
+    "id": "prison_building",
+    "name": "监狱",
+    "model": "model/prison_building/prison_building.glb",
+    "sourceBlend": "model/prison_building/prison_building.blend",
+    "icon": 17,
+    "faction": "通用"
+  },
+  {
+    "id": "chi_ha",
+    "name": "九七式中战车改",
+    "model": "model/chi_ha/chi_ha.glb",
+    "sourceBlend": "model/chi_ha/chi_ha.blend",
+    "icon": 64,
+    "faction": "日军"
+  },
+  {
+    "id": "usf_armoury_para",
+    "name": "空投军械库",
+    "model": "model/usf_armoury_para/usf_armoury_para.glb",
+    "sourceBlend": "model/usf_armoury_para/usf_armoury_para.blend",
+    "icon": 22,
+    "faction": "美军"
+  },
+  {
+    "id": "rubber_boat",
+    "name": "快艇",
+    "model": "model/rubber_boat/rubber_boat.glb",
+    "sourceBlend": "model/rubber_boat/rubber_boat.blend",
+    "icon": 4,
+    "faction": "通用"
+  },
+  {
+    "id": "fortified_turret_sherman",
+    "name": "美军堡垒化坦克炮塔工事",
+    "model": "model/fortified_turret_sherman/fortified_turret_sherman.glb",
+    "sourceBlend": "model/fortified_turret_sherman/fortified_turret_sherman.blend",
+    "icon": 65,
+    "faction": "美军"
+  },
+  {
+    "id": "pillbox",
+    "name": "美军机枪碉堡",
+    "model": "model/pillbox/pillbox.glb",
+    "sourceBlend": "model/pillbox/pillbox.blend",
+    "icon": 40,
+    "faction": "美军"
+  },
+  {
+    "id": "opel_blitz_armoury",
+    "name": "欧宝闪电军械库卡车",
+    "model": "model/opel_blitz_armoury/opel_blitz_armoury.glb",
+    "sourceBlend": "model/opel_blitz_armoury/opel_blitz_armoury.blend",
+    "icon": 2,
+    "faction": "德军"
+  },
+  {
+    "id": "opel_blitz_1",
+    "name": "欧宝闪电卡车",
+    "model": "model/opel_blitz_1/opel_blitz_1.glb",
+    "sourceBlend": "model/opel_blitz_1/opel_blitz_1.blend",
+    "icon": 1,
+    "faction": "德军"
+  },
+  {
+    "id": "mortar_ammunition_crates",
+    "name": "迫击炮弹药箱",
+    "model": "model/mortar_ammunition_crates/mortar_ammunition_crates.glb",
+    "sourceBlend": "model/mortar_ammunition_crates/mortar_ammunition_crates.blend",
+    "faction": "通用",
+    "icon": 25
+  },
+  {
+    "id": "submarine",
+    "name": "潜艇",
+    "model": "model/submarine/submarine.glb",
+    "sourceBlend": "model/submarine/submarine.blend",
+    "icon": 77,
+    "faction": "通用"
   },
   {
     "id": "churchill_crocodile",
     "name": "丘吉尔喷火坦克",
     "model": "model/churchill_crocodile/churchill_crocodile.glb",
-    "sourceBlend": "model/churchill_crocodile/churchill_crocodile.blend"
+    "sourceBlend": "model/churchill_crocodile/churchill_crocodile.blend",
+    "icon": 74,
+    "faction": "英军"
+  },
+  {
+    "id": "churchill_mkvii",
+    "name": "丘吉尔Mk.VII步兵坦克",
+    "model": "model/churchill_mkvii/churchill_mkvii.glb",
+    "sourceBlend": "model/churchill_mkvii/churchill_mkvii.blend",
+    "icon": 73,
+    "faction": "英军"
+  },
+  {
+    "id": "fortified_turret_chi_ha",
+    "name": "日军堡垒化坦克炮塔工事",
+    "model": "model/fortified_turret_chi_ha/fortified_turret_chi_ha.glb",
+    "sourceBlend": "model/fortified_turret_chi_ha/fortified_turret_chi_ha.blend",
+    "icon": 65,
+    "faction": "日军"
+  },
+  {
+    "id": "pillbox1",
+    "name": "日军机枪碉堡",
+    "model": "model/pillbox1/pillbox1.glb",
+    "sourceBlend": "model/pillbox1/pillbox1.blend",
+    "icon": 39,
+    "faction": "日军"
   },
   {
     "id": "stug_iii_base",
     "name": "三号突击炮",
     "model": "model/stug_iii_base/stug_iii_base.glb",
-    "sourceBlend": "model/stug_iii_base/stug_iii_base.blend"
-  },
-  {
-    "id": "luchs",
-    "name": "山猫轻型坦克",
-    "model": "model/luchs/luchs.glb",
-    "sourceBlend": "model/luchs/luchs.blend"
+    "sourceBlend": "model/stug_iii_base/stug_iii_base.blend",
+    "icon": 31,
+    "faction": "德军"
   },
   {
     "id": "maus_boss",
     "name": "鼠式超重型坦克",
     "model": "model/maus_boss/maus_boss.glb",
-    "sourceBlend": "model/maus_boss/maus_boss.blend"
+    "sourceBlend": "model/maus_boss/maus_boss.blend",
+    "icon": 5,
+    "faction": "德军"
   },
   {
     "id": "panzer_iv_base",
     "name": "四号中型坦克",
     "model": "model/panzer_iv_base/panzer_iv_base.glb",
-    "sourceBlend": "model/panzer_iv_base/panzer_iv_base.blend"
+    "sourceBlend": "model/panzer_iv_base/panzer_iv_base.blend",
+    "icon": 30,
+    "faction": "德军"
   },
   {
     "id": "katsu",
     "name": "特四式内火艇",
     "model": "model/katsu/katsu.glb",
-    "sourceBlend": "model/katsu/katsu.blend"
+    "sourceBlend": "model/katsu/katsu.blend",
+    "icon": 53,
+    "faction": "日军"
+  },
+  {
+    "id": "universal_carrier_base",
+    "name": "通用运载车MK.II",
+    "model": "model/universal_carrier_base/universal_carrier_base.glb",
+    "sourceBlend": "model/universal_carrier_base/universal_carrier_base.blend",
+    "icon": 58,
+    "faction": "英军"
   },
   {
     "id": "king_tiger_player",
     "name": "玩家虎王重型坦克",
     "model": "model/king_tiger_player/king_tiger_player.glb",
-    "sourceBlend": "model/king_tiger_player/king_tiger_player.blend"
+    "sourceBlend": "model/king_tiger_player/king_tiger_player.blend",
+    "icon": 61,
+    "faction": "德军"
+  },
+  {
+    "id": "jeep",
+    "name": "威利斯吉普车",
+    "model": "model/jeep/jeep.glb",
+    "sourceBlend": "model/jeep/jeep.blend",
+    "icon": 0,
+    "faction": "美军"
+  },
+  {
+    "id": "willys_mb_recoilless_rifle",
+    "name": "威利斯MB反装甲吉普车",
+    "model": "model/willys_mb_recoilless_rifle/willys_mb_recoilless_rifle.glb",
+    "sourceBlend": "model/willys_mb_recoilless_rifle/willys_mb_recoilless_rifle.blend",
+    "icon": 0,
+    "faction": "美军"
+  },
+  {
+    "id": "willys_mb",
+    "name": "威利斯MB机枪吉普车",
+    "model": "model/willys_mb/willys_mb.glb",
+    "sourceBlend": "model/willys_mb/willys_mb.blend",
+    "icon": 10,
+    "faction": "美军"
+  },
+  {
+    "id": "radio_jammer_base",
+    "name": "无线电干扰器",
+    "model": "model/radio_jammer_base/radio_jammer_base.glb",
+    "sourceBlend": "model/radio_jammer_base/radio_jammer_base.blend",
+    "icon": 9,
+    "faction": "通用"
+  },
+  {
+    "id": "landing_craft",
+    "name": "希金斯登陆艇",
+    "model": "model/landing_craft/landing_craft.glb",
+    "sourceBlend": "model/landing_craft/landing_craft.blend",
+    "icon": 37,
+    "faction": "美军"
+  },
+  {
+    "id": "armory_higgins",
+    "name": "希金斯军械库船",
+    "model": "model/armory_higgins/armory_higgins.glb",
+    "sourceBlend": "model/armory_higgins/armory_higgins.blend",
+    "icon": 50,
+    "faction": "美军"
+  },
+  {
+    "id": "m4_firefly_base",
+    "name": "谢尔曼“萤火虫”坦克",
+    "model": "model/m4_firefly_base/m4_firefly_base.glb",
+    "sourceBlend": "model/m4_firefly_base/m4_firefly_base.blend",
+    "icon": 59,
+    "faction": "英军"
+  },
+  {
+    "id": "m4_75",
+    "name": "谢尔曼中型坦克",
+    "model": "model/m4_75/m4_75.glb",
+    "sourceBlend": "model/m4_75/m4_75.blend",
+    "icon": 60,
+    "faction": "美军"
   },
   {
     "id": "hoha",
-    "name": "一式装甲运兵车",
+    "name": "一式半履带装甲车",
     "model": "model/hoha/hoha.glb",
-    "sourceBlend": "model/hoha/hoha.blend"
+    "sourceBlend": "model/hoha/hoha.blend",
+    "icon": 52,
+    "faction": "日军"
   },
   {
     "id": "m4_v_base",
     "name": "英军M4中型坦克",
     "model": "model/m4_v_base/m4_V_base.glb",
-    "sourceBlend": "model/m4_v_base/m4_V_base.blend"
+    "sourceBlend": "model/m4_v_base/m4_V_base.blend",
+    "icon": 60,
+    "faction": "英军"
+  },
+  {
+    "id": "pt_boat",
+    "name": "鱼雷艇",
+    "model": "model/pt_boat/pt_boat.glb",
+    "sourceBlend": "model/pt_boat/pt_boat.blend",
+    "icon": 36,
+    "faction": "美军"
+  },
+  {
+    "id": "heavy_mortar",
+    "name": "重型迫击炮",
+    "model": "model/heavy_mortar/heavy_mortar.glb",
+    "sourceBlend": "model/heavy_mortar/heavy_mortar.blend",
+    "icon": 46,
+    "faction": "设施"
+  },
+  {
+    "id": "soukoutei",
+    "name": "装甲艇",
+    "model": "model/soukoutei/soukoutei.glb",
+    "sourceBlend": "model/soukoutei/soukoutei.blend",
+    "icon": 67,
+    "faction": "日军"
   },
   {
     "id": "king_tiger",
     "name": "AI虎王重型坦克",
     "model": "model/king_tiger/king_tiger.glb",
-    "sourceBlend": "model/king_tiger/king_tiger.blend"
+    "sourceBlend": "model/king_tiger/king_tiger.blend",
+    "icon": 61,
+    "faction": "德军"
+  },
+  {
+    "id": "dukw",
+    "name": "DUKW两栖军械库卡车",
+    "model": "model/dukw/dukw.glb",
+    "sourceBlend": "model/dukw/dukw.blend",
+    "icon": 69,
+    "faction": "美军"
+  },
+  {
+    "id": "flak_88",
+    "name": "Flak-37防空炮",
+    "model": "model/flak_88/flak_88.glb",
+    "sourceBlend": "model/flak_88/flak_88.blend",
+    "icon": 42,
+    "faction": "德军"
+  },
+  {
+    "id": "sidecar_german",
+    "name": "KS-750摩托车",
+    "model": "model/sidecar_german/sidecar_german.glb",
+    "sourceBlend": "model/sidecar_german/sidecar_german.blend",
+    "icon": 78,
+    "faction": "德军"
+  },
+  {
+    "id": "lefh18",
+    "name": "LeFH-18轻型野战榴弹炮",
+    "model": "model/lefh18/lefh18.glb",
+    "sourceBlend": "model/lefh18/lefh18.blend",
+    "icon": 15,
+    "faction": "德军"
   },
   {
     "id": "lvt4",
     "name": "LVT4两栖战车",
     "model": "model/lvt4/lvt4.glb",
-    "sourceBlend": "model/lvt4/lvt4.blend"
+    "sourceBlend": "model/lvt4/lvt4.blend",
+    "icon": 35,
+    "faction": "美军"
+  },
+  {
+    "id": "m2hb_hmg",
+    "name": "M2HB重机枪",
+    "model": "model/m2hb_hmg/m2hb_hmg.glb",
+    "sourceBlend": "model/m2hb_hmg/m2hb_hmg.blend",
+    "icon": 29,
+    "faction": "美军"
   },
   {
     "id": "m3_halftrack_base",
     "name": "M3半履带车",
     "model": "model/m3_halftrack_base/m3_halftrack_base.glb",
-    "sourceBlend": "model/m3_halftrack_base/m3_halftrack_base.blend"
+    "sourceBlend": "model/m3_halftrack_base/m3_halftrack_base.blend",
+    "icon": 24,
+    "faction": "美军"
   },
   {
     "id": "m4_rhino",
-    "name": "M4犀牛中型坦克",
+    "name": "M4“犀牛”中型坦克",
     "model": "model/m4_rhino/m4_rhino.glb",
-    "sourceBlend": "model/m4_rhino/m4_rhino.blend"
+    "sourceBlend": "model/m4_rhino/m4_rhino.blend",
+    "icon": 60,
+    "faction": "美军"
   },
   {
-    "id": "m4_firefly_base",
-    "name": "M4萤火虫中型坦克",
-    "model": "model/m4_firefly_base/m4_firefly_base.glb",
-    "sourceBlend": "model/m4_firefly_base/m4_firefly_base.blend"
+    "id": "at_gun_m5",
+    "name": "M5反坦克炮",
+    "model": "model/at_gun_m5/at_gun_m5.glb",
+    "sourceBlend": "model/at_gun_m5/at_gun_m5.blend",
+    "icon": 14,
+    "faction": "美军"
   },
   {
     "id": "m10",
-    "name": "M10坦克歼击车",
+    "name": "M10“狼獾”坦克歼击车",
     "model": "model/m10/m10.glb",
-    "sourceBlend": "model/m10/m10.blend"
+    "sourceBlend": "model/m10/m10.blend",
+    "icon": 63,
+    "faction": "美军"
   },
   {
-    "id": "sdkfz251_base",
-    "name": "sdkfz251半履带车",
-    "model": "model/sdkfz251_base/sdkfz251_base.glb",
-    "sourceBlend": "model/sdkfz251_base/sdkfz251_base.blend"
+    "id": "m1919_hmg",
+    "name": "M1919A4勃朗宁重机枪",
+    "model": "model/m1919_hmg/m1919_hmg.glb",
+    "sourceBlend": "model/m1919_hmg/m1919_hmg.blend",
+    "icon": 48,
+    "faction": "美军"
+  },
+  {
+    "id": "mg34_hmg",
+    "name": "MG-34重机枪",
+    "model": "model/mg34_hmg/mg34_hmg.glb",
+    "sourceBlend": "model/mg34_hmg/mg34_hmg.blend",
+    "icon": 27,
+    "faction": "德军"
+  },
+  {
+    "id": "mg42_hmg",
+    "name": "MG-42重机枪",
+    "model": "model/mg42_hmg/mg42_hmg.glb",
+    "sourceBlend": "model/mg42_hmg/mg42_hmg.blend",
+    "icon": 28,
+    "faction": "德军"
+  },
+  {
+    "id": "oerlikon",
+    "name": "Mk.2厄利孔防空炮",
+    "model": "model/oerlikon/oerlikon.glb",
+    "sourceBlend": "model/oerlikon/oerlikon.blend",
+    "icon": 45,
+    "faction": "美军"
+  },
+  {
+    "id": "bofors",
+    "name": "Mk.3博福斯防空炮",
+    "model": "model/bofors/bofors.glb",
+    "sourceBlend": "model/bofors/bofors.blend",
+    "icon": 43,
+    "faction": "美军"
+  },
+  {
+    "id": "at_gun_pak40_base",
+    "name": "PaK-40反坦克炮",
+    "model": "model/at_gun_pak40_base/at_gun_pak40_base.glb",
+    "sourceBlend": "model/at_gun_pak40_base/at_gun_pak40_base.blend",
+    "icon": 13,
+    "faction": "德军"
   },
   {
     "id": "sdkfz251_flak",
-    "name": "sdkfz251半履带防空车",
+    "name": "Sd.Kfz.251/17防空车",
     "model": "model/sdkfz251_flak/sdkfz251_flak.glb",
-    "sourceBlend": "model/sdkfz251_flak/sdkfz251_flak.blend"
+    "sourceBlend": "model/sdkfz251_flak/sdkfz251_flak.blend",
+    "icon": 54,
+    "faction": "德军"
+  },
+  {
+    "id": "sdkfz251_base",
+    "name": "Sd.Kfz.251半履带车",
+    "model": "model/sdkfz251_base/sdkfz251_base.glb",
+    "sourceBlend": "model/sdkfz251_base/sdkfz251_base.blend",
+    "icon": 55,
+    "faction": "德军"
   },
   {
     "id": "tog2_boss",
-    "name": "TOGII超重型坦克",
+    "name": "TOG II 超重型坦克",
     "model": "model/tog2_boss/tog2_boss.glb",
-    "sourceBlend": "model/tog2_boss/tog2_boss.blend"
+    "sourceBlend": "model/tog2_boss/tog2_boss.blend",
+    "icon": 19,
+    "faction": "英军"
   }
 ]

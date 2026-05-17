@@ -26,7 +26,7 @@ http://127.0.0.1:8765/index.html
 地图摘要       20 条，保存在 data/maps.json
 地图点位文件   20 个，保存在 maps/<地图名>/map-data.json
 地图点位     3054 个，按阵营和视图状态分组
-模型数据       22 条，保存在 model/models.json，模型文件保存在 model/<安全英文id>/
+模型数据       71 条，保存在 model/models.json，模型文件保存在 model/<安全英文id>/
 ```
 
 ## 项目结构
@@ -59,8 +59,7 @@ http://127.0.0.1:8765/index.html
 │   └── <安全英文id>/
 │       ├── *.glb                 网页实际加载的 GLB 模型
 │       └── *.blend               源文件归档，网页不直接渲染
-├── maps_textures/                地图叠加视图使用的设施和载具图标
-├── vehicles_textures/            载具表格和详情使用的图标
+├── maps_textures/                地图叠加视图、载具表格和模型查询共用的设施/载具图标
 └── weapons_textures/             枪械表格和详情使用的图标
 ```
 
@@ -181,7 +180,7 @@ id
 图标号
 ```
 
-新增载具时，在 CSV 中增加一行即可。`图标号` 对应 `vehicles_textures/<编号>.webp`。
+新增载具时，在 CSV 中增加一行即可。`图标号` 对应 `maps_textures/<编号>.webp`。
 
 ### 空值和类型规则
 
@@ -322,12 +321,16 @@ layer         原始图层信息
     "id": "maus_boss",
     "name": "鼠式超重型坦克",
     "model": "model/maus_boss/maus_boss.glb",
-    "sourceBlend": "model/maus_boss/maus_boss.blend"
+    "sourceBlend": "model/maus_boss/maus_boss.blend",
+    "icon": 5,
+    "faction": "德军"
   }
 ]
 ```
 
 网页查看器通过 `model-viewer.html?id=<id>` 打开，并实际加载 `model` 指向的 `.glb`。浏览器不能直接渲染 `.blend`，`sourceBlend` 只用于源文件归档。
+
+`icon` 对应 `maps_textures/<编号>.webp`。模型查询页会优先使用模型清单里的 `icon`，没有写明时再尝试按 `name` 匹配 `data/vehicles.json` 中的 `图标号`。
 
 ## 前端功能
 
@@ -346,7 +349,7 @@ layer         原始图层信息
 
 地图查询支持地图列表、基础地图预览、按阵营和占领状态生成带设施图标的地图视图。
 
-模型查询支持从 `model/models.json` 列出模型、按载具名匹配 `data/vehicles.json` 中的 `图标号` 并显示 `vehicles_textures/<图标号>.webp`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。模型查看页右侧的部件显示控制为单列纵向列表，按钮列宽按最长部件名收缩，部件较多时在面板内上下滚动；渲染器会在低 DPR 屏幕上使用轻量超采样，并保留贴图原始分辨率和各向异性过滤。
+模型查询支持从 `model/models.json` 列出模型、优先使用模型清单中的 `icon` 显示 `maps_textures/<图标号>.webp`，没有 `icon` 时再按载具名匹配 `data/vehicles.json` 中的 `图标号`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。模型查看页右侧的部件显示控制为单列纵向列表，按钮列宽按最长部件名收缩，部件较多时在面板内上下滚动；渲染器会在低 DPR 屏幕上使用轻量超采样，并保留贴图原始分辨率和各向异性过滤。
 
 页面包含移动端适配：`860px` 以下顶部操作栏纵向排列并保持在表格滚动层上方，主查询表格保留完整列宽并限制在 `.table-wrap` 内上下和左右滚动，避免页面主体被宽表格撑出横向滚动，同时保证手机端可以继续纵向浏览更多行；载具对比和枪械对比弹窗在手机端也保留完整三栏对比结构，并在弹窗内容区内左右滑动查看。`640px` 以下主导航折叠为“菜单”按钮，详情、地图和索敌优先级弹窗贴合手机视口显示，按钮和输入框保持触控友好的高度与间距。桌面端从其他分类切换到地图查询或模型查询时，列表滚动位置会回到顶部，避免沿用上一分类停留的行位置。
 
@@ -382,7 +385,6 @@ data/
 model/
 maps_textures/
 maps/
-vehicles_textures/
 weapons_textures/
 index.html
 model-viewer.html
@@ -462,9 +464,9 @@ python -m http.server 8765 --bind 127.0.0.1
 - 修改枪械和载具数据时，优先编辑 `csv/` 目录下的 CSV。
 - 不建议直接编辑 `data/weapons.json` 和 `data/vehicles.json`。
 - 新增枪械后，检查 `weapons_textures/` 中是否存在对应图标。
-- 新增载具后，检查 `vehicles_textures/` 中是否存在对应编号图标。
+- 新增载具后，检查 `maps_textures/` 中是否存在对应编号图标。
 - 新增模型时，在 `model/` 下创建安全英文 id 子目录，放入同一模型对应的 `.glb` 和可选 `.blend`，然后手动在 `model/models.json` 中增加对应条目。
-- 模型查询页的图标来自 `data/vehicles.json` 的 `图标号`，如果 `model/models.json` 中的 `name` 和载具表中的 `载具名` 不完全一致，页面会尝试宽松匹配；精确显示建议保持二者一致。
+- 模型查询页的图标优先来自 `model/models.json` 的 `icon`，缺失时会尝试按 `name` 匹配 `data/vehicles.json` 中的 `图标号`；精确显示建议直接维护 `icon`。
 - 修改地图点位后，检查 `map-data.json` 中的 `icon` 是否能在 `maps_textures/` 中找到。
 - 上传前运行 `update-assets-and-upload.bat`，让 CSV、JSON、资源清单和 Git 上传保持同一流程。
 - 如果数据和资源没有变化，JSON 和资源清单都不会被重写，用户浏览器也不会因为无意义哈希变化重新请求资源。

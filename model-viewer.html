@@ -901,6 +901,7 @@
       activeModel.name = activeModel.name || model.name || "model";
       scene.add(activeModel);
       normalizeMaterials(activeModel);
+      centerModel(activeModel);
       resetCamera(activeModel);
       buildPartButtons(activeModel);
       loadingPanel.classList.add("hidden");
@@ -960,6 +961,13 @@
       if (!texture) return;
       texture.anisotropy = maxTextureAnisotropy;
       texture.needsUpdate = true;
+    }
+
+    function centerModel(root) {
+      const box = new THREE.Box3().setFromObject(root);
+      if (box.isEmpty()) return;
+      const center = box.getCenter(new THREE.Vector3());
+      root.position.sub(center);
     }
 
     function resetCamera(root) {

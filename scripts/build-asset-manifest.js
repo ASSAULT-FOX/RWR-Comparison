@@ -7,7 +7,6 @@ const roots = [
   "model",
   "maps_textures",
   "maps",
-  "vehicles_textures",
   "weapons_textures"
 ];
 
