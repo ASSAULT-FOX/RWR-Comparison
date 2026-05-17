@@ -4,12 +4,12 @@
     "name": "15cm Tbts.K C／36岸防炮",
     "model": "model/normandy_turret/normandy_turret.glb",
     "sourceBlend": "model/normandy_turret/normandy_turret.blend",
-    "icon": 61,
+    "icon": 75,
     "faction": "德军"
   },
   {
     "id": "5inch_gun",
-    "name": "15CM舰炮",
+    "name": "5英寸舰炮",
     "model": "model/5inch_gun/5inch_gun.glb",
     "sourceBlend": "model/5inch_gun/5inch_gun.blend",
     "icon": 41,
@@ -68,7 +68,7 @@
     "name": "参谋车",
     "model": "model/staff_car/staff_car.glb",
     "sourceBlend": "model/staff_car/staff_car.blend",
-    "icon": 76,
+    "icon": 66,
     "faction": "德军"
   },
   {
@@ -428,7 +428,7 @@
     "name": "Flak-37防空炮",
     "model": "model/flak_88/flak_88.glb",
     "sourceBlend": "model/flak_88/flak_88.blend",
-    "icon": 42,
+    "icon": 72,
     "faction": "德军"
   },
   {
