@@ -1,0 +1,39 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = false
+
+[*.md]
+charset = utf-8
+end_of_line = lf
+
+[*.json]
+charset = utf-8
+end_of_line = lf
+
+[*.csv]
+charset = utf-8
+end_of_line = lf
+
+[*.cpp]
+charset = utf-8
+end_of_line = lf
+
+[*.hpp]
+charset = utf-8
+end_of_line = lf
+
+[*.bat]
+charset = utf-8-bom
+end_of_line = crlf
+
+[*.cmd]
+charset = utf-8-bom
+end_of_line = crlf
+
+[*.ps1]
+charset = utf-8
+end_of_line = crlf
