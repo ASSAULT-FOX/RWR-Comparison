@@ -723,6 +723,22 @@ function resetDialogScroll(dialogRoot) {
   if (body) body.scrollTop = 0;
 }
 
+function syncModalState() {
+  const hasOpenModal = [modal, detailModal, targetModal, mapModal]
+    .some((dialogRoot) => dialogRoot.classList.contains("open"));
+  document.body.classList.toggle("modal-open", hasOpenModal);
+}
+
+function openDialog(dialogRoot) {
+  dialogRoot.classList.add("open");
+  syncModalState();
+}
+
+function closeDialog(dialogRoot) {
+  dialogRoot.classList.remove("open");
+  syncModalState();
+}
+
 function compareArrow(left, right) {
   if (left > right) return { left: "↑", right: "↓", leftClass: "up", rightClass: "down" };
   if (left < right) return { left: "↓", right: "↑", leftClass: "down", rightClass: "up" };
@@ -1250,7 +1266,7 @@ function openDetail(index) {
     renderDetailSection("可维修性", repairRows(vehicle)),
     renderDetailSection("伤害抗性", detailAntiTankRows(vehicle))
   ].join("");
-  detailModal.classList.add("open");
+  openDialog(detailModal);
   resetDialogScroll(detailModal);
 }
 
@@ -1339,7 +1355,7 @@ function openTargetOptimizer(index) {
   targetStage.querySelectorAll(".threat-token").forEach((node) => node.remove());
   renderThreatButtons();
   priorityList.innerHTML = "";
-  targetModal.classList.add("open");
+  openDialog(targetModal);
   resetDialogScroll(targetModal);
   setTargetMode(false);
 }
@@ -1348,7 +1364,7 @@ async function openMapDetail(mapId) {
   const summary = mapLookup.get(mapId);
   mapTitle.textContent = summary ? `${summary.group} / ${summary.name}` : "地图详情";
   renderMapPerspectiveActions(summary);
-  mapModal.classList.add("open");
+  openDialog(mapModal);
   showMapLoading("正在读取地图数据和图片");
   resetDialogScroll(mapModal);
   currentMap = await loadMapData(mapId);
@@ -2091,7 +2107,7 @@ function openWeaponDetail(index) {
   detailRows.innerHTML = detailIconPanel(weaponIconSrc(weapon), displayValue(weapon["枪械名称"]), "weapon-icon") + weaponSections
     .map((section) => renderDetailSection(section.title, weaponDetailRows(weapon, section)))
     .join("");
-  detailModal.classList.add("open");
+  openDialog(detailModal);
   resetDialogScroll(detailModal);
 }
 
@@ -2121,7 +2137,7 @@ function openPlayerDetail(index) {
   detailRows.innerHTML = playerDetailSections
     .map((section) => renderDetailSection(section.title, playerDetailRows(player, section)))
     .join("");
-  detailModal.classList.add("open");
+  openDialog(detailModal);
   resetDialogScroll(detailModal);
 }
 
@@ -2210,7 +2226,7 @@ function openWeaponComparison(indexA, indexB) {
 
   compareMetrics.innerHTML = "";
   document.getElementById("compareTitle").textContent = "枪械对比";
-  modal.classList.add("open");
+  openDialog(modal);
   resetDialogScroll(modal);
 }
 
@@ -2260,7 +2276,7 @@ function openComparison(indexA, indexB) {
   compareMetrics.innerHTML = "";
 
   document.getElementById("compareTitle").textContent = `斗 兽 棋 结 果`;
-  modal.classList.add("open");
+  openDialog(modal);
   resetDialogScroll(modal);
 }
 
@@ -2449,21 +2465,21 @@ targetStage.addEventListener("pointercancel", () => {
   dragThreat = null;
   updateThreatScores();
 });
-closeModal.addEventListener("click", () => modal.classList.remove("open"));
+closeModal.addEventListener("click", () => closeDialog(modal));
 modal.addEventListener("click", (event) => {
-  if (event.target === modal) modal.classList.remove("open");
+  if (event.target === modal) closeDialog(modal);
 });
-closeDetailModal.addEventListener("click", () => detailModal.classList.remove("open"));
+closeDetailModal.addEventListener("click", () => closeDialog(detailModal));
 detailModal.addEventListener("click", (event) => {
-  if (event.target === detailModal) detailModal.classList.remove("open");
+  if (event.target === detailModal) closeDialog(detailModal);
 });
-closeTargetModal.addEventListener("click", () => targetModal.classList.remove("open"));
+closeTargetModal.addEventListener("click", () => closeDialog(targetModal));
 targetModal.addEventListener("click", (event) => {
-  if (event.target === targetModal) targetModal.classList.remove("open");
+  if (event.target === targetModal) closeDialog(targetModal);
 });
-closeMapModal.addEventListener("click", () => mapModal.classList.remove("open"));
+closeMapModal.addEventListener("click", () => closeDialog(mapModal));
 mapModal.addEventListener("click", (event) => {
-  if (event.target === mapModal) mapModal.classList.remove("open");
+  if (event.target === mapModal) closeDialog(mapModal);
 });
 window.addEventListener("resize", () => {
   invalidateTargetGeometry();
@@ -2476,6 +2492,7 @@ window.addEventListener("keydown", (event) => {
     detailModal.classList.remove("open");
     targetModal.classList.remove("open");
     mapModal.classList.remove("open");
+    syncModalState();
   }
 });
 

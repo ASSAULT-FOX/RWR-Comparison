@@ -83,8 +83,8 @@
     .topbar {
       position: relative;
       z-index: 6;
-      min-height: 126px;
-      padding: 8px 10px;
+      min-height: 96px;
+      padding: 4px 10px;
       display: grid;
       grid-template-columns: minmax(430px, 1.28fr) minmax(680px, 1.42fr) minmax(430px, 1fr);
       align-items: center;
@@ -106,9 +106,9 @@
 
     .brand-splash {
       display: block;
-      width: min(680px, 126%);
-      height: 116px;
-      margin-left: -72px;
+      width: min(540px, 108%);
+      height: 86px;
+      margin-left: -48px;
       object-fit: contain;
       filter: drop-shadow(0 10px 16px rgba(35, 76, 124, 0.14));
     }
@@ -240,6 +240,21 @@
 
     body.players-pagination-visible .content-panel {
       grid-template-rows: auto minmax(0, 1fr) minmax(84px, auto);
+      gap: 12px;
+      overflow: visible;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    body.players-pagination-visible .table-wrap {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: #fff;
+    }
+
+    body.players-pagination-visible.modal-open .content-panel {
+      grid-template-rows: auto minmax(0, 1fr);
     }
 
     .primary {
@@ -651,10 +666,10 @@
       display: none;
       min-height: 84px;
       padding: 14px 18px;
-      border-top: 1px solid var(--line);
-      border-radius: 0 0 18px 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
       background: rgba(255, 255, 255, 0.96);
-      box-shadow: 0 -8px 22px rgba(35, 76, 124, 0.08);
+      box-shadow: 0 8px 20px rgba(35, 76, 124, 0.06);
       backdrop-filter: blur(10px) saturate(125%);
       -webkit-backdrop-filter: blur(10px) saturate(125%);
       align-items: center;
@@ -675,6 +690,10 @@
     .pagination-panel.show {
       display: grid;
       grid-template-columns: minmax(180px, auto) minmax(0, 1fr);
+    }
+
+    body.modal-open .pagination-panel.show {
+      display: none;
     }
 
     .pagination-info {
@@ -1025,7 +1044,7 @@
     }
 
     .detail-icon-panel {
-      margin: 18px 18px 0;
+      margin: 0 18px;
       min-height: 220px;
       display: grid;
       place-items: center;
@@ -1171,7 +1190,7 @@
       background: rgba(24, 43, 68, 0.32);
       backdrop-filter: blur(10px) saturate(130%);
       -webkit-backdrop-filter: blur(10px) saturate(130%);
-      z-index: 10;
+      z-index: 100;
     }
 
     .modal.open {
@@ -1773,6 +1792,10 @@
 
     .detail-section + .detail-section {
       margin-top: 16px;
+    }
+
+    .detail-icon-panel + .detail-section {
+      margin-top: 6px;
     }
 
     .detail-section-title {
