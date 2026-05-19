@@ -40,10 +40,11 @@ http://127.0.0.1:8765/index.html
 ├── splash.webp                   首页顶部操作容器左侧的品牌图
 ├── update-assets-and-upload.bat  编译 TypeScript、更新数据、刷新资源清单并上传的脚本
 ├── README.md                     当前说明文档，UTF-8 with BOM 编码
-├── package.json                  TypeScript 构建脚本和开发依赖
-├── tsconfig.json                 TypeScript 编译配置，输出到 scripts/
 ├── ts/
-│   └── index.ts                  主页面前端逻辑源码
+│   ├── index.ts                  主页面前端逻辑源码
+│   ├── package.json              TypeScript 构建脚本和开发依赖
+│   ├── package-lock.json         TypeScript 依赖锁定文件
+│   └── tsconfig.json             TypeScript 编译配置，输出到 scripts/
 ├── scripts/
 │   ├── index.js                  由 ts/index.ts 编译生成的浏览器运行时代码
 │   ├── sync-csv-json.js          CSV 和 JSON 同步脚本
@@ -73,6 +74,8 @@ http://127.0.0.1:8765/index.html
 ├── maps_textures/                地图叠加视图、载具表格和模型查询共用的设施/载具图标
 └── weapons_textures/             枪械表格和详情使用的图标
 ```
+
+根目录保留 `.editorconfig`、`.gitignore` 和 `sw.js`：前两个文件需要在仓库根目录生效，`sw.js` 需要留在根目录以保持 Service Worker 作用域覆盖整站。TypeScript 相关的 npm 配置集中放在 `ts/`，避免根目录继续堆放构建配置文件。
 
 ## 数据维护方式
 
@@ -105,8 +108,8 @@ maps/<地图名>/map-data.json
 点击 `update-assets-and-upload.bat` 时，当前流程是：
 
 ```text
-1. 如缺少依赖，执行 cmd /c npm install
-2. cmd /c npm run build:ts
+1. 如缺少依赖，执行 cmd /c npm --prefix ts install
+2. cmd /c npm --prefix ts run build:ts
 3. node scripts/sync-csv-json.js csv-to-json
 4. node scripts/build-asset-manifest.js
 5. git add .
@@ -133,7 +136,7 @@ data/vehicles.json
 
 如果 CSV 转换后的 JSON 内容和现有 JSON 完全一致，脚本会输出 `Unchanged`，不会重写 JSON 文件。因此对应文件的 SHA-256 哈希不会变化，也不会让用户浏览器重新请求没有变化的数据资源。
 
-TypeScript 编译步骤会读取 `ts/index.ts` 并生成 `scripts/index.js`，GitHub Pages 实际加载的是这个编译产物。
+TypeScript 编译步骤会读取 `ts/index.ts`，使用 `ts/tsconfig.json` 生成 `scripts/index.js`，GitHub Pages 实际加载的是这个编译产物。
 
 资源清单步骤会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
 
@@ -466,7 +469,7 @@ splash.webp
 scripts/index.js
 ```
 
-`README.md`、`csv/`、`ts/`、`package.json`、`tsconfig.json` 和辅助脚本不参与网页运行时加载，因此不写入资源清单；`scripts/index.js` 是浏览器运行时代码，会写入资源清单。
+`README.md`、`csv/`、`ts/` 和辅助脚本不参与网页运行时加载，因此不写入资源清单；`scripts/index.js` 是浏览器运行时代码，会写入资源清单。
 
 页面启动时会使用 `cache: "no-store"` 请求：
 
@@ -524,7 +527,7 @@ node scripts/build-asset-manifest.js
 编译 TypeScript 前端逻辑：
 
 ```powershell
-cmd /c npm run build:ts
+cmd /c npm --prefix ts run build:ts
 ```
 
 手动抓取太平洋玩家统计：

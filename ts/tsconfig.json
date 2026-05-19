@@ -7,11 +7,11 @@
     "lib": ["DOM", "ES2020"],
     "module": "None",
     "noEmitOnError": false,
-    "outDir": "scripts",
+    "outDir": "../scripts",
     "removeComments": false,
     "skipLibCheck": true,
     "strict": false,
     "target": "ES2020"
   },
-  "include": ["ts/**/*.ts"]
+  "include": ["*.ts"]
 }

@@ -3,9 +3,9 @@ setlocal
 chcp 65001 >nul
 cd /d "%~dp0"
 
-if not exist "node_modules\typescript\bin\tsc" (
+if not exist "ts\node_modules\typescript\bin\tsc" (
   echo Installing TypeScript dependencies...
-  cmd /c npm install
+  cmd /c npm --prefix ts install
   if errorlevel 1 (
     echo.
     echo Failed to install TypeScript dependencies.
@@ -15,7 +15,7 @@ if not exist "node_modules\typescript\bin\tsc" (
 )
 
 echo Compiling TypeScript...
-cmd /c npm run build:ts
+cmd /c npm --prefix ts run build:ts
 if errorlevel 1 (
   echo.
   echo Failed to compile TypeScript.
@@ -84,7 +84,7 @@ if errorlevel 1 (
 )
 
 echo Rebuilding assets after remote sync...
-cmd /c npm run build:ts
+cmd /c npm --prefix ts run build:ts
 if errorlevel 1 (
   echo.
   echo Failed to compile TypeScript after remote sync.

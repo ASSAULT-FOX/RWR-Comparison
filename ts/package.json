@@ -1,4 +1,6 @@
 {
+  "name": "rwr-parameters-query-ts",
+  "private": true,
   "scripts": {
     "build:ts": "tsc -p tsconfig.json"
   },
