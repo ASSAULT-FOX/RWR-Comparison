@@ -8,6 +8,7 @@
   <link rel="preload" href="data/vehicles.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="data/weapons.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="data/maps.json" as="fetch" type="application/json" crossorigin>
+  <link rel="preload" href="data/rwr-players-pacific.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="model/models.json" as="fetch" type="application/json" crossorigin>
   <style>
     :root {
@@ -105,8 +106,9 @@
 
     .brand-splash {
       display: block;
-      width: min(600px, 112%);
+      width: min(680px, 126%);
       height: 116px;
+      margin-left: -72px;
       object-fit: contain;
       filter: drop-shadow(0 10px 16px rgba(35, 76, 124, 0.14));
     }
@@ -478,6 +480,14 @@
       width: 11%;
     }
 
+    col.player-name-col {
+      width: 28%;
+    }
+
+    col.player-stat-col {
+      width: 12%;
+    }
+
     col.map-group-col {
       width: 14%;
     }
@@ -605,6 +615,7 @@
 
     #vehicleTable tbody td,
     #weaponTable tbody td,
+    #playerTable tbody td,
     #modelTable tbody td {
       padding-top: 16px;
       padding-bottom: 16px;
@@ -614,8 +625,71 @@
 
     #vehicleTable tbody tr,
     #weaponTable tbody tr,
+    #playerTable tbody tr,
     #modelTable tbody tr {
       min-height: 82px;
+    }
+
+    .pagination {
+      position: sticky;
+      left: 0;
+      bottom: 0;
+      z-index: 15;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 70px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 -8px 22px rgba(35, 76, 124, 0.08);
+      backdrop-filter: blur(10px) saturate(125%);
+      -webkit-backdrop-filter: blur(10px) saturate(125%);
+    }
+
+    .pagination.show {
+      display: flex;
+    }
+
+    .page-button {
+      min-width: 42px;
+      min-height: 38px;
+      border: 1px solid rgba(93, 125, 159, 0.2);
+      border-radius: 8px;
+      padding: 0 12px;
+      color: #345365;
+      background: rgba(235, 244, 252, 0.82);
+      cursor: pointer;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+      transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .page-button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: #fff;
+      box-shadow: 0 8px 18px rgba(35, 76, 124, 0.12);
+    }
+
+    .page-button.active {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, rgba(32, 200, 212, 0.96), rgba(63, 124, 255, 0.96));
+      box-shadow: 0 8px 18px rgba(43, 122, 230, 0.16);
+    }
+
+    .page-button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .page-ellipsis {
+      color: var(--muted);
+      font-weight: 900;
+      padding: 0 2px;
     }
 
     .table-icon-cell {
@@ -1605,6 +1679,23 @@
       box-shadow: 0 4px 12px rgba(35, 76, 124, 0.045);
     }
 
+    .detail-row.with-rank {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 112px;
+    }
+
+    .detail-rank {
+      display: grid;
+      place-items: center;
+      padding: 10px 12px;
+      text-align: center;
+      line-height: 1.3;
+      color: #285c97;
+      background: rgba(235, 246, 255, 0.94);
+      border-left: 1px solid var(--line);
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
     .detail-name,
     .detail-value {
       display: grid;
@@ -2019,6 +2110,7 @@
       .brand-splash {
         width: min(250px, 80vw);
         height: 72px;
+        margin-left: 0;
       }
 
       .search {
@@ -2349,6 +2441,10 @@
         min-width: 840px;
       }
 
+      #playerTable {
+        min-width: 760px;
+      }
+
       #mapTable {
         min-width: 0;
       }
@@ -2388,6 +2484,7 @@
       tbody tr,
       #vehicleTable tbody tr,
       #weaponTable tbody tr,
+      #playerTable tbody tr,
       #modelTable tbody tr {
         display: table-row;
         min-height: 0;
@@ -2406,6 +2503,7 @@
       tbody td,
       #vehicleTable tbody td,
       #weaponTable tbody td,
+      #playerTable tbody td,
       #modelTable tbody td {
         display: table-cell;
         min-height: 0;
@@ -2441,6 +2539,16 @@
       .row-icon {
         width: 58px;
         height: 58px;
+      }
+
+      .pagination {
+        justify-content: flex-start;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .pagination::-webkit-scrollbar {
+        display: none;
       }
 
       .faction {
@@ -2759,6 +2867,7 @@
           <button class="tag-tab" data-tab="weapons" type="button">枪械查询</button>
           <button class="tag-tab" data-tab="maps" type="button">地图查询</button>
           <button class="tag-tab" data-tab="models" type="button">模型查询</button>
+          <button class="tag-tab" data-tab="players" type="button">玩家列表</button>
         </nav>
         <label class="search">
           <span>⌕</span>
@@ -2780,7 +2889,7 @@
           <div class="loading-card">
             <div class="loading-spinner" aria-hidden="true"></div>
             <div class="loading-title">正在加载数据</div>
-            <div class="loading-subtitle">正在请求并解析载具、枪械、地图和模型数据</div>
+            <div class="loading-subtitle">正在请求并解析载具、枪械、地图、模型和玩家数据</div>
           </div>
         </div>
         <table id="vehicleTable">
@@ -2841,12 +2950,34 @@
           </thead>
           <tbody id="weaponRows"></tbody>
         </table>
+        <table id="playerTable" class="hidden">
+          <colgroup>
+            <col class="player-name-col">
+            <col class="player-stat-col">
+            <col class="player-stat-col">
+            <col class="player-stat-col">
+            <col class="player-stat-col">
+            <col class="player-stat-col">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th class="sortable player-sort" data-sort="xp">XP<span class="sort-indicator"></span></th>
+              <th class="sortable player-sort" data-sort="kills">击杀数<span class="sort-indicator"></span></th>
+              <th class="sortable player-sort" data-sort="deaths">死亡数<span class="sort-indicator"></span></th>
+              <th class="sortable player-sort" data-sort="kd_ratio">K/D<span class="sort-indicator"></span></th>
+              <th class="sortable player-sort" data-sort="longest_kill_streak">最长连杀<span class="sort-indicator"></span></th>
+            </tr>
+          </thead>
+          <tbody id="playerRows"></tbody>
+        </table>
         <section id="mapTable" class="map-panel hidden" aria-label="地图卡片">
           <div class="map-series-list" id="mapRows"></div>
         </section>
         <section id="modelTable" class="model-panel hidden" aria-label="模型载具卡片">
           <div class="model-card-grid" id="modelRows"></div>
         </section>
+        <nav class="pagination" id="playerPagination" aria-label="玩家列表分页"></nav>
       </section>
       </section>
     </main>
@@ -2940,6 +3071,8 @@
     let weapons = [];
     let maps = [];
     let models = [];
+    let players = [];
+    let playerRankings = {};
     let currentMap = null;
     const mapDataCache = new Map();
 
@@ -2948,12 +3081,15 @@
     const tableWrap = document.querySelector(".table-wrap");
     const vehicleTable = document.getElementById("vehicleTable");
     const weaponTable = document.getElementById("weaponTable");
+    const playerTable = document.getElementById("playerTable");
     const mapTable = document.getElementById("mapTable");
     const modelTable = document.getElementById("modelTable");
     const rowsEl = document.getElementById("vehicleRows");
     const weaponRowsEl = document.getElementById("weaponRows");
+    const playerRowsEl = document.getElementById("playerRows");
     const mapRowsEl = document.getElementById("mapRows");
     const modelRowsEl = document.getElementById("modelRows");
+    const playerPaginationEl = document.getElementById("playerPagination");
     const loadingPanel = document.getElementById("loadingPanel");
     const searchInput = document.getElementById("searchInput");
     const compareBar = document.querySelector(".compare-bar");
@@ -3007,6 +3143,56 @@
       }
     ];
     const vehicleHigherBetter = new Set(["hp", "speed", "acceleration", "turret", "threshold", "reduction", "vision", "blast"]);
+    const playerSortKeys = new Set(["xp", "kills", "deaths", "kd_ratio", "longest_kill_streak"]);
+    const playerRankFields = [
+      { key: "xp", label: "XP" },
+      { key: "kills", label: "击杀" },
+      { key: "deaths", label: "死亡" },
+      { key: "score", label: "分数" },
+      { key: "kd_ratio", label: "KD" },
+      { key: "time_played", label: "游戏时间" },
+      { key: "longest_kill_streak", label: "最长连杀" },
+      { key: "targets_destroyed", label: "摧毁目标" },
+      { key: "vehicles_destroyed", label: "摧毁车辆" },
+      { key: "soldiers_healed", label: "治疗士兵" },
+      { key: "teamkills", label: "误伤" },
+      { key: "distance_moved", label: "移动距离" },
+      { key: "shots_fired", label: "开火次数" },
+      { key: "throwables_thrown", label: "投掷物次数" }
+    ];
+    const playerDetailSections = [
+      {
+        title: "基本信息",
+        rows: [
+          { key: "leaderboard_position", label: "排名" },
+          { key: "username", label: "ID" }
+        ]
+      },
+      {
+        title: "战斗统计",
+        rows: [
+          { key: "xp", label: "XP", ranked: true },
+          { key: "kills", label: "击杀", ranked: true },
+          { key: "deaths", label: "死亡", ranked: true },
+          { key: "score", label: "分数", ranked: true },
+          { key: "kd_ratio", label: "KD", ranked: true },
+          { key: "time_played", label: "游戏时间", ranked: true, formatter: "time" },
+          { key: "longest_kill_streak", label: "最长连杀", ranked: true }
+        ]
+      },
+      {
+        title: "贡献统计",
+        rows: [
+          { key: "targets_destroyed", label: "摧毁目标", ranked: true },
+          { key: "vehicles_destroyed", label: "摧毁车辆", ranked: true },
+          { key: "soldiers_healed", label: "治疗士兵", ranked: true },
+          { key: "teamkills", label: "误伤", ranked: true },
+          { key: "distance_moved", label: "移动距离", ranked: true, formatter: "distance" },
+          { key: "shots_fired", label: "开火次数", ranked: true },
+          { key: "throwables_thrown", label: "投掷物次数", ranked: true }
+        ]
+      }
+    ];
     const modelFactionOrder = new Map([
       ["德军", 0],
       ["美军", 1],
@@ -3053,12 +3239,16 @@
     let filteredList = [];
     let currentWeaponList = [];
     let filteredWeaponList = [];
+    let currentPlayerList = [];
+    let filteredPlayerList = [];
     let weaponLookup = new Map();
     let mapLookup = new Map();
     let vehicleNameLookup = new Map();
     let vehicleLooseNameLookup = new Map();
     let sortState = { key: null, mode: null };
     let weaponSortState = { key: null, mode: null };
+    let playerSortState = { key: null, mode: null };
+    let playerPage = 1;
     let viewFrame = null;
     let scoreFrame = null;
     let pendingScoreUpdate = false;
@@ -3174,7 +3364,7 @@
       };
     }
 
-    function setLoading(loading, subtitle = "正在请求并解析载具、枪械、地图和模型数据") {
+    function setLoading(loading, subtitle = "正在请求并解析载具、枪械、地图、模型和玩家数据") {
       if (!loadingPanel) return;
       loadingPanel.classList.remove("error");
       loadingPanel.classList.toggle("open", loading);
@@ -3196,24 +3386,29 @@
     async function loadData() {
       setLoading(true);
       const cacheMode = canUseCachedResources ? "force-cache" : "no-cache";
-      const [vehicleResponse, weaponResponse, mapResponse, modelResponse] = await Promise.all([
+      const [vehicleResponse, weaponResponse, mapResponse, modelResponse, playerResponse] = await Promise.all([
         fetchWithTimeout("data/vehicles.json", { cache: cacheMode }, 10000),
         fetchWithTimeout("data/weapons.json", { cache: cacheMode }, 10000),
         fetchWithTimeout("data/maps.json", { cache: cacheMode }, 10000),
-        fetchWithTimeout("model/models.json", { cache: cacheMode }, 10000)
+        fetchWithTimeout("model/models.json", { cache: cacheMode }, 10000),
+        fetchWithTimeout("data/rwr-players-pacific.json", { cache: cacheMode }, 10000)
       ]);
       if (!vehicleResponse.ok) throw new Error(`载具数据加载失败：${vehicleResponse.status}`);
       if (!weaponResponse.ok) throw new Error(`枪械数据加载失败：${weaponResponse.status}`);
       if (!mapResponse.ok) throw new Error(`地图数据加载失败：${mapResponse.status}`);
       if (!modelResponse.ok) throw new Error(`模型数据加载失败：${modelResponse.status}`);
+      if (!playerResponse.ok) throw new Error(`玩家数据加载失败：${playerResponse.status}`);
       const vehicleData = await vehicleResponse.json();
       const weaponData = await weaponResponse.json();
       const mapData = await mapResponse.json();
       const modelData = await modelResponse.json();
+      const playerData = await playerResponse.json();
       if (!Array.isArray(vehicleData)) throw new Error("载具数据格式错误：根节点必须是数组");
       if (!Array.isArray(weaponData)) throw new Error("枪械数据格式错误：根节点必须是数组");
       if (!Array.isArray(mapData)) throw new Error("地图数据格式错误：根节点必须是数组");
       if (!Array.isArray(modelData)) throw new Error("模型数据格式错误：根节点必须是数组");
+      const playerList = Array.isArray(playerData) ? playerData : playerData.players;
+      if (!Array.isArray(playerList)) throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
       vehicles = vehicleData.map((vehicle, index) => {
         const normalized = normalizeVehicle(vehicle);
         return {
@@ -3239,6 +3434,12 @@
         index,
         searchText: [model.name, model.id, model.model, model.icon, model["图标号"]].join("\n").toLowerCase()
       }));
+      players = playerList.map((player, index) => ({
+        ...player,
+        index,
+        searchText: [player.username, player.leaderboard_position, player.xp, player.kills, player.score].join("\n").toLowerCase()
+      }));
+      playerRankings = buildPlayerRankings(players);
       weaponLookup = new Map(weapons.map((weapon) => [weapon.id, weapon]));
       mapLookup = new Map(maps.map((map) => [map.id, map]));
       vehicleNameLookup = new Map(vehicles.map((vehicle) => [vehicle.name, vehicle]));
@@ -3251,6 +3452,8 @@
       filteredList = vehicles;
       currentWeaponList = weapons;
       filteredWeaponList = weapons;
+      currentPlayerList = players;
+      filteredPlayerList = players;
     }
 
     function fmt(value) {
@@ -3260,6 +3463,61 @@
 
     function displayValue(value) {
       return value === null || value === undefined || value === "" || value === "/" ? "-" : value;
+    }
+
+    function formatInteger(value) {
+      if (value === null || value === undefined || value === "") return "-";
+      const numeric = Number(value);
+      return Number.isFinite(numeric) ? numeric.toLocaleString("zh-CN") : displayValue(value);
+    }
+
+    function formatPlayerValue(player, key, formatter) {
+      const value = player?.[key];
+      if (formatter === "time") return formatSeconds(value);
+      if (formatter === "distance") return value === null || value === undefined ? "-" : `${fmt(Number(value))} km`;
+      if (key === "kd_ratio") return value === null || value === undefined ? "-" : fmt(Number(value));
+      if (typeof value === "number") return formatInteger(value);
+      return displayValue(value);
+    }
+
+    function formatSeconds(value) {
+      if (value === null || value === undefined) return "-";
+      const seconds = Number(value);
+      if (!Number.isFinite(seconds)) return displayValue(value);
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const rest = Math.floor(seconds % 60);
+      if (hours > 0) return `${hours}h ${minutes}m`;
+      if (minutes > 0) return `${minutes}m ${rest}s`;
+      return `${rest}s`;
+    }
+
+    function buildPlayerRankings(list) {
+      const rankings = {};
+      playerRankFields.forEach(({ key }) => {
+        rankings[key] = new Map();
+        const sorted = list
+          .filter((player) => player[key] !== null && player[key] !== undefined && Number.isFinite(Number(player[key])))
+          .slice()
+          .sort((a, b) => {
+            const diff = Number(b[key]) - Number(a[key]);
+            return diff || a.index - b.index;
+          });
+        let rank = 0;
+        let previousValue = null;
+        sorted.forEach((player, index) => {
+          const value = Number(player[key]);
+          if (previousValue === null || value !== previousValue) rank = index + 1;
+          rankings[key].set(player.index, rank);
+          previousValue = value;
+        });
+      });
+      return rankings;
+    }
+
+    function playerRank(player, key) {
+      const rank = playerRankings[key]?.get(player.index);
+      return rank ? `#${formatInteger(rank)}` : "-";
     }
 
     function weaponFieldDisplay(weapon, key) {
@@ -3408,6 +3666,12 @@
       return getSortedModels(list);
     }
 
+    function getFilteredPlayers() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      if (!keyword) return players;
+      return players.filter((player) => player.searchText.includes(keyword));
+    }
+
     function countDisplay(value) {
       return value ? String(value) : "-";
     }
@@ -3459,10 +3723,28 @@
       });
     }
 
+    function getSortedPlayers(list) {
+      if (!playerSortState.key || !playerSortState.mode) return list.slice();
+      const multiplier = playerSortState.mode === "advantage" ? -1 : 1;
+      return list.slice().sort((a, b) => {
+        const left = Number(a[playerSortState.key]);
+        const right = Number(b[playerSortState.key]);
+        const leftMissing = !Number.isFinite(left);
+        const rightMissing = !Number.isFinite(right);
+        if (leftMissing && rightMissing) return a.index - b.index;
+        if (leftMissing) return 1;
+        if (rightMissing) return -1;
+        if (left === right) return a.index - b.index;
+        return (left - right) * multiplier;
+      });
+    }
+
     function updateSortHeaders() {
       sortableHeaders.forEach((header) => {
         const indicator = header.querySelector(".sort-indicator");
-        const state = header.classList.contains("weapon-sort") ? weaponSortState : sortState;
+        const state = header.classList.contains("player-sort")
+          ? playerSortState
+          : (header.classList.contains("weapon-sort") ? weaponSortState : sortState);
         const active = header.dataset.sort === state.key && state.mode;
         header.classList.toggle("sorted", Boolean(active));
         header.classList.toggle("advantage-sort", Boolean(active && state.mode === "advantage"));
@@ -3476,10 +3758,18 @@
       if (activeTab === "maps") {
         renderMapTable(getFilteredMaps());
         updateSortHeaders();
+        playerPaginationEl.classList.remove("show");
         return;
       }
       if (activeTab === "models") {
         renderModelTable(getFilteredModels());
+        updateSortHeaders();
+        playerPaginationEl.classList.remove("show");
+        return;
+      }
+      if (activeTab === "players") {
+        filteredPlayerList = getFilteredPlayers();
+        renderPlayerTable(getSortedPlayers(filteredPlayerList));
         updateSortHeaders();
         return;
       }
@@ -3487,11 +3777,13 @@
         filteredWeaponList = getFilteredWeapons();
         renderWeaponTable(getSortedWeapons(filteredWeaponList));
         updateSortHeaders();
+        playerPaginationEl.classList.remove("show");
         return;
       }
       filteredList = getFilteredList();
       renderTable(getSortedList(filteredList));
       updateSortHeaders();
+      playerPaginationEl.classList.remove("show");
     }
 
     function scheduleApplyView() {
@@ -3821,6 +4113,61 @@
       }).join("");
     }
 
+    function renderPlayerTable(list) {
+      currentPlayerList = list;
+      const pageSize = 100;
+      const totalPages = Math.max(1, Math.ceil(list.length / pageSize));
+      if (playerPage > totalPages) playerPage = totalPages;
+      if (playerPage < 1) playerPage = 1;
+      const start = (playerPage - 1) * pageSize;
+      const pageItems = list.slice(start, start + pageSize);
+      playerRowsEl.innerHTML = pageItems.length ? pageItems.map((player) => `
+        <tr data-index="${escapeHtml(player.index)}">
+          <td data-label="ID" data-mobile-role="title">${escapeHtml(displayValue(player.username))}</td>
+          <td class="num" data-label="XP">${escapeHtml(formatInteger(player.xp))}</td>
+          <td class="num" data-label="击杀数">${escapeHtml(formatInteger(player.kills))}</td>
+          <td class="num" data-label="死亡数">${escapeHtml(formatInteger(player.deaths))}</td>
+          <td class="num" data-label="K/D">${escapeHtml(formatPlayerValue(player, "kd_ratio"))}</td>
+          <td class="num" data-label="最长连杀">${escapeHtml(formatInteger(player.longest_kill_streak))}</td>
+        </tr>
+      `).join("") : `
+        <tr>
+          <td colspan="6">没有找到匹配的玩家</td>
+        </tr>
+      `;
+      renderPlayerPagination(totalPages);
+    }
+
+    function playerPageItems(totalPages) {
+      if (totalPages <= 9) return Array.from({ length: totalPages }, (_, index) => index + 1);
+      const items = [1];
+      const start = Math.max(2, playerPage - 2);
+      const end = Math.min(totalPages - 1, playerPage + 2);
+      if (start > 2) items.push("...");
+      for (let page = start; page <= end; page += 1) items.push(page);
+      if (end < totalPages - 1) items.push("...");
+      items.push(totalPages);
+      return items;
+    }
+
+    function renderPlayerPagination(totalPages) {
+      if (activeTab !== "players" || totalPages <= 1) {
+        playerPaginationEl.classList.remove("show");
+        playerPaginationEl.innerHTML = "";
+        return;
+      }
+      const items = playerPageItems(totalPages);
+      playerPaginationEl.classList.add("show");
+      playerPaginationEl.innerHTML = `
+        <button class="page-button" data-page="${playerPage - 1}" type="button"${playerPage === 1 ? " disabled" : ""}>上一页</button>
+        ${items.map((item) => item === "..."
+          ? '<span class="page-ellipsis">...</span>'
+          : `<button class="page-button ${item === playerPage ? "active" : ""}" data-page="${item}" type="button">${item}</button>`
+        ).join("")}
+        <button class="page-button" data-page="${playerPage + 1}" type="button"${playerPage === totalPages ? " disabled" : ""}>下一页</button>
+      `;
+    }
+
     function assetIconHtml(src, alt, className) {
       if (!src) return '<span class="muted">-</span>';
       return `<img class="${escapeHtml(className)}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" fetchpriority="low">`;
@@ -3981,6 +4328,16 @@
         `;
       }
 
+      if (row.rank) {
+        return `
+        <div class="detail-row with-rank">
+          <div class="detail-name">${escapeHtml(row.name)}</div>
+          <div class="detail-value">${safeDisplayHtml(row.value)}</div>
+          <div class="detail-rank">${escapeHtml(row.rank)}</div>
+        </div>
+      `;
+      }
+
       return `
         <div class="detail-row">
           <div class="detail-name">${escapeHtml(row.name)}</div>
@@ -4041,6 +4398,7 @@
       tagTabs.forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
       vehicleTable.classList.toggle("hidden", tab !== "vehicles");
       weaponTable.classList.toggle("hidden", tab !== "weapons");
+      playerTable.classList.toggle("hidden", tab !== "players");
       mapTable.classList.toggle("hidden", tab !== "maps");
       modelTable.classList.toggle("hidden", tab !== "models");
       targetModeBtn.classList.toggle("hidden", tab !== "vehicles");
@@ -4056,9 +4414,10 @@
         : (tab === "vehicles" ? "在列表中选两个载具进行对比" : "");
       searchInput.placeholder = tab === "maps"
         ? "在地图页中搜索"
-        : (tab === "models" ? "在模型页中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索"));
+        : (tab === "models" ? "在模型页中搜索" : (tab === "players" ? "在玩家列表中搜索" : (tab === "weapons" ? "在枪械页中搜索" : "在载具页中搜索")));
+      if (tab === "players") playerPage = 1;
       applyView();
-      if (tab === "maps" || tab === "models") resetTablePosition();
+      if (tab === "maps" || tab === "models" || tab === "players") resetTablePosition();
       if (tab === "maps") warmMapAssets();
     }
 
@@ -4851,6 +5210,29 @@
       resetDialogScroll(detailModal);
     }
 
+    function playerDetailRows(player, section) {
+      return section.rows.map((row) => ({
+        name: row.label,
+        value: formatPlayerValue(player, row.key, row.formatter),
+        rank: row.ranked ? playerRank(player, row.key) : ""
+      }));
+    }
+
+    function openPlayerDetail(index) {
+      const player = players[index];
+      if (!player) return;
+      detailTitle.textContent = "玩家详细参数";
+      detailHero.innerHTML = `
+        <span class="faction common">太平洋</span>
+        <h3>${escapeHtml(displayValue(player.username))}</h3>
+      `;
+      detailRows.innerHTML = playerDetailSections
+        .map((section) => renderDetailSection(section.title, playerDetailRows(player, section)))
+        .join("");
+      detailModal.classList.add("open");
+      resetDialogScroll(detailModal);
+    }
+
     function weaponCompareRow(key, a, b) {
       const leftValue = numericValue(a[key]);
       const rightValue = numericValue(b[key]);
@@ -4991,6 +5373,7 @@
     }
 
     searchInput.addEventListener("input", () => {
+      if (activeTab === "players") playerPage = 1;
       scheduleApplyView();
     });
 
@@ -5006,8 +5389,9 @@
     sortableHeaders.forEach((header) => {
       header.addEventListener("click", () => {
         const key = header.dataset.sort;
+        const isPlayerSort = header.classList.contains("player-sort");
         const isWeaponSort = header.classList.contains("weapon-sort");
-        const state = isWeaponSort ? weaponSortState : sortState;
+        const state = isPlayerSort ? playerSortState : (isWeaponSort ? weaponSortState : sortState);
         let nextState;
         if (state.key !== key) {
           nextState = { key, mode: "advantage" };
@@ -5016,7 +5400,10 @@
         } else {
           nextState = { key: null, mode: null };
         }
-        if (isWeaponSort) {
+        if (isPlayerSort) {
+          playerSortState = nextState;
+          playerPage = 1;
+        } else if (isWeaponSort) {
           weaponSortState = nextState;
         } else {
           sortState = nextState;
@@ -5072,6 +5459,20 @@
         return;
       }
       openWeaponDetail(index);
+    });
+    playerRowsEl.addEventListener("click", (event) => {
+      const row = event.target.closest("tr[data-index]");
+      if (!row) return;
+      openPlayerDetail(Number(row.dataset.index));
+    });
+    playerPaginationEl.addEventListener("click", (event) => {
+      const button = event.target.closest(".page-button[data-page]");
+      if (!button || button.disabled) return;
+      const page = Number(button.dataset.page);
+      if (!Number.isFinite(page)) return;
+      playerPage = page;
+      applyView();
+      resetTablePosition();
     });
     function handleMapPerspectiveClick(perspectiveButton) {
       if (!perspectiveButton) return;
@@ -5254,7 +5655,7 @@
         return loadData();
       })
       .then(() => {
-        if (vehicles.length === 0 && weapons.length === 0 && maps.length === 0) return;
+        if (vehicles.length === 0 && weapons.length === 0 && maps.length === 0 && players.length === 0) return;
         applyView();
         setLoading(false);
         registerServiceWorker();

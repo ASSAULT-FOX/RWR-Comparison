@@ -1,6 +1,6 @@
 ﻿# RWR 参数查询器
 
-这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息、地图设施点位和载具模型，并支持排序、搜索、详情弹窗、双对象对比、索敌优先级计算、生成带设施图标的地图视图，以及在独立页面中查看 GLB 模型。
+这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息、地图设施点位、载具模型和太平洋玩家统计，并支持排序、搜索、详情弹窗、双对象对比、索敌优先级计算、生成带设施图标的地图视图，以及在独立页面中查看 GLB 模型。
 
 项目没有后端，也没有前端打包流程。浏览器加载 `index.html` 后，通过 `fetch()` 读取 `data/`、`maps/` 和 `model/` 目录中的 JSON 文件，再在前端完成渲染和交互。
 
@@ -27,6 +27,7 @@ http://127.0.0.1:8765/index.html
 地图点位文件   20 个，保存在 maps/<地图名>/map-data.json
 地图点位     3054 个，按阵营和视图状态分组
 模型数据       71 条，保存在 model/models.json，模型文件保存在 model/<安全英文id>/
+玩家数据        由 GitHub Actions 每 3 小时从 RWR 官方统计页更新到 data/rwr-players-pacific.json
 ```
 
 ## 项目结构
@@ -42,13 +43,17 @@ http://127.0.0.1:8765/index.html
 ├── README.md                     当前说明文档，UTF-8 with BOM 编码
 ├── scripts/
 │   ├── sync-csv-json.js          CSV 和 JSON 同步脚本
-│   └── build-asset-manifest.js   生成 data/asset-manifest.json 的脚本
+│   ├── build-asset-manifest.js   生成 data/asset-manifest.json 的脚本
+│   └── fetch-rwr-players.py      抓取太平洋玩家统计并生成静态 JSON
+├── .github/workflows/
+│   └── fetch-rwr-players.yml     每 3 小时更新玩家统计的 GitHub Actions 工作流
 ├── csv/
 │   ├── weapons.csv               枪械源数据，开发时主要编辑它
 │   └── vehicles.csv              载具源数据，开发时主要编辑它
 ├── data/
 │   ├── weapons.json              枪械发布数据，由 csv/weapons.csv 生成
 │   ├── vehicles.json             载具发布数据，由 csv/vehicles.csv 生成
+│   ├── rwr-players-pacific.json  太平洋玩家统计快照，由 GitHub Actions 更新
 │   ├── maps.json                 地图摘要数据
 │   └── asset-manifest.json       静态资源 SHA-256 哈希清单，由脚本生成
 ├── maps/
@@ -81,6 +86,7 @@ csv/vehicles.csv
 data/weapons.json
 data/vehicles.json
 data/maps.json
+data/rwr-players-pacific.json
 model/models.json
 maps/<地图名>/map-data.json
 ```
@@ -220,6 +226,49 @@ CSV 文件使用 UTF-8 with BOM 编码，Excel 通常可以正常识别中文。
 排序
 ```
 
+### data/rwr-players-pacific.json
+
+这是网页运行时读取的太平洋玩家统计快照，由 `.github/workflows/fetch-rwr-players.yml` 每 3 小时运行 `scripts/fetch-rwr-players.py` 生成。数据来源为：
+
+```text
+http://rwr.runningwithrifles.com/rwr_stats/view_players.php?db=pacific
+```
+
+文件结构为：
+
+```json
+{
+  "fetchedAt": "2026-05-19T05:36:47+00:00",
+  "source": "http://rwr.runningwithrifles.com/rwr_stats/view_players.php?db=pacific",
+  "database": "pacific",
+  "count": 100,
+  "players": []
+}
+```
+
+`players` 中每个玩家保存和 RWRS `Player.load()` 一致的字段：
+
+```text
+leaderboard_position
+username
+kills
+deaths
+score
+kd_ratio
+time_played
+longest_kill_streak
+targets_destroyed
+vehicles_destroyed
+soldiers_healed
+teamkills
+distance_moved
+shots_fired
+throwables_thrown
+xp
+```
+
+玩家列表页会显示 `ID - XP - 击杀数 - 死亡数 - K/D - 最长连杀`，支持按数值列全量升降排序，每页显示 100 个玩家。点击玩家行会打开详情弹窗，并显示 XP、击杀、死亡、分数、KD、游戏时间、最长连杀、摧毁目标、摧毁车辆、治疗士兵、误伤、移动距离、开火次数、投掷物次数在当前快照所有玩家中的排名。
+
 ### data/maps.json
 
 这是地图摘要数据，负责告诉页面：
@@ -342,6 +391,7 @@ layer         原始图层信息
 枪械查询
 地图查询
 模型查询
+玩家列表
 ```
 
 载具查询支持列表、搜索、排序、详情、对比和索敌优先级工具。
@@ -351,6 +401,8 @@ layer         原始图层信息
 地图查询使用和模型查询一致的卡片式布局，按雪绒花和太平洋分组显示，分组标题只保留放大的系列徽标文字，不再显示“系列”或地图数量；桌面端系列徽标约为普通阵营徽标的 2 倍，并保留适中的容器顶部留白；每张卡片展示地图缩略图和地图名，悬停时有卡片抬升动效。点击地图卡片后打开基础地图预览，弹窗右侧提供按阵营和占领状态生成带设施图标地图视图的按钮，按钮宽度按文字内容收缩并保留左右留白，外层使用和地图图片区一致的圆角容器；手机端这些按钮会移动到地图下方。
 
 模型查询支持从 `model/models.json` 列出模型、优先使用模型清单中的 `icon` 显示 `maps_textures/<图标号>.webp`，没有 `icon` 时再按载具名匹配 `data/vehicles.json` 中的 `图标号`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。模型查看页右侧的部件显示控制为单列纵向列表，按钮列宽按最长部件名收缩，部件较多时在面板内上下滚动；渲染器会在低 DPR 屏幕上使用轻量超采样，并保留贴图原始分辨率和各向异性过滤。
+
+玩家列表读取 `data/rwr-players-pacific.json`，展示太平洋数据库的玩家统计快照。列表页按 100 个玩家分页，数值列点击表头后会对全部已加载玩家排序，而不是只排序当前页。玩家详情弹窗会列出全部玩家统计字段，并在可排名字段右侧显示该玩家在当前快照中的全量排名。
 
 页面包含移动端适配：`860px` 以下顶部操作栏纵向排列并保持在表格滚动层上方，主查询表格保留完整列宽并限制在 `.table-wrap` 内上下和左右滚动，避免页面主体被宽表格撑出横向滚动，同时保证手机端可以继续纵向浏览更多行；载具对比和枪械对比弹窗在手机端也保留完整三栏对比结构，并在弹窗内容区内左右滑动查看。`640px` 以下主导航折叠为“菜单”按钮，详情、地图和索敌优先级弹窗贴合手机视口显示，按钮和输入框保持触控友好的高度与间距。桌面端从其他分类切换到地图查询或模型查询时，列表滚动位置会回到顶部，避免沿用上一分类停留的行位置。
 
@@ -366,6 +418,7 @@ layer         原始图层信息
 fetch("data/vehicles.json")
 fetch("data/weapons.json")
 fetch("data/maps.json")
+fetch("data/rwr-players-pacific.json")
 fetch("model/models.json")
 ```
 
@@ -449,6 +502,18 @@ node scripts/sync-csv-json.js csv-to-json
 
 ```powershell
 node scripts/build-asset-manifest.js
+```
+
+手动抓取太平洋玩家统计：
+
+```powershell
+python scripts/fetch-rwr-players.py
+```
+
+本地只测试第一页解析：
+
+```powershell
+python scripts/fetch-rwr-players.py --max-pages 1 --output data/rwr-players-pacific.json
 ```
 
 本地启动静态服务器：

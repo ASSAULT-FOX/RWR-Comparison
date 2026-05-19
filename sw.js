@@ -20,6 +20,7 @@ const APP_SHELL = [
   "./data/asset-manifest.json",
   "./data/vehicles.json",
   "./data/weapons.json",
+  "./data/rwr-players-pacific.json",
   "./data/maps.json",
   "./model/models.json"
 ];
