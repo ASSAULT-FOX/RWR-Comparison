@@ -60,7 +60,7 @@ class TableParser(HTMLParser):
     def handle_endtag(self, tag):
         tag = tag.lower()
         if tag in ("td", "th") and self._in_cell:
-            text = " ".join("".join(self._cell_parts).split())
+            text = "".join(self._cell_parts).strip()
             self._row.append(unescape(text))
             self._in_cell = False
             self._cell_parts = []
@@ -80,7 +80,11 @@ def parse_time(value):
 
 
 def decode_username(value):
-    raw = value.encode("iso-8859-1")
+    try:
+        raw = value.encode("iso-8859-1")
+    except UnicodeEncodeError:
+        return value
+    raw = raw.replace(b"\xa0", b" ")
     try:
         return raw.decode("utf-8")
     except UnicodeDecodeError as error:
@@ -107,7 +111,12 @@ def parse_value(value, kind):
 
 
 def decode_response(raw):
-    return raw.decode("iso-8859-1")
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        decoded = raw.decode("utf-8", errors="replace")
+        print(f"Warning: replaced invalid UTF-8 bytes in response body: {error}", file=sys.stderr, flush=True)
+        return decoded
 
 
 def fetch_page(start, size, timeout):
@@ -146,9 +155,39 @@ def parse_players(html):
             continue
         player = {}
         for index, (name, kind) in enumerate(PLAYER_FIELDS):
-            player[name] = parse_value(row[index], kind)
+            value = row[index] if name == "username" else " ".join(row[index].split())
+            player[name] = parse_value(value, kind)
         players.append(player)
     return players
+
+
+def self_test():
+    cjk_name = "\u73a9\u5bb6\u6d4b\u8bd5\u7532\u7532QAQ"
+    cjk_name_mojibake = cjk_name.encode("utf-8").decode("iso-8859-1")
+    cedilla_name = "PLAYER D1KE\u00c7"
+    cedilla_name_mojibake = cedilla_name.encode("utf-8").decode("iso-8859-1")
+    samples = {
+        cjk_name_mojibake: cjk_name,
+        cedilla_name_mojibake: cedilla_name,
+        "ASCII.NAME": "ASCII.NAME",
+        "\u5df2\u7ecf\u662f Unicode": "\u5df2\u7ecf\u662f Unicode",
+    }
+    for source, expected in samples.items():
+        actual = decode_username(source)
+        if actual != expected:
+            raise AssertionError(f"decode_username({source!r}) returned {actual!r}, expected {expected!r}")
+
+    html = f"""
+    <table>
+      <tr><th>#</th><th>Username</th><th>Kills</th><th>Deaths</th><th>Score</th><th>K/D</th><th>Time</th><th>Streak</th><th>Targets</th><th>Vehicles</th><th>Healed</th><th>TK</th><th>Distance</th><th>Shots</th><th>Throwables</th><th>XP</th></tr>
+      <tr><td>1</td><td>{cjk_name_mojibake} &amp; MR.&nbsp;A</td><td>1</td><td>2</td><td>3</td><td>0.5</td><td>1h 2min 3s</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9km</td><td>10</td><td>11</td><td>12</td></tr>
+    </table>
+    """
+    player = parse_players(html)[0]
+    if player["username"] != f"{cjk_name} & MR. A":
+        raise AssertionError(f"username parse returned {player['username']!r}")
+    if player["time_played"] != 3723 or player["distance_moved"] != 9.0:
+        raise AssertionError("numeric parsing regression")
 
 
 def fetch_all_players(max_pages=None, timeout=60, delay=0.25):
@@ -179,7 +218,13 @@ def main():
     parser.add_argument("--max-pages", type=int, default=None)
     parser.add_argument("--timeout", type=float, default=120)
     parser.add_argument("--delay", type=float, default=0.5)
+    parser.add_argument("--self-test", action="store_true", help="Run parser and username decoding checks without fetching.")
     args = parser.parse_args()
+
+    if args.self_test:
+        self_test()
+        print("Self-test passed")
+        return 0
 
     players = fetch_all_players(max_pages=args.max_pages, timeout=args.timeout, delay=args.delay)
     output = {
