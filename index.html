@@ -341,7 +341,6 @@
       overflow-x: hidden;
       overflow-y: auto;
       background: #fff;
-      padding-bottom: 76px;
       overscroll-behavior: contain;
       scrollbar-gutter: stable;
       contain: layout paint;
@@ -647,12 +646,22 @@
       min-height: 76px;
       padding: 12px 16px;
       border-top: 1px solid var(--line);
+      border-radius: 0 0 18px 18px;
       background: rgba(255, 255, 255, 0.96);
       box-shadow: 0 -8px 22px rgba(35, 76, 124, 0.08);
       backdrop-filter: blur(10px) saturate(125%);
       -webkit-backdrop-filter: blur(10px) saturate(125%);
       align-items: center;
       justify-content: center;
+    }
+
+    .pagination-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background: linear-gradient(180deg, rgba(247, 251, 255, 0.42), rgba(255, 255, 255, 0));
     }
 
     .pagination-panel.show {
@@ -2963,15 +2972,15 @@
       </header>
 
       <section class="content-panel" aria-label="查询结果">
-      <section class="compare-bar" aria-label="选择载具比较">
-        <button class="primary" id="compareBtn">比较</button>
-        <button class="confirm" id="confirmCompareBtn">确认比较</button>
-        <div class="compare-hint" id="compareHint">在列表中选两个载具进行对比</div>
-        <button class="target-mode-button" id="targetModeBtn">载具索敌优选</button>
-        <div class="target-hint" id="targetHint">查看载具索敌的优先级</div>
-      </section>
+        <section class="compare-bar" aria-label="选择载具比较">
+          <button class="primary" id="compareBtn">比较</button>
+          <button class="confirm" id="confirmCompareBtn">确认比较</button>
+          <div class="compare-hint" id="compareHint">在列表中选两个载具进行对比</div>
+          <button class="target-mode-button" id="targetModeBtn">载具索敌优选</button>
+          <div class="target-hint" id="targetHint">查看载具索敌的优先级</div>
+        </section>
 
-      <section class="table-wrap" aria-label="载具数据表">
+        <section class="table-wrap" aria-label="载具数据表">
         <div class="loading-panel open" id="loadingPanel" role="status" aria-live="polite">
           <div class="loading-card">
             <div class="loading-spinner" aria-hidden="true"></div>
@@ -3064,10 +3073,10 @@
         <section id="modelTable" class="model-panel hidden" aria-label="模型载具卡片">
           <div class="model-card-grid" id="modelRows"></div>
         </section>
-      </section>
-      <div class="pagination-panel" id="playerPaginationPanel">
-        <nav class="pagination" id="playerPagination" aria-label="玩家列表分页"></nav>
-      </div>
+        </section>
+        <div class="pagination-panel" id="playerPaginationPanel" aria-label="玩家列表分页容器">
+          <nav class="pagination" id="playerPagination" aria-label="玩家列表分页"></nav>
+        </div>
       </section>
     </main>
   </div>

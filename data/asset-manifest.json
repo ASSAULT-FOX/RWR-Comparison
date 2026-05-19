@@ -1,13 +1,13 @@
 {
-  "version": "9ba36073bb71f7a44404f022ad8aea158218e45113e143d01fc93242a6f62a3f",
-  "generatedAt": "2026-05-19T08:12:17.832Z",
+  "version": "a08032334bd3378e89ada682a6ad5aca8670e2156bea0c7edbd2ca4bc80ae88c",
+  "generatedAt": "2026-05-19T08:31:01.496Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/rwr-players-pacific.json": "3d1366927e7a80dc0271a80ab7e047fe3cfe1efff5aab62ccefca2db978381d7",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
     "data/weapons.json": "97fa4544c7b90231511680c479060724c9bb66a69bb791c20acdcce20e8469a5",
     "ico.webp": "2a47046b17dde309cb9c8318a9d5a6f07283b5422f757de6c0be85f016dcb70d",
-    "index.html": "6f08ba404b79d6a673f2df8de92768740bedef07327423abae36d03c41ef2fa0",
+    "index.html": "ee2805e28fc57805b784e731442cb08fd3bb7503cc79c29963a2fd975850dc14",
     "maps_textures/0.webp": "f15787f9c25d3522b5ec686316e79a68629ddc9a4d7e197ef3ec56c5e0f0f89e",
     "maps_textures/1.webp": "dce5d0cf7f6c68cfc805ba14db887a992974018e3b056bef798a39b6a8361998",
     "maps_textures/2.webp": "e441346912be37d51e7543bb99a50b87051097413396a001dcf169ba0bc2a498",

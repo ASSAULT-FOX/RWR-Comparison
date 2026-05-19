@@ -2,7 +2,7 @@
 
 这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息、地图设施点位、载具模型和太平洋玩家统计，并支持排序、搜索、详情弹窗、双对象对比、索敌优先级计算、生成带设施图标的地图视图，以及在独立页面中查看 GLB 模型。
 
-项目没有后端，也没有前端打包流程。浏览器加载 `index.html` 后，通过 `fetch()` 读取 `data/`、`maps/` 和 `model/` 目录中的 JSON 文件，再在前端完成渲染和交互。
+项目没有后端，GitHub Pages 直接发布静态文件。浏览器加载 `index.html` 后引用 `scripts/index.js`，再通过 `fetch()` 读取 `data/`、`maps/` 和 `model/` 目录中的 JSON 文件，并在前端完成渲染和交互。`scripts/index.js` 由 `ts/index.ts` 编译生成，开发时优先修改 TypeScript 源文件。
 
 本地推荐运行方式：
 
@@ -34,16 +34,21 @@ http://127.0.0.1:8765/index.html
 
 ```text
 .
-├── index.html                    页面入口，HTML、CSS、JavaScript 都在这里
+├── index.html                    页面入口，保留 HTML、CSS，并引用 scripts/index.js
 ├── sw.js                         Service Worker，负责静态资源缓存和哈希校验
 ├── ico.webp                      网页图标
 ├── splash.webp                   首页顶部操作容器左侧的品牌图
-├── update-assets-and-upload.bat  更新数据、刷新资源清单并上传的脚本
-├── convert_png_to_webp.py        PNG 转 WebP 的辅助脚本
+├── update-assets-and-upload.bat  编译 TypeScript、更新数据、刷新资源清单并上传的脚本
 ├── README.md                     当前说明文档，UTF-8 with BOM 编码
+├── package.json                  TypeScript 构建脚本和开发依赖
+├── tsconfig.json                 TypeScript 编译配置，输出到 scripts/
+├── ts/
+│   └── index.ts                  主页面前端逻辑源码
 ├── scripts/
+│   ├── index.js                  由 ts/index.ts 编译生成的浏览器运行时代码
 │   ├── sync-csv-json.js          CSV 和 JSON 同步脚本
 │   ├── build-asset-manifest.js   生成 data/asset-manifest.json 的脚本
+│   ├── convert_png_to_webp.py    PNG 转 WebP 的辅助脚本
 │   └── fetch-rwr-players.py      抓取太平洋玩家统计并生成静态 JSON
 ├── .github/workflows/
 │   └── fetch-rwr-players.yml     每 3 小时更新玩家统计的 GitHub Actions 工作流
@@ -100,12 +105,19 @@ maps/<地图名>/map-data.json
 点击 `update-assets-and-upload.bat` 时，当前流程是：
 
 ```text
-1. node scripts/sync-csv-json.js csv-to-json
-2. node scripts/build-asset-manifest.js
-3. git upup
+1. 如缺少依赖，执行 cmd /c npm install
+2. cmd /c npm run build:ts
+3. node scripts/sync-csv-json.js csv-to-json
+4. node scripts/build-asset-manifest.js
+5. git add .
+6. git commit -m "Update assets"（如有变更）
+7. git fetch origin main
+8. git merge origin/main
+9. 再次编译 TypeScript 并刷新 data/asset-manifest.json
+10. git push
 ```
 
-第一步会读取：
+CSV 同步步骤会读取：
 
 ```text
 csv/weapons.csv
@@ -121,9 +133,11 @@ data/vehicles.json
 
 如果 CSV 转换后的 JSON 内容和现有 JSON 完全一致，脚本会输出 `Unchanged`，不会重写 JSON 文件。因此对应文件的 SHA-256 哈希不会变化，也不会让用户浏览器重新请求没有变化的数据资源。
 
-第二步会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
+TypeScript 编译步骤会读取 `ts/index.ts` 并生成 `scripts/index.js`，GitHub Pages 实际加载的是这个编译产物。
 
-第三步执行 `git upup`，用于把当前变更上传到 Git。
+资源清单步骤会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
+
+上传脚本会先提交本地构建结果，再拉取并合并远端 `main`，这样 GitHub Actions 更新过的 `data/rwr-players-pacific.json` 会被整合到本地；合并后脚本会再次编译 TypeScript、刷新资源清单，然后推送到 Git。
 
 ## CSV 编辑说明
 
@@ -386,7 +400,7 @@ layer         原始图层信息
 
 ## 前端功能
 
-`index.html` 包含页面结构、样式和全部前端逻辑。页面主要分为四个功能区：
+`index.html` 包含页面结构和样式，主页面交互逻辑在 `ts/index.ts` 中维护，并编译为 `scripts/index.js` 供浏览器加载。页面主要分为五个功能区：
 
 ```text
 载具查询
@@ -404,11 +418,11 @@ layer         原始图层信息
 
 模型查询支持从 `model/models.json` 列出模型、优先使用模型清单中的 `icon` 显示 `maps_textures/<图标号>.webp`，没有 `icon` 时再按载具名匹配 `data/vehicles.json` 中的 `图标号`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。模型查看页右侧的部件显示控制为单列纵向列表，按钮列宽按最长部件名收缩，部件较多时在面板内上下滚动；渲染器会在低 DPR 屏幕上使用轻量超采样，并保留贴图原始分辨率和各向异性过滤。
 
-玩家列表读取 `data/rwr-players-pacific.json`，展示太平洋数据库的玩家统计快照。列表页按 100 个玩家分页，玩家 ID 使用和地图分组标题相近的浅蓝色药丸徽章；分页栏位于玩家列表容器下方的独立容器中，分页控件水平和垂直居中；数值列点击表头后会对全部已加载玩家排序，而不是只排序当前页。玩家详情弹窗顶部先显示大号玩家名，再显示大号排名数字，下方列出全部玩家统计字段，并在可排名字段右侧显示该玩家在当前快照中的全量排名。
+玩家列表读取 `data/rwr-players-pacific.json`，展示太平洋数据库的玩家统计快照。列表页按 100 个玩家分页，玩家 ID 使用和地图分组标题相近的浅蓝色药丸徽章；分页栏是内容容器底部的独立容器，不属于表格滚动层，分页控件在该容器中水平和垂直居中；数值列点击表头后会对全部已加载玩家排序，而不是只排序当前页。玩家详情弹窗顶部先显示大号玩家名，再显示大号排名数字，下方列出全部玩家统计字段，并在可排名字段右侧显示该玩家在当前快照中的全量排名。
 
 页面包含移动端适配：`860px` 以下顶部操作栏纵向排列并保持在表格滚动层上方，主查询表格保留完整列宽并限制在 `.table-wrap` 内上下和左右滚动，避免页面主体被宽表格撑出横向滚动，同时保证手机端可以继续纵向浏览更多行；载具对比和枪械对比弹窗在手机端也保留完整三栏对比结构，并在弹窗内容区内左右滑动查看。`640px` 以下主导航折叠为“菜单”按钮，详情、地图和索敌优先级弹窗贴合手机视口显示，按钮和输入框保持触控友好的高度与间距。桌面端从其他分类切换到地图查询或模型查询时，列表滚动位置会回到顶部，避免沿用上一分类停留的行位置。
 
-主页面视觉结构分为两个独立容器：上方操作容器左侧放大显示 `splash.webp` 并进一步向左对齐，图片放大时不增加顶栏高度而是压缩上下留白；中间居中显示查询分类 TAG，右侧显示搜索框并向右对齐；下方内容容器承载比较工具条、索敌入口和各查询结果，中间保留间距以分隔导航和数据内容。顶部三个控件区域使用较大的固定高度和宽度，内容容器不再使用外层阴影遮罩；地图查询和模型查询页会隐藏无操作意义的提示条。页面保留卡片动效和毛玻璃模糊效果，同时通过较轻的模糊半径、较小阴影、GPU 友好的 transform 动画、滚动容器隔离和卡片分组内容可见性控制降低重绘压力。`splash.webp` 由 `convert_png_to_webp.py` 从原始 PNG 转换生成并裁掉透明边距，原始 PNG 不再保留。
+主页面视觉结构分为两个独立容器：上方操作容器左侧放大显示 `splash.webp` 并进一步向左对齐，图片放大时不增加顶栏高度而是压缩上下留白；中间居中显示查询分类 TAG，右侧显示搜索框并向右对齐；下方内容容器承载比较工具条、索敌入口和各查询结果，中间保留间距以分隔导航和数据内容。顶部三个控件区域使用较大的固定高度和宽度，内容容器不再使用外层阴影遮罩；地图查询和模型查询页会隐藏无操作意义的提示条。页面保留卡片动效和毛玻璃模糊效果，同时通过较轻的模糊半径、较小阴影、GPU 友好的 transform 动画、滚动容器隔离和卡片分组内容可见性控制降低重绘压力。`splash.webp` 由 `scripts/convert_png_to_webp.py` 从原始 PNG 转换生成并裁掉透明边距，原始 PNG 不再保留。
 
 模型查看页在 `720px` 以下会显示“操作说明”按钮，点击后展开手势说明抽屉；光照滑动条固定在页面底栏，避免占用模型主要显示区域；模块显示入口放在操作说明下方，点击“模块显示”后从右侧滑出窄侧栏，侧栏中的模块按钮使用 `1`、`2`、`3` 这样的数字标识以节省空间，并以单列纵向排列，模块数量超出侧栏高度时可在侧栏内上下滑动。手机端说明使用触控逻辑和手机图标：单指滑动屏幕查看模型，双指张合缩放模型，双指同时拖动移动视角。`420px` 以下会进一步压缩标题、光照控件和部件按钮宽度，适配更窄屏幕。
 
@@ -449,9 +463,10 @@ model-viewer.html
 sw.js
 ico.webp
 splash.webp
+scripts/index.js
 ```
 
-`README.md`、`csv/` 和 `scripts/` 不参与网页运行时加载，因此不写入资源清单。
+`README.md`、`csv/`、`ts/`、`package.json`、`tsconfig.json` 和辅助脚本不参与网页运行时加载，因此不写入资源清单；`scripts/index.js` 是浏览器运行时代码，会写入资源清单。
 
 页面启动时会使用 `cache: "no-store"` 请求：
 
@@ -504,6 +519,12 @@ node scripts/sync-csv-json.js csv-to-json
 
 ```powershell
 node scripts/build-asset-manifest.js
+```
+
+编译 TypeScript 前端逻辑：
+
+```powershell
+cmd /c npm run build:ts
 ```
 
 手动抓取太平洋玩家统计：
