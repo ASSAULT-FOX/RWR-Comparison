@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "alwaysStrict": false,
+    "checkJs": false,
+    "declaration": false,
+    "lib": ["DOM", "ES2020"],
+    "module": "None",
+    "noEmitOnError": false,
+    "outDir": "scripts",
+    "removeComments": false,
+    "skipLibCheck": true,
+    "strict": false,
+    "target": "ES2020"
+  },
+  "include": ["ts/**/*.ts"]
+}

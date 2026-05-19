@@ -13,6 +13,7 @@ const roots = [
 const rootFiles = [
   "index.html",
   "model-viewer.html",
+  "scripts/index.js",
   "sw.js",
   "ico.webp",
   "splash.webp"
