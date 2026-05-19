@@ -66,7 +66,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo Syncing remote changes...
+echo Fetching remote player data...
 git fetch origin main
 if errorlevel 1 (
   echo.
@@ -75,19 +75,27 @@ if errorlevel 1 (
   exit /b 1
 )
 
-git merge origin/main
+git merge -s ours --no-commit origin/main
 if errorlevel 1 (
   echo.
-  echo Failed to merge remote changes. Please resolve conflicts and run this script again.
+  echo Failed to record remote history. Please resolve conflicts and run this script again.
   pause
   exit /b 1
 )
 
-echo Rebuilding assets after remote sync...
+git checkout origin/main -- "data\rwr-players-pacific.json"
+if errorlevel 1 (
+  echo.
+  echo Failed to restore data\rwr-players-pacific.json from origin/main.
+  pause
+  exit /b 1
+)
+
+echo Rebuilding assets after remote player data sync...
 cmd /c npm --prefix ts run build:ts
 if errorlevel 1 (
   echo.
-  echo Failed to compile TypeScript after remote sync.
+  echo Failed to compile TypeScript after remote player data sync.
   pause
   exit /b 1
 )
@@ -95,7 +103,7 @@ if errorlevel 1 (
 node scripts/build-asset-manifest.js
 if errorlevel 1 (
   echo.
-  echo Failed to update asset-manifest.json after remote sync.
+  echo Failed to update asset-manifest.json after remote player data sync.
   pause
   exit /b 1
 )
@@ -108,18 +116,29 @@ if errorlevel 1 (
   exit /b 1
 )
 
-git diff --cached --quiet
-if errorlevel 1 (
-  echo Committing post-sync changes...
+if exist ".git\MERGE_HEAD" (
+  echo Committing remote player data sync...
   git commit -m "Update assets"
   if errorlevel 1 (
     echo.
-    echo post-sync git commit failed.
+    echo remote player data sync commit failed.
     pause
     exit /b 1
   )
 ) else (
-  echo No post-sync changes to commit.
+  git diff --cached --quiet
+  if errorlevel 1 (
+    echo Committing remote player data sync...
+    git commit -m "Update assets"
+    if errorlevel 1 (
+      echo.
+      echo remote player data sync commit failed.
+      pause
+      exit /b 1
+    )
+  ) else (
+    echo No remote player data changes to commit.
+  )
 )
 
 echo Running git push...
