@@ -238,6 +238,10 @@
       box-shadow: none;
     }
 
+    body.players-pagination-visible .content-panel {
+      grid-template-rows: auto minmax(0, 1fr) minmax(84px, auto);
+    }
+
     .primary {
       border: 0;
       border-radius: 8px;
@@ -634,6 +638,8 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      position: relative;
+      z-index: 1;
     }
 
     .pagination.show {
@@ -643,8 +649,8 @@
     .pagination-panel {
       z-index: 15;
       display: none;
-      min-height: 76px;
-      padding: 12px 16px;
+      min-height: 84px;
+      padding: 14px 18px;
       border-top: 1px solid var(--line);
       border-radius: 0 0 18px 18px;
       background: rgba(255, 255, 255, 0.96);
@@ -653,6 +659,8 @@
       -webkit-backdrop-filter: blur(10px) saturate(125%);
       align-items: center;
       justify-content: center;
+      gap: 18px;
+      position: relative;
     }
 
     .pagination-panel::before {
@@ -665,7 +673,27 @@
     }
 
     .pagination-panel.show {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(180px, auto) minmax(0, 1fr);
+    }
+
+    .pagination-info {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid rgba(93, 125, 159, 0.16);
+      border-radius: 8px;
+      color: #345365;
+      background: rgba(235, 244, 252, 0.72);
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.25;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
     }
 
     .page-button {
@@ -2645,6 +2673,13 @@
 
       .pagination-panel {
         justify-content: center;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        min-height: 104px;
+      }
+
+      .pagination-info {
+        width: 100%;
       }
 
       .faction {
@@ -3075,6 +3110,7 @@
         </section>
         </section>
         <div class="pagination-panel" id="playerPaginationPanel" aria-label="玩家列表分页容器">
+          <div class="pagination-info" id="playerPaginationInfo"></div>
           <nav class="pagination" id="playerPagination" aria-label="玩家列表分页"></nav>
         </div>
       </section>

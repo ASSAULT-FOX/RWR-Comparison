@@ -22,6 +22,7 @@ const playerRowsEl = document.getElementById("playerRows");
 const mapRowsEl = document.getElementById("mapRows");
 const modelRowsEl = document.getElementById("modelRows");
 const playerPaginationPanel = document.getElementById("playerPaginationPanel");
+const playerPaginationInfoEl = document.getElementById("playerPaginationInfo");
 const playerPaginationEl = document.getElementById("playerPagination");
 const loadingPanel = document.getElementById("loadingPanel");
 const searchInput = document.getElementById("searchInput");
@@ -623,6 +624,7 @@ function applyView() {
     updateSortHeaders();
     playerPaginationEl.classList.remove("show");
     playerPaginationPanel.classList.remove("show");
+    document.body.classList.remove("players-pagination-visible");
     return;
   }
   if (activeTab === "models") {
@@ -630,6 +632,7 @@ function applyView() {
     updateSortHeaders();
     playerPaginationEl.classList.remove("show");
     playerPaginationPanel.classList.remove("show");
+    document.body.classList.remove("players-pagination-visible");
     return;
   }
   if (activeTab === "players") {
@@ -644,6 +647,7 @@ function applyView() {
     updateSortHeaders();
     playerPaginationEl.classList.remove("show");
     playerPaginationPanel.classList.remove("show");
+    document.body.classList.remove("players-pagination-visible");
     return;
   }
   filteredList = getFilteredList();
@@ -651,6 +655,7 @@ function applyView() {
   updateSortHeaders();
   playerPaginationEl.classList.remove("show");
   playerPaginationPanel.classList.remove("show");
+  document.body.classList.remove("players-pagination-visible");
 }
 
 function scheduleApplyView() {
@@ -1015,14 +1020,24 @@ function playerPageItems(totalPages) {
 }
 
 function renderPlayerPagination(totalPages) {
-  if (activeTab !== "players" || totalPages <= 1) {
+  if (activeTab !== "players") {
     playerPaginationEl.classList.remove("show");
     playerPaginationPanel.classList.remove("show");
+    document.body.classList.remove("players-pagination-visible");
+    playerPaginationInfoEl.textContent = "";
+    playerPaginationEl.innerHTML = "";
+    document.body.classList.remove("players-pagination-visible");
+    return;
+  }
+  playerPaginationPanel.classList.add("show");
+  document.body.classList.add("players-pagination-visible");
+  playerPaginationInfoEl.textContent = `第 ${formatInteger(playerPage)} / ${formatInteger(totalPages)} 页 · 共 ${formatInteger(currentPlayerList.length)} 名玩家`;
+  if (totalPages <= 1) {
+    playerPaginationEl.classList.remove("show");
     playerPaginationEl.innerHTML = "";
     return;
   }
   const items = playerPageItems(totalPages);
-  playerPaginationPanel.classList.add("show");
   playerPaginationEl.classList.add("show");
   playerPaginationEl.innerHTML = `
     <button class="page-button" data-page="${playerPage - 1}" type="button"${playerPage === 1 ? " disabled" : ""}>上一页</button>
