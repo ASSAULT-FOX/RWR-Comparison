@@ -631,21 +631,31 @@
     }
 
     .pagination {
-      z-index: 15;
       display: none;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 70px;
-      padding: 12px 16px;
-      border-top: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.94);
-      box-shadow: 0 -8px 22px rgba(35, 76, 124, 0.08);
-      backdrop-filter: blur(10px) saturate(125%);
-      -webkit-backdrop-filter: blur(10px) saturate(125%);
     }
 
     .pagination.show {
+      display: flex;
+    }
+
+    .pagination-panel {
+      z-index: 15;
+      display: none;
+      min-height: 76px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 -8px 22px rgba(35, 76, 124, 0.08);
+      backdrop-filter: blur(10px) saturate(125%);
+      -webkit-backdrop-filter: blur(10px) saturate(125%);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pagination-panel.show {
       display: flex;
     }
 
@@ -761,6 +771,22 @@
       border-radius: 999px;
       font-size: 28px;
       line-height: 1;
+    }
+
+    .player-id-badge {
+      display: inline-grid;
+      place-items: center;
+      max-width: min(100%, 260px);
+      min-height: 42px;
+      padding: 8px 22px;
+      border-radius: 999px;
+      color: #215a98;
+      background: linear-gradient(135deg, rgba(219, 232, 255, 0.96), rgba(226, 242, 255, 0.9));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.82), 0 8px 18px rgba(35, 76, 124, 0.08);
+      font-weight: 950;
+      line-height: 1.12;
+      overflow-wrap: anywhere;
+      letter-spacing: 0;
     }
 
     .map-card-grid {
@@ -1638,9 +1664,47 @@
       line-height: 1.3;
     }
 
-    .player-rank-hero {
+    .detail-hero.player-hero {
+      gap: 18px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .player-name-card,
+    .player-rank-card {
+      width: 100%;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(235, 249, 249, 0.9));
+      box-shadow: 0 8px 22px rgba(35, 76, 124, 0.08);
+      text-align: center;
+    }
+
+    .player-name-card {
+      min-height: 116px;
+      padding: 22px 24px;
+    }
+
+    .player-name-large {
+      max-width: 100%;
+      color: #17283a;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.15;
+      font-weight: 950;
+      overflow-wrap: anywhere;
+      letter-spacing: 0;
+    }
+
+    .player-rank-card {
       min-height: 150px;
       align-content: center;
+      gap: 12px;
+      padding: 22px 24px;
     }
 
     .player-rank-label {
@@ -2563,10 +2627,15 @@
         justify-content: flex-start;
         overflow-x: auto;
         scrollbar-width: none;
+        max-width: 100%;
       }
 
       .pagination::-webkit-scrollbar {
         display: none;
+      }
+
+      .pagination-panel {
+        justify-content: center;
       }
 
       .faction {
@@ -2996,7 +3065,9 @@
           <div class="model-card-grid" id="modelRows"></div>
         </section>
       </section>
-      <nav class="pagination" id="playerPagination" aria-label="玩家列表分页"></nav>
+      <div class="pagination-panel" id="playerPaginationPanel">
+        <nav class="pagination" id="playerPagination" aria-label="玩家列表分页"></nav>
+      </div>
       </section>
     </main>
   </div>
@@ -3107,6 +3178,7 @@
     const playerRowsEl = document.getElementById("playerRows");
     const mapRowsEl = document.getElementById("mapRows");
     const modelRowsEl = document.getElementById("modelRows");
+    const playerPaginationPanel = document.getElementById("playerPaginationPanel");
     const playerPaginationEl = document.getElementById("playerPagination");
     const loadingPanel = document.getElementById("loadingPanel");
     const searchInput = document.getElementById("searchInput");
@@ -3770,12 +3842,14 @@
         renderMapTable(getFilteredMaps());
         updateSortHeaders();
         playerPaginationEl.classList.remove("show");
+        playerPaginationPanel.classList.remove("show");
         return;
       }
       if (activeTab === "models") {
         renderModelTable(getFilteredModels());
         updateSortHeaders();
         playerPaginationEl.classList.remove("show");
+        playerPaginationPanel.classList.remove("show");
         return;
       }
       if (activeTab === "players") {
@@ -3789,12 +3863,14 @@
         renderWeaponTable(getSortedWeapons(filteredWeaponList));
         updateSortHeaders();
         playerPaginationEl.classList.remove("show");
+        playerPaginationPanel.classList.remove("show");
         return;
       }
       filteredList = getFilteredList();
       renderTable(getSortedList(filteredList));
       updateSortHeaders();
       playerPaginationEl.classList.remove("show");
+      playerPaginationPanel.classList.remove("show");
     }
 
     function scheduleApplyView() {
@@ -4134,7 +4210,7 @@
       const pageItems = list.slice(start, start + pageSize);
       playerRowsEl.innerHTML = pageItems.length ? pageItems.map((player) => `
         <tr data-index="${escapeHtml(player.index)}">
-          <td data-label="ID" data-mobile-role="title">${escapeHtml(displayValue(player.username))}</td>
+          <td data-label="ID" data-mobile-role="title"><span class="player-id-badge">${escapeHtml(displayValue(player.username))}</span></td>
           <td class="num" data-label="XP">${escapeHtml(formatInteger(player.xp))}</td>
           <td class="num" data-label="击杀数">${escapeHtml(formatInteger(player.kills))}</td>
           <td class="num" data-label="死亡数">${escapeHtml(formatInteger(player.deaths))}</td>
@@ -4164,10 +4240,12 @@
     function renderPlayerPagination(totalPages) {
       if (activeTab !== "players" || totalPages <= 1) {
         playerPaginationEl.classList.remove("show");
+        playerPaginationPanel.classList.remove("show");
         playerPaginationEl.innerHTML = "";
         return;
       }
       const items = playerPageItems(totalPages);
+      playerPaginationPanel.classList.add("show");
       playerPaginationEl.classList.add("show");
       playerPaginationEl.innerHTML = `
         <button class="page-button" data-page="${playerPage - 1}" type="button"${playerPage === 1 ? " disabled" : ""}>上一页</button>
@@ -4370,6 +4448,7 @@
       const vehicle = vehicles[index];
       detailTitle.textContent = `载具详细参数`;
       detailHero.classList.remove("player-rank-hero");
+      detailHero.classList.remove("player-hero");
       detailHero.innerHTML = `
         ${factionBadge(vehicle)}
         <h3>${escapeHtml(vehicle.name)}</h3>
@@ -5212,6 +5291,7 @@
       if (!weapon) return;
       detailTitle.textContent = "枪械详细参数";
       detailHero.classList.remove("player-rank-hero");
+      detailHero.classList.remove("player-hero");
       detailHero.innerHTML = `
         ${factionBadge({ faction: weapon["阵营"] })}
         <h3>${escapeHtml(displayValue(weapon["枪械名称"]))}</h3>
@@ -5235,10 +5315,16 @@
       const player = players[index];
       if (!player) return;
       detailTitle.textContent = "玩家详细参数";
-      detailHero.classList.add("player-rank-hero");
+      detailHero.classList.remove("player-rank-hero");
+      detailHero.classList.add("player-hero");
       detailHero.innerHTML = `
-        <div class="player-rank-label">排名</div>
-        <div class="player-rank-number">${escapeHtml(formatInteger(player.leaderboard_position))}</div>
+        <section class="player-name-card">
+          <div class="player-name-large">${escapeHtml(displayValue(player.username))}</div>
+        </section>
+        <section class="player-rank-card">
+          <div class="player-rank-label">排名</div>
+          <div class="player-rank-number">${escapeHtml(formatInteger(player.leaderboard_position))}</div>
+        </section>
       `;
       detailRows.innerHTML = playerDetailSections
         .map((section) => renderDetailSection(section.title, playerDetailRows(player, section)))
