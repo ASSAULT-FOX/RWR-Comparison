@@ -22,11 +22,34 @@ if errorlevel 1 (
 )
 
 echo.
-echo Running git upup...
-git upup
+echo Preparing Git changes...
+git add .
 if errorlevel 1 (
   echo.
-  echo git upup failed.
+  echo git add failed.
+  pause
+  exit /b 1
+)
+
+git diff --cached --quiet
+if errorlevel 1 (
+  echo Committing changes...
+  git commit -m "功能增加和BUG修复"
+  if errorlevel 1 (
+    echo.
+    echo git commit failed.
+    pause
+    exit /b 1
+  )
+) else (
+  echo No new changes to commit.
+)
+
+echo Running git push...
+git push
+if errorlevel 1 (
+  echo.
+  echo git push failed.
   pause
   exit /b 1
 )
