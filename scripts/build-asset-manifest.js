@@ -21,6 +21,9 @@ const rootFiles = [
 
 const includeExt = new Set([".html", ".js", ".json", ".webp", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".glb", ".blend"]);
 const outputFile = path.join("data", "asset-manifest.json");
+const excludeFiles = new Set([
+  "data/rwr-players-pacific.json"
+]);
 
 function walk(dir) {
   if (!fs.existsSync(dir)) return [];
@@ -42,6 +45,7 @@ const files = [
 ]
   .filter((file) => path.normalize(file) !== path.normalize(outputFile))
   .map((file) => file.split(path.sep).join("/"))
+  .filter((file) => !excludeFiles.has(file))
   .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 
 const hashes = Object.fromEntries(files.map((file) => [file, fileHash(file)]));

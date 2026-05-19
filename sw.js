@@ -1,4 +1,4 @@
-const CACHE_VERSION = "rwr-cache-2026-05-16-3";
+const CACHE_VERSION = "rwr-cache-2026-05-19-1";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const MANIFEST_URL = "./data/asset-manifest.json";
@@ -20,7 +20,6 @@ const APP_SHELL = [
   "./data/asset-manifest.json",
   "./data/vehicles.json",
   "./data/weapons.json",
-  "./data/rwr-players-pacific.json",
   "./data/maps.json",
   "./model/models.json"
 ];
@@ -52,6 +51,11 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.endsWith("/asset-manifest.json")) {
     event.respondWith(networkOnly(request));
+    return;
+  }
+
+  if (url.pathname.endsWith("/data/rwr-players-pacific.json")) {
+    event.respondWith(networkOnlyNoStore(request));
     return;
   }
 
@@ -118,6 +122,14 @@ async function cacheFirst(request) {
   } else if (response.status === 404 || response.status === 410) {
     await cache.delete(request);
   }
+  return response;
+}
+
+async function networkOnlyNoStore(request) {
+  const cache = await caches.open(RUNTIME_CACHE);
+  await cache.delete(request);
+  const response = await fetch(request, { cache: "no-store" });
+  await cache.delete(request);
   return response;
 }
 

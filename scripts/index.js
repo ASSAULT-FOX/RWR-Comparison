@@ -179,6 +179,20 @@ let pendingScoreUpdate = false;
 let sortableHeaders = [];
 let canUseCachedResources = false;
 let assetManifestPaths = null;
+let dataReady = {
+    vehicles: false,
+    weapons: false,
+    maps: false,
+    models: false
+};
+let dataErrors = {
+    vehicles: "",
+    weapons: "",
+    maps: "",
+    models: ""
+};
+let playersLoading = false;
+let playersLoadError = "";
 const imagePromiseCache = new Map();
 const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
 const antiTankWeapons = [
@@ -295,10 +309,16 @@ function setLoading(loading, subtitle = "正在请求并解析载具、枪械、
     if (subtitleEl)
         subtitleEl.textContent = subtitle;
 }
+function hideLoadingPanel() {
+    if (!loadingPanel)
+        return;
+    loadingPanel.classList.remove("open", "error");
+}
 function showNetworkError(message) {
     if (!loadingPanel)
         return;
     loadingPanel.classList.add("open", "error");
+    loadingPanel.setAttribute("role", "alert");
     const titleEl = loadingPanel.querySelector(".loading-title");
     const subtitleEl = loadingPanel.querySelector(".loading-subtitle");
     if (titleEl)
@@ -306,81 +326,170 @@ function showNetworkError(message) {
     if (subtitleEl)
         subtitleEl.textContent = message || "资源加载失败，请检查网络后刷新页面";
 }
-async function loadData() {
+async function loadDataIncremental() {
     setLoading(true);
+    applyView();
     const cacheMode = canUseCachedResources ? "force-cache" : "no-cache";
-    const [vehicleResponse, weaponResponse, mapResponse, modelResponse, playerResponse] = await Promise.all([
-        fetchWithTimeout("data/vehicles.json", { cache: cacheMode }, 10000),
-        fetchWithTimeout("data/weapons.json", { cache: cacheMode }, 10000),
-        fetchWithTimeout("data/maps.json", { cache: cacheMode }, 10000),
-        fetchWithTimeout("model/models.json", { cache: cacheMode }, 10000),
-        fetchWithTimeout("data/rwr-players-pacific.json", { cache: cacheMode }, 10000)
-    ]);
-    if (!vehicleResponse.ok)
-        throw new Error(`载具数据加载失败：${vehicleResponse.status}`);
-    if (!weaponResponse.ok)
-        throw new Error(`枪械数据加载失败：${weaponResponse.status}`);
-    if (!mapResponse.ok)
-        throw new Error(`地图数据加载失败：${mapResponse.status}`);
-    if (!modelResponse.ok)
-        throw new Error(`模型数据加载失败：${modelResponse.status}`);
-    if (!playerResponse.ok)
-        throw new Error(`玩家数据加载失败：${playerResponse.status}`);
-    const vehicleData = await vehicleResponse.json();
-    const weaponData = await weaponResponse.json();
-    const mapData = await mapResponse.json();
-    const modelData = await modelResponse.json();
-    const playerData = await playerResponse.json();
-    if (!Array.isArray(vehicleData))
-        throw new Error("载具数据格式错误：根节点必须是数组");
-    if (!Array.isArray(weaponData))
-        throw new Error("枪械数据格式错误：根节点必须是数组");
-    if (!Array.isArray(mapData))
-        throw new Error("地图数据格式错误：根节点必须是数组");
-    if (!Array.isArray(modelData))
-        throw new Error("模型数据格式错误：根节点必须是数组");
-    const playerList = Array.isArray(playerData) ? playerData : playerData.players;
-    if (!Array.isArray(playerList))
-        throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
-    vehicles = vehicleData.map((vehicle, index) => {
-        const normalized = normalizeVehicle(vehicle);
-        return {
-            ...normalized,
-            index,
-            searchText: [normalized.faction, normalized.name, normalized.weapon].join("\n").toLowerCase()
-        };
+    const loadVehicles = fetchWithTimeout("data/vehicles.json", { cache: cacheMode }, 10000)
+        .then((response) => {
+        if (!response.ok)
+            throw new Error(`载具数据加载失败：${response.status}`);
+        return response.json();
+    })
+        .then((vehicleData) => {
+        if (!Array.isArray(vehicleData))
+            throw new Error("载具数据格式错误：根节点必须是数组");
+        vehicles = vehicleData.map((vehicle, index) => {
+            const normalized = normalizeVehicle(vehicle);
+            return {
+                ...normalized,
+                index,
+                searchText: [normalized.faction, normalized.name, normalized.weapon].join("\n").toLowerCase()
+            };
+        });
+        currentList = vehicles;
+        filteredList = vehicles;
+        dataReady.vehicles = true;
+        applyView();
+        if (activeTab === "vehicles")
+            hideLoadingPanel();
+    })
+        .catch((error) => {
+        dataErrors.vehicles = error.message || "载具数据加载失败";
+        console.warn(error);
+        if (activeTab === "vehicles") {
+            applyView();
+            hideLoadingPanel();
+        }
     });
-    weapons = weaponData.map((weapon) => ({
-        ...weapon,
-        searchText: ["阵营", "类型", "枪械名称", "文件名称", "文件类型"].map((key) => String(weapon[key] || "")).join("\n").toLowerCase(),
-        numeric: Object.fromEntries(Array.from(weaponHigherBetter, (key) => [key, numericValue(weapon[key])]))
-    }));
-    maps = mapData.map((map) => ({
-        ...map,
-        searchText: [map.group, map.name, map.id].join("\n").toLowerCase(),
-        actionsHtml: null
-    }));
-    models = modelData.map((model, index) => ({
-        ...model,
-        id: model.id || String(index),
-        icon: model.icon ?? model["图标号"] ?? null,
-        index,
-        searchText: [model.name, model.id, model.model, model.icon, model["图标号"]].join("\n").toLowerCase()
-    }));
+    const loadWeapons = fetchWithTimeout("data/weapons.json", { cache: cacheMode }, 10000)
+        .then((response) => {
+        if (!response.ok)
+            throw new Error(`枪械数据加载失败：${response.status}`);
+        return response.json();
+    })
+        .then((weaponData) => {
+        if (!Array.isArray(weaponData))
+            throw new Error("枪械数据格式错误：根节点必须是数组");
+        weapons = weaponData.map((weapon) => ({
+            ...weapon,
+            searchText: ["阵营", "类型", "枪械名称", "文件名称", "文件类型"].map((key) => String(weapon[key] || "")).join("\n").toLowerCase(),
+            numeric: Object.fromEntries(Array.from(weaponHigherBetter, (key) => [key, numericValue(weapon[key])]))
+        }));
+        currentWeaponList = weapons;
+        filteredWeaponList = weapons;
+        weaponLookup = new Map(weapons.map((weapon) => [weapon.id, weapon]));
+        dataReady.weapons = true;
+        applyView();
+        if (activeTab === "weapons")
+            hideLoadingPanel();
+    })
+        .catch((error) => {
+        dataErrors.weapons = error.message || "枪械数据加载失败";
+        console.warn(error);
+        if (activeTab === "weapons") {
+            applyView();
+            hideLoadingPanel();
+        }
+    });
+    const loadMaps = fetchWithTimeout("data/maps.json", { cache: cacheMode }, 10000)
+        .then((response) => {
+        if (!response.ok)
+            throw new Error(`地图数据加载失败：${response.status}`);
+        return response.json();
+    })
+        .then((mapData) => {
+        if (!Array.isArray(mapData))
+            throw new Error("地图数据格式错误：根节点必须是数组");
+        maps = mapData.map((map) => ({
+            ...map,
+            searchText: [map.group, map.name, map.id].join("\n").toLowerCase(),
+            actionsHtml: null
+        }));
+        mapLookup = new Map(maps.map((map) => [map.id, map]));
+        dataReady.maps = true;
+        applyView();
+        if (activeTab === "maps")
+            hideLoadingPanel();
+    })
+        .catch((error) => {
+        dataErrors.maps = error.message || "地图数据加载失败";
+        console.warn(error);
+        if (activeTab === "maps") {
+            applyView();
+            hideLoadingPanel();
+        }
+    });
+    const loadModels = fetchWithTimeout("model/models.json", { cache: cacheMode }, 10000)
+        .then((response) => {
+        if (!response.ok)
+            throw new Error(`模型数据加载失败：${response.status}`);
+        return response.json();
+    })
+        .then((modelData) => {
+        if (!Array.isArray(modelData))
+            throw new Error("模型数据格式错误：根节点必须是数组");
+        models = modelData.map((model, index) => ({
+            ...model,
+            id: model.id || String(index),
+            icon: model.icon ?? model["图标号"] ?? null,
+            index,
+            searchText: [model.name, model.id, model.model, model.icon, model["图标号"]].join("\n").toLowerCase()
+        }));
+        dataReady.models = true;
+        applyView();
+        if (activeTab === "models")
+            hideLoadingPanel();
+    })
+        .catch((error) => {
+        dataErrors.models = error.message || "模型数据加载失败";
+        console.warn(error);
+        if (activeTab === "models") {
+            applyView();
+            hideLoadingPanel();
+        }
+    });
+    loadPlayersInBackground();
+    await Promise.all([loadVehicles, loadWeapons, loadMaps, loadModels]);
+    if (["vehicles", "weapons", "maps", "models"].includes(activeTab) && (dataReady[activeTab] || dataErrors[activeTab])) {
+        hideLoadingPanel();
+    }
+    registerServiceWorker();
+}
+function setPlayers(playerList) {
     players = playerList.map((player, index) => ({
         ...player,
         index,
         searchText: [player.username, player.leaderboard_position, player.xp, player.kills, player.score].join("\n").toLowerCase()
     }));
     playerRankings = buildPlayerRankings(players);
-    weaponLookup = new Map(weapons.map((weapon) => [weapon.id, weapon]));
-    mapLookup = new Map(maps.map((map) => [map.id, map]));
-    currentList = vehicles;
-    filteredList = vehicles;
-    currentWeaponList = weapons;
-    filteredWeaponList = weapons;
     currentPlayerList = players;
     filteredPlayerList = players;
+}
+async function loadPlayersInBackground() {
+    playersLoading = true;
+    playersLoadError = "";
+    if (activeTab === "players")
+        applyView();
+    try {
+        const response = await fetchWithTimeout("data/rwr-players-pacific.json", { cache: "no-store" }, 45000);
+        if (!response.ok)
+            throw new Error(`玩家数据加载失败：${response.status}`);
+        const playerData = await response.json();
+        const playerList = Array.isArray(playerData) ? playerData : playerData.players;
+        if (!Array.isArray(playerList))
+            throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
+        setPlayers(playerList);
+    }
+    catch (error) {
+        playersLoadError = error.message || "玩家数据加载失败";
+        console.warn(error);
+    }
+    finally {
+        playersLoading = false;
+        if (activeTab === "players")
+            applyView();
+    }
 }
 function fmt(value) {
     if (value === null || value === undefined)
@@ -541,6 +650,8 @@ function getFilteredModels() {
     return getSortedModels(list);
 }
 function getFilteredPlayers() {
+    if (!players.length)
+        return [];
     const keyword = searchInput.value.trim().toLowerCase();
     if (!keyword)
         return players;
@@ -640,6 +751,14 @@ function updateSortHeaders() {
 function applyView() {
     viewFrame = null;
     if (activeTab === "maps") {
+        if (!dataReady.maps && !maps.length) {
+            renderTableLoadingState(mapTable, dataErrors.maps || "地图数据正在加载，请稍候");
+            updateSortHeaders();
+            playerPaginationEl.classList.remove("show");
+            playerPaginationPanel.classList.remove("show");
+            document.body.classList.remove("players-pagination-visible");
+            return;
+        }
         renderMapTable(getFilteredMaps());
         updateSortHeaders();
         playerPaginationEl.classList.remove("show");
@@ -648,6 +767,14 @@ function applyView() {
         return;
     }
     if (activeTab === "models") {
+        if (!dataReady.models && !models.length) {
+            renderTableLoadingState(modelTable, dataErrors.models || "模型数据正在加载，请稍候");
+            updateSortHeaders();
+            playerPaginationEl.classList.remove("show");
+            playerPaginationPanel.classList.remove("show");
+            document.body.classList.remove("players-pagination-visible");
+            return;
+        }
         renderModelTable(getFilteredModels());
         updateSortHeaders();
         playerPaginationEl.classList.remove("show");
@@ -656,14 +783,35 @@ function applyView() {
         return;
     }
     if (activeTab === "players") {
+        if (!players.length && (playersLoading || playersLoadError)) {
+            renderPlayerTable([]);
+            updateSortHeaders();
+            return;
+        }
         filteredPlayerList = getFilteredPlayers();
         renderPlayerTable(getSortedPlayers(filteredPlayerList));
         updateSortHeaders();
         return;
     }
     if (activeTab === "weapons") {
+        if (!dataReady.weapons && !weapons.length) {
+            renderTableLoadingState(weaponTable, dataErrors.weapons || "枪械数据正在加载，请稍候");
+            updateSortHeaders();
+            playerPaginationEl.classList.remove("show");
+            playerPaginationPanel.classList.remove("show");
+            document.body.classList.remove("players-pagination-visible");
+            return;
+        }
         filteredWeaponList = getFilteredWeapons();
         renderWeaponTable(getSortedWeapons(filteredWeaponList));
+        updateSortHeaders();
+        playerPaginationEl.classList.remove("show");
+        playerPaginationPanel.classList.remove("show");
+        document.body.classList.remove("players-pagination-visible");
+        return;
+    }
+    if (!dataReady.vehicles && !vehicles.length) {
+        renderTableLoadingState(vehicleTable, dataErrors.vehicles || "载具数据正在加载，请稍候");
         updateSortHeaders();
         playerPaginationEl.classList.remove("show");
         playerPaginationPanel.classList.remove("show");
@@ -1001,6 +1149,24 @@ function renderModelTable(list) {
 }
 function renderPlayerTable(list) {
     currentPlayerList = list;
+    if (playersLoading && !players.length) {
+        playerRowsEl.innerHTML = `
+      <tr>
+        <td colspan="6">玩家数据正在加载，请稍候</td>
+      </tr>
+    `;
+        renderPlayerPagination(1);
+        return;
+    }
+    if (playersLoadError && !players.length) {
+        playerRowsEl.innerHTML = `
+      <tr>
+        <td colspan="6">${escapeHtml(playersLoadError)}，请刷新页面重试</td>
+      </tr>
+    `;
+        renderPlayerPagination(1);
+        return;
+    }
     const pageSize = 100;
     const totalPages = Math.max(1, Math.ceil(list.length / pageSize));
     if (playerPage > totalPages)
@@ -1024,6 +1190,21 @@ function renderPlayerTable(list) {
     </tr>
   `;
     renderPlayerPagination(totalPages);
+}
+function renderTableLoadingState(table, message) {
+    const body = table.querySelector("tbody") || table.querySelector(".map-series-list") || table.querySelector(".model-card-grid");
+    if (!body)
+        return;
+    if (body.tagName === "TBODY") {
+        const cols = table.querySelectorAll("thead th").length || 1;
+        body.innerHTML = `
+      <tr>
+        <td colspan="${cols}">${escapeHtml(message)}</td>
+      </tr>
+    `;
+        return;
+    }
+    body.innerHTML = `<div class="model-empty">${escapeHtml(message)}</div>`;
 }
 function playerPageItems(totalPages) {
     if (totalPages <= 9)
@@ -2488,6 +2669,17 @@ async function clearAppCaches() {
         navigator.serviceWorker.controller.postMessage({ type: "CLEAR_RWR_CACHES" });
     }
 }
+function safeStorage(storage) {
+    try {
+        const probe = "__rwr_storage_probe__";
+        storage.setItem(probe, "1");
+        storage.removeItem(probe);
+        return storage;
+    }
+    catch (error) {
+        return null;
+    }
+}
 async function checkAssetManifest() {
     if (!/^https?:$/.test(location.protocol))
         return false;
@@ -2500,17 +2692,23 @@ async function checkAssetManifest() {
         throw new Error("网络错误：资源清单格式错误");
     }
     assetManifestPaths = manifest.files ? new Set(Object.keys(manifest.files)) : null;
+    const local = safeStorage(localStorage);
+    const session = safeStorage(sessionStorage);
+    if (!local || !session) {
+        canUseCachedResources = false;
+        return false;
+    }
     const key = "rwrAssetManifestVersion";
-    const previous = localStorage.getItem(key);
+    const previous = local.getItem(key);
     const refreshedKey = "rwrAssetManifestRefreshed";
-    const refreshedVersion = sessionStorage.getItem(refreshedKey);
-    localStorage.setItem(key, manifest.version);
+    const refreshedVersion = session.getItem(refreshedKey);
+    local.setItem(key, manifest.version);
     canUseCachedResources = Boolean(previous && previous === manifest.version && refreshedVersion !== manifest.version);
     if (refreshedVersion === manifest.version)
-        sessionStorage.removeItem(refreshedKey);
+        session.removeItem(refreshedKey);
     if (previous && previous !== manifest.version) {
         await clearAppCaches();
-        sessionStorage.setItem(refreshedKey, manifest.version);
+        session.setItem(refreshedKey, manifest.version);
         location.reload();
         return true;
     }
@@ -2533,14 +2731,12 @@ checkAssetManifest()
     .then((reloading) => {
     if (reloading)
         return null;
-    return loadData();
+    return loadDataIncremental();
 })
     .then(() => {
-    if (vehicles.length === 0 && weapons.length === 0 && maps.length === 0 && players.length === 0)
+    if (vehicles.length === 0 && weapons.length === 0 && maps.length === 0 && models.length === 0 && players.length === 0)
         return;
     applyView();
-    setLoading(false);
-    registerServiceWorker();
 })
     .catch((error) => {
     console.error(error);

@@ -8,7 +8,6 @@
   <link rel="preload" href="data/vehicles.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="data/weapons.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="data/maps.json" as="fetch" type="application/json" crossorigin>
-  <link rel="preload" href="data/rwr-players-pacific.json" as="fetch" type="application/json" crossorigin>
   <link rel="preload" href="model/models.json" as="fetch" type="application/json" crossorigin>
   <style>
     :root {
@@ -239,7 +238,7 @@
     }
 
     body.players-pagination-visible .content-panel {
-      grid-template-rows: auto minmax(0, 1fr) minmax(84px, auto);
+      grid-template-rows: auto minmax(0, 1fr) minmax(54px, auto);
       gap: 12px;
       overflow: visible;
       border: 0;
@@ -664,8 +663,8 @@
     .pagination-panel {
       z-index: 15;
       display: none;
-      min-height: 84px;
-      padding: 14px 18px;
+      min-height: 54px;
+      padding: 4px 14px;
       border: 1px solid var(--line);
       border-radius: 18px;
       background: rgba(255, 255, 255, 0.96);
@@ -690,6 +689,7 @@
     .pagination-panel.show {
       display: grid;
       grid-template-columns: minmax(180px, auto) minmax(0, 1fr);
+      align-items: center;
     }
 
     body.modal-open .pagination-panel.show {
@@ -702,8 +702,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 38px;
-      padding: 0 14px;
+      min-height: 34px;
+      padding: 0 12px;
       border: 1px solid rgba(93, 125, 159, 0.16);
       border-radius: 8px;
       color: #345365;
@@ -2406,6 +2406,13 @@
         font-size: 14px;
       }
 
+      #vehicleTable,
+      #weaponTable,
+      #playerTable {
+        width: 100%;
+        min-width: 0;
+      }
+
       colgroup,
       thead {
         display: none;
@@ -2567,111 +2574,12 @@
         grid-template-columns: 1fr 88px 44px 88px;
       }
 
-      table {
-        display: table;
-        width: max-content;
-        table-layout: fixed;
-        border-collapse: separate;
-        border-spacing: 0;
-      }
-
-      #vehicleTable {
-        min-width: 1060px;
-      }
-
-      #weaponTable {
-        min-width: 840px;
-      }
-
-      #playerTable {
-        min-width: 760px;
-      }
-
       #mapTable {
         min-width: 0;
       }
 
-      #modelTable {
-        min-width: 620px;
-      }
-
       #modelTable.model-panel {
         min-width: 0;
-      }
-
-      colgroup {
-        display: table-column-group;
-      }
-
-      thead {
-        display: table-header-group;
-        position: sticky;
-        top: 0;
-        z-index: 30;
-        background: #fbfdff;
-        box-shadow: 0 1px 0 var(--line), 0 8px 18px rgba(35, 76, 124, 0.055);
-      }
-
-      thead th {
-        position: relative;
-        z-index: 31;
-        background: #fbfdff;
-      }
-
-      tbody {
-        display: table-row-group;
-      }
-
-      tr,
-      tbody tr,
-      #vehicleTable tbody tr,
-      #weaponTable tbody tr,
-      #playerTable tbody tr,
-      #modelTable tbody tr {
-        display: table-row;
-        min-height: 0;
-        border: 0;
-        border-radius: 0;
-        background: rgba(255, 255, 255, 0.42);
-        box-shadow: none;
-        overflow: visible;
-      }
-
-      tbody tr:nth-child(even) {
-        background: rgba(250, 253, 255, 0.58);
-      }
-
-      td,
-      tbody td,
-      #vehicleTable tbody td,
-      #weaponTable tbody td,
-      #playerTable tbody td,
-      #modelTable tbody td {
-        display: table-cell;
-        min-height: 0;
-        padding: 12px 8px;
-        border-top: 0;
-        border-bottom: 1px solid rgba(118, 140, 153, 0.16);
-        text-align: center;
-        font-size: 14px;
-      }
-
-      tbody td::before,
-      tbody td[data-mobile-role="title"]::before,
-      tbody td[data-mobile-role="actions"]::before {
-        content: none;
-        display: none;
-      }
-
-      tbody td[data-mobile-role="title"],
-      tbody td[data-mobile-role="actions"] {
-        display: table-cell;
-        min-height: 0;
-        background: transparent;
-        color: inherit;
-        font-size: 14px;
-        font-weight: inherit;
-        text-align: center;
       }
 
       tbody td[data-mobile-role="actions"] > .map-action-button {
@@ -2697,8 +2605,8 @@
       .pagination-panel {
         justify-content: center;
         grid-template-columns: 1fr;
-        gap: 10px;
-        min-height: 104px;
+        gap: 4px;
+        min-height: 54px;
       }
 
       .pagination-info {
