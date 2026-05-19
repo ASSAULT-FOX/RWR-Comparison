@@ -82,7 +82,7 @@ def parse_time(value):
 def parse_value(value, kind):
     value = (value or "").strip()
     if kind is str:
-        return value
+        return value.encode("iso-8859-1").decode("utf-8")
     if not value or value == "-":
         return None
     if kind == "time":
@@ -97,12 +97,7 @@ def parse_value(value, kind):
 
 
 def decode_response(raw):
-    for encoding in ("utf-8", "iso-8859-1"):
-        try:
-            return raw.decode(encoding)
-        except UnicodeDecodeError:
-            continue
-    return raw.decode("utf-8", errors="replace")
+    return raw.decode("iso-8859-1")
 
 
 def fetch_page(start, size, timeout):
