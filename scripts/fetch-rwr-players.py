@@ -79,10 +79,20 @@ def parse_time(value):
     return int(parts["s"] or 0) + int(parts["m"] or 0) * 60 + int(parts["h"] or 0) * 3600
 
 
+def decode_username(value):
+    raw = value.encode("iso-8859-1")
+    try:
+        return raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        decoded = raw.decode("utf-8", errors="replace")
+        print(f"Warning: replaced invalid UTF-8 bytes in username {ascii(value)}: {error}", file=sys.stderr, flush=True)
+        return decoded
+
+
 def parse_value(value, kind):
     value = (value or "").strip()
     if kind is str:
-        return value.encode("iso-8859-1").decode("utf-8")
+        return decode_username(value)
     if not value or value == "-":
         return None
     if kind == "time":
@@ -167,8 +177,8 @@ def main():
     parser = argparse.ArgumentParser(description="Fetch Pacific RWR player stats into a static JSON file.")
     parser.add_argument("--output", default="data/rwr-players-pacific.json")
     parser.add_argument("--max-pages", type=int, default=None)
-    parser.add_argument("--timeout", type=float, default=60)
-    parser.add_argument("--delay", type=float, default=0.25)
+    parser.add_argument("--timeout", type=float, default=120)
+    parser.add_argument("--delay", type=float, default=0.5)
     args = parser.parse_args()
 
     players = fetch_all_players(max_pages=args.max_pages, timeout=args.timeout, delay=args.delay)
