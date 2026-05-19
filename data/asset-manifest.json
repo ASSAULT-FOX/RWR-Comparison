@@ -1,9 +1,9 @@
 {
-  "version": "f3b9e0db97a83a772cefe1793b87d24097f182488925e3bf6c823ce7344c5b11",
-  "generatedAt": "2026-05-19T06:17:22.257Z",
+  "version": "07649a662055432acdee1f189219d4a64eab4365aa76ded4dbe1e609950a4ef9",
+  "generatedAt": "2026-05-19T06:29:01.950Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
-    "data/rwr-players-pacific.json": "61996af7b88bb2dadbb541af02309d1d2621c7a9baa144a4098594671faf5c91",
+    "data/rwr-players-pacific.json": "e63b2619addcb5d6e731d55df6623755113533a2e35c8a3e89292309203c00ce",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
     "data/weapons.json": "97fa4544c7b90231511680c479060724c9bb66a69bb791c20acdcce20e8469a5",
     "ico.webp": "2a47046b17dde309cb9c8318a9d5a6f07283b5422f757de6c0be85f016dcb70d",
