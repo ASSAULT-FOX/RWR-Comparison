@@ -169,8 +169,6 @@ let currentPlayerList = [];
 let filteredPlayerList = [];
 let weaponLookup = new Map();
 let mapLookup = new Map();
-let vehicleNameLookup = new Map();
-let vehicleLooseNameLookup = new Map();
 let sortState = { key: null, mode: null };
 let weaponSortState = { key: null, mode: null };
 let playerSortState = { key: null, mode: null };
@@ -368,12 +366,6 @@ async function loadData() {
   playerRankings = buildPlayerRankings(players);
   weaponLookup = new Map(weapons.map((weapon) => [weapon.id, weapon]));
   mapLookup = new Map(maps.map((map) => [map.id, map]));
-  vehicleNameLookup = new Map(vehicles.map((vehicle) => [vehicle.name, vehicle]));
-  vehicleLooseNameLookup = new Map();
-  vehicles.forEach((vehicle) => {
-    const key = looseVehicleName(vehicle.name);
-    if (key && !vehicleLooseNameLookup.has(key)) vehicleLooseNameLookup.set(key, vehicle);
-  });
   currentList = vehicles;
   filteredList = vehicles;
   currentWeaponList = weapons;
@@ -501,61 +493,6 @@ function mapGroupClass(group) {
 
 function mapGroupBadge(group) {
   return `<span class="faction ${escapeHtml(mapGroupClass(group))}">${escapeHtml(group)}</span>`;
-}
-
-function looseVehicleName(name) {
-  return String(name || "")
-    .toLowerCase()
-    .replace(/[“”"'\s.（）()\/-]/g, "")
-    .replace(/^ai/, "")
-    .replace(/^玩家/, "")
-    .replace(/^精英/, "")
-    .replace(/^美军/, "")
-    .replace(/^英军/, "")
-    .replace(/^sdkfz/, "sdkfz.")
-    .replace(/mk\.?vii/g, "")
-    .replace(/ii/g, "2")
-    .replace(/狼獾/g, "")
-    .replace(/谢尔曼/g, "m4")
-    .replace(/犀牛/g, "")
-    .replace(/萤火虫/g, "firefly")
-    .replace(/改/g, "")
-    .replace(/式/g, "")
-    .replace(/型/g, "");
-}
-
-function modelVehicle(model) {
-  if (!model) return null;
-  const exact = vehicleNameLookup.get(model.name);
-  if (exact) return exact;
-  const alias = modelVehicleAlias(model.name);
-  if (alias) return alias;
-  const key = looseVehicleName(model.name);
-  const looseExact = vehicleLooseNameLookup.get(key);
-  if (looseExact) return looseExact;
-  if (!key) return null;
-  return vehicles.find((vehicle) => {
-    const vehicleKey = looseVehicleName(vehicle.name);
-    return vehicleKey && (vehicleKey.includes(key) || key.includes(vehicleKey));
-  }) || null;
-}
-
-function modelVehicleAlias(name) {
-  const text = String(name || "").toLowerCase();
-  const rules = [
-    { test: (value) => value.includes("97") || value.includes("九七"), match: (vehicle) => vehicle.name.includes("九七") },
-    { test: (value) => value.includes("丘吉尔") && value.includes("步兵"), match: (vehicle) => vehicle.name.includes("丘吉尔") && vehicle.name.includes("步兵") },
-    { test: (value) => value.includes("丘吉尔") && value.includes("喷火"), match: (vehicle) => vehicle.name.includes("喷火") },
-    { test: (value) => value.includes("一式") && value.includes("装甲"), match: (vehicle) => vehicle.name.includes("一式") && vehicle.name.includes("装甲") },
-    { test: (value) => value.includes("萤火虫") || value.includes("firefly"), match: (vehicle) => vehicle.name.includes("萤火虫") },
-    { test: (value) => value.includes("sdkfz251") && value.includes("防空"), match: (vehicle) => vehicle.name.toLowerCase().includes("251/17") || (vehicle.name.toLowerCase().includes("251") && vehicle.name.includes("防空")) },
-    { test: (value) => value.includes("sdkfz251"), match: (vehicle) => vehicle.name.toLowerCase().includes("251") && !vehicle.name.includes("防空") },
-    { test: (value) => value.includes("m10"), match: (vehicle) => vehicle.name.toLowerCase().includes("m10") || vehicle.name.includes("狼獾") },
-    { test: (value) => value.includes("tog"), match: (vehicle) => vehicle.name.toLowerCase().includes("tog") },
-    { test: (value) => value.includes("lvt4"), match: (vehicle) => vehicle.name.toLowerCase().includes("lvt4") }
-  ];
-  const rule = rules.find((item) => item.test(text));
-  return rule ? vehicles.find(rule.match) || null : null;
 }
 
 function isUnarmedVehicle(vehicle) {
@@ -1024,14 +961,11 @@ function renderModelTable(list) {
     return;
   }
   modelRowsEl.innerHTML = list.map((model) => {
-    const vehicle = modelVehicle(model);
-    const iconSrc = modelIconSrc(model, vehicle);
+    const iconSrc = modelIconSrc(model);
     const iconHtml = iconSrc
       ? assetIconHtml(iconSrc, model.name, "model-card-icon")
       : '<span class="model-card-placeholder">无图标</span>';
-    const factionHtml = vehicle
-      ? factionBadge(vehicle)
-      : (model.faction ? factionBadge({ faction: model.faction }) : '<span class="faction">未知阵营</span>');
+    const factionHtml = model.faction ? factionBadge({ faction: model.faction }) : '<span class="faction">未知阵营</span>';
     const disabled = model.model ? "" : " disabled";
     return `
       <button class="model-card" data-model-id="${escapeHtml(model.id)}" type="button"${disabled} title="${escapeHtml(model.name)}">
@@ -1116,12 +1050,12 @@ function vehicleIconSrc(vehicle) {
   return icon === null || icon === undefined || icon === "" ? "" : `maps_textures/${encodeURIComponent(String(icon))}.webp`;
 }
 
-function modelIconSrc(model, vehicle) {
+function modelIconSrc(model) {
   const icon = model?.icon ?? model?.["图标号"];
   if (icon !== null && icon !== undefined && icon !== "") {
     return `maps_textures/${encodeURIComponent(String(icon))}.webp`;
   }
-  return vehicleIconSrc(vehicle);
+  return "";
 }
 
 function weaponIconSrc(weapon) {
