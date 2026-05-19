@@ -2755,6 +2755,12 @@ async function fetchWithTimeout(url, options = {}, timeout = 10000) {
 }
 
 checkAssetManifest()
+  .catch((error) => {
+    console.warn("Asset manifest check failed; continuing without cached resources.", error);
+    canUseCachedResources = false;
+    assetManifestPaths = null;
+    return false;
+  })
   .then((reloading) => {
     if (reloading) return null;
     return loadDataIncremental();
