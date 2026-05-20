@@ -484,69 +484,25 @@ function appendPlayers(playerList, final = false) {
     }
 }
 async function loadPlayerResponse(response) {
-    const probe = response.clone();
-    const header = await readPlayerStreamHeader(probe);
-    if (header?.format === PLAYER_STREAM_FORMAT) {
-        await readPlayerStream(response);
-        return;
-    }
-    const playerData = await response.json();
-    const playerList = Array.isArray(playerData) ? playerData : playerData.players;
-    if (!Array.isArray(playerList))
-        throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
-    setPlayers(playerList);
+    await readPlayerStream(response);
 }
-async function readPlayerStreamHeader(response) {
-    if (!response.body)
-        return null;
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    let doneReading = false;
-    try {
-        while (true) {
-            const { value, done } = await reader.read();
-            if (value)
-                buffer += decoder.decode(value, { stream: !done });
-            const newlineIndex = buffer.indexOf("\n");
-            if (newlineIndex >= 0) {
-                const firstLine = buffer.slice(0, newlineIndex).trim();
-                buffer = buffer.slice(newlineIndex + 1);
-                if (!firstLine)
-                    continue;
-                try {
-                    return JSON.parse(firstLine);
-                }
-                catch {
-                    return null;
-                }
-            }
-            if (done) {
-                doneReading = true;
-                const firstLine = buffer.trim();
-                if (!firstLine)
-                    return null;
-                try {
-                    return JSON.parse(firstLine);
-                }
-                catch {
-                    return null;
-                }
-            }
-        }
+function parsePlayerStreamHeader(line) {
+    const header = JSON.parse(line);
+    if (header?.format !== PLAYER_STREAM_FORMAT) {
+        throw new Error("玩家数据格式错误：必须是 JSONL 流格式");
     }
-    finally {
-        if (!doneReading)
-            reader.cancel().catch(() => null);
-    }
+    return header;
+}
+function parsePlayerStreamText(text) {
+    const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    if (!lines.length)
+        throw new Error("玩家数据格式错误：玩家流为空");
+    parsePlayerStreamHeader(lines[0]);
+    return lines.slice(1).map((line) => JSON.parse(line));
 }
 async function readPlayerStream(response) {
     if (!response.body) {
-        const fallback = await response.json();
-        const playerList = Array.isArray(fallback) ? fallback : fallback.players;
-        if (!Array.isArray(playerList))
-            throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
-        setPlayers(playerList);
+        setPlayers(parsePlayerStreamText(await response.text()));
         return;
     }
     const reader = response.body.getReader();
@@ -573,10 +529,7 @@ async function readPlayerStream(response) {
                         break;
                     continue;
                 }
-                const header = JSON.parse(firstLine);
-                if (header.format !== PLAYER_STREAM_FORMAT) {
-                    throw new Error("玩家数据格式错误：不支持的流格式");
-                }
+                parsePlayerStreamHeader(firstLine);
                 headerParsed = true;
             }
             let newlineIndex = buffer.indexOf("\n");
@@ -596,16 +549,10 @@ async function readPlayerStream(response) {
             if (done)
                 break;
         }
+        if (!headerParsed)
+            throw new Error("玩家数据格式错误：玩家流为空");
         const tail = buffer.trim();
         if (tail) {
-            if (!headerParsed) {
-                const playerData = JSON.parse(tail);
-                const playerList = Array.isArray(playerData) ? playerData : playerData.players;
-                if (!Array.isArray(playerList))
-                    throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
-                setPlayers(playerList);
-                return;
-            }
             pendingPlayers.push(JSON.parse(tail));
         }
         if (pendingPlayers.length)

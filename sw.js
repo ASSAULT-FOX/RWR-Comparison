@@ -380,40 +380,20 @@ async function responseMatchesPlayerHash(response, expectedHash) {
 }
 
 function parsePlayerPayload(text) {
-  const trimmed = text.trim();
-  if (!trimmed) {
-    return { source: null, database: null, count: 0, players: [] };
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  if (!lines.length) {
+    throw new Error("Empty player stream");
   }
 
-  const firstNewline = trimmed.indexOf("\n");
-  if (firstNewline > 0) {
-    try {
-      const header = JSON.parse(trimmed.slice(0, firstNewline).trim());
-      if (header?.format === PLAYER_STREAM_FORMAT) {
-        const players = trimmed
-          .slice(firstNewline + 1)
-          .split(/\r?\n/)
-          .map((line) => line.trim())
-          .filter(Boolean)
-          .map((line) => JSON.parse(line));
-        return {
-          source: header.source,
-          database: header.database,
-          count: header.count,
-          players
-        };
-      }
-    } catch (error) {
-      // Fall through to legacy JSON parsing.
-    }
+  const header = JSON.parse(lines[0]);
+  if (header?.format !== PLAYER_STREAM_FORMAT) {
+    throw new Error("Unsupported player stream format");
   }
-
-  const legacy = JSON.parse(trimmed);
   return {
-    source: legacy.source,
-    database: legacy.database,
-    count: legacy.count,
-    players: Array.isArray(legacy) ? legacy : legacy.players
+    source: header.source,
+    database: header.database,
+    count: header.count,
+    players: lines.slice(1).map((line) => JSON.parse(line))
   };
 }
 

@@ -2417,27 +2417,33 @@
         font-size: 14px;
       }
 
-      #vehicleTable,
-      #weaponTable,
       #playerTable {
         width: 100%;
         min-width: 0;
       }
 
-      colgroup,
-      thead {
+      #vehicleTable {
+        width: 100%;
+        min-width: 1080px;
+      }
+
+      #weaponTable {
+        width: 100%;
+        min-width: 900px;
+      }
+
+      #playerTable colgroup,
+      #playerTable thead {
         display: none;
       }
 
-      tbody {
+      #playerTable tbody {
         display: grid;
         gap: 10px;
+        padding: 10px 0 82px;
       }
 
-      tbody tr,
-      #vehicleTable tbody tr,
-      #weaponTable tbody tr,
-      #modelTable tbody tr {
+      #playerTable tbody tr {
         display: grid;
         min-height: 0;
         border: 1px solid var(--line);
@@ -2447,16 +2453,16 @@
         overflow: hidden;
       }
 
-      tbody tr:nth-child(even) {
+      #playerTable tbody tr:nth-child(even) {
         background: rgba(255, 255, 255, 0.82);
       }
 
-      body:not(.compare-mode) tbody tr:hover {
+      body:not(.compare-mode) #playerTable tbody tr:hover {
         transform: none;
         box-shadow: 0 8px 20px rgba(35, 76, 124, 0.08);
       }
 
-      body:not(.compare-mode) tbody tr:hover td {
+      body:not(.compare-mode) #playerTable tbody tr:hover td {
         font-size: inherit;
         font-weight: inherit;
       }
@@ -2513,21 +2519,6 @@
         display: none;
       }
 
-      .table-icon-cell {
-        padding-top: 10px !important;
-        padding-bottom: 10px !important;
-      }
-
-      .row-icon {
-        width: 58px;
-        height: 58px;
-        justify-self: end;
-      }
-
-      .faction {
-        justify-self: end;
-      }
-
       .compare-grid {
         grid-template-columns: 1fr;
       }
@@ -2576,13 +2567,8 @@
         min-width: 0;
       }
 
-      tbody td[data-mobile-role="actions"] > .map-action-button {
+      #playerTable tbody td[data-mobile-role="actions"] > .map-action-button {
         width: auto;
-      }
-
-      .row-icon {
-        width: 58px;
-        height: 58px;
       }
 
       .pagination-panel {
@@ -2594,10 +2580,6 @@
 
       .pagination-info {
         width: 100%;
-      }
-
-      .faction {
-        justify-self: center;
       }
 
       #compareModal .dialog-body {
