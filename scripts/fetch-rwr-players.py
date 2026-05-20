@@ -16,6 +16,7 @@ from urllib.request import Request, urlopen
 BASE_URL = "http://rwr.runningwithrifles.com/rwr_stats/view_players.php"
 DATABASE = "pacific"
 PAGE_SIZE = 100
+STREAM_FORMAT = "rwr-player-stream-v1"
 STABLE_PLAYER_FIELDS = [
     "leaderboard_position",
     "username",
@@ -231,6 +232,100 @@ def fetch_all_players(max_pages=None, timeout=60, delay=0.25):
     return players
 
 
+def compute_stable_hash(players):
+    stable_output = {
+        "source": f"{BASE_URL}?db={DATABASE}",
+        "database": DATABASE,
+        "count": len(players),
+        "players": [
+            {field: player.get(field) for field in STABLE_PLAYER_FIELDS}
+            for player in players
+        ],
+    }
+    stable_output_json = json.dumps(stable_output, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(stable_output_json.encode("utf-8")).hexdigest()
+
+
+def detect_existing_version(output_path, meta_path):
+    if meta_path.exists():
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8").replace("\ufeff", "", 1))
+            version = meta.get("version")
+            if version:
+                return version
+        except Exception:
+            pass
+
+    if not output_path.exists():
+        return None
+    try:
+        with output_path.open("r", encoding="utf-8") as handle:
+            first_line = handle.readline().strip()
+        if not first_line:
+            return None
+        first_record = json.loads(first_line)
+        if isinstance(first_record, dict) and first_record.get("format") == STREAM_FORMAT:
+            return first_record.get("version")
+    except Exception:
+        pass
+
+    try:
+        legacy = json.loads(output_path.read_text(encoding="utf-8").replace("\ufeff", "", 1))
+        players = legacy.get("players") if isinstance(legacy, dict) else None
+        if not isinstance(players, list):
+            return None
+        return compute_stable_hash(players)
+    except Exception:
+        return None
+
+
+def output_is_stream_file(output_path):
+    if not output_path.exists():
+        return False
+    try:
+        with output_path.open("r", encoding="utf-8") as handle:
+            first_line = handle.readline().strip()
+        if not first_line:
+            return False
+        first_record = json.loads(first_line)
+        return isinstance(first_record, dict) and first_record.get("format") == STREAM_FORMAT
+    except Exception:
+        return False
+
+
+def write_stream_output(output_path, players, version):
+    header = {
+        "format": STREAM_FORMAT,
+        "version": version,
+        "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source": f"{BASE_URL}?db={DATABASE}",
+        "database": DATABASE,
+        "count": len(players),
+    }
+    temp_output = output_path.with_suffix(output_path.suffix + ".tmp")
+    with temp_output.open("w", encoding="utf-8", newline="\n") as handle:
+        handle.write(json.dumps(header, ensure_ascii=False, separators=(",", ":")))
+        handle.write("\n")
+        for player in players:
+            handle.write(json.dumps(player, ensure_ascii=False, separators=(",", ":")))
+            handle.write("\n")
+    temp_output.replace(output_path)
+
+
+def write_meta_output(meta_path, output_path, version, count):
+    meta = {
+        "version": version,
+        "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source": f"{BASE_URL}?db={DATABASE}",
+        "database": DATABASE,
+        "count": count,
+        "dataFile": output_path.name,
+    }
+    temp_meta = meta_path.with_suffix(meta_path.suffix + ".tmp")
+    temp_meta.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    temp_meta.replace(meta_path)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Fetch Pacific RWR player stats into a static JSON file.")
     parser.add_argument("--output", default="data/rwr-players-pacific.json")
@@ -245,41 +340,18 @@ def main():
         print("Self-test passed")
         return 0
 
-    players = fetch_all_players(max_pages=args.max_pages, timeout=args.timeout, delay=args.delay)
-    output = {
-        "fetchedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "source": f"{BASE_URL}?db={DATABASE}",
-        "database": DATABASE,
-        "count": len(players),
-        "players": players,
-    }
-    output_json = json.dumps(output, ensure_ascii=False, indent=2) + "\n"
-    stable_output = {
-        "source": output["source"],
-        "database": output["database"],
-        "count": output["count"],
-        "players": [
-            {field: player.get(field) for field in STABLE_PLAYER_FIELDS}
-            for player in players
-        ],
-    }
-    stable_output_json = json.dumps(stable_output, ensure_ascii=False, separators=(",", ":"))
-    output_hash = hashlib.sha256(stable_output_json.encode("utf-8")).hexdigest()
-
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(output_json, encoding="utf-8")
-
     meta_path = output_path.with_suffix(".meta.json")
-    meta = {
-        "version": output_hash,
-        "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "source": f"{BASE_URL}?db={DATABASE}",
-        "database": DATABASE,
-        "count": len(players),
-        "dataFile": output_path.name,
-    }
-    meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    players = fetch_all_players(max_pages=args.max_pages, timeout=args.timeout, delay=args.delay)
+    output_hash = compute_stable_hash(players)
+    existing_version = detect_existing_version(output_path, meta_path)
+    if existing_version == output_hash and output_is_stream_file(output_path):
+        print(f"Unchanged {output_path}, version {output_hash[:12]}")
+        return 0
+
+    write_stream_output(output_path, players, output_hash)
+    write_meta_output(meta_path, output_path, output_hash, len(players))
     print(f"Wrote {output_path} with {len(players)} Pacific players")
     print(f"Wrote {meta_path} with version {output_hash[:12]}")
     return 0

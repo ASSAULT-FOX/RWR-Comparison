@@ -4,6 +4,7 @@ const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const MANIFEST_URL = "./data/asset-manifest.json";
 const PLAYER_MANIFEST_URL = "./data/rwr-players-pacific.meta.json";
 const MANIFEST_TTL = 30000;
+const PLAYER_STREAM_FORMAT = "rwr-player-stream-v1";
 const PLAYER_STABLE_FIELDS = [
   "leaderboard_position",
   "username",
@@ -178,7 +179,7 @@ async function playerDataCache(request) {
   const manifests = await getPlayerManifests().catch(() => ({ latest: null, cached: null }));
   const latestHash = manifests.latest?.version || null;
 
-  if (cached && latestHash && await cachedResponseMatches(request.url, cached.clone(), latestHash)) {
+  if (cached && latestHash && await cachedPlayerResponseMatches(request.url, cached.clone(), latestHash)) {
     return cached;
   }
 
@@ -244,6 +245,14 @@ async function cachedResponseMatches(requestUrl, response, expectedHash) {
   const cacheKey = verifiedCacheKey(requestUrl, expectedHash);
   if (verifiedResponses.get(cacheKey)) return true;
   const matches = await responseMatchesHashText(response, expectedHash);
+  if (matches) rememberVerified(requestUrl, expectedHash);
+  return matches;
+}
+
+async function cachedPlayerResponseMatches(requestUrl, response, expectedHash) {
+  const cacheKey = verifiedCacheKey(requestUrl, expectedHash);
+  if (verifiedResponses.get(cacheKey)) return true;
+  const matches = await responseMatchesPlayerHash(response, expectedHash);
   if (matches) rememberVerified(requestUrl, expectedHash);
   return matches;
 }
@@ -346,7 +355,8 @@ async function loadPlayerManifestPair() {
 
 async function responseMatchesPlayerHash(response, expectedHash) {
   try {
-    const json = await response.json();
+    const text = await response.text();
+    const json = parsePlayerPayload(text);
     const stablePayload = {
       source: json.source,
       database: json.database,
@@ -367,6 +377,44 @@ async function responseMatchesPlayerHash(response, expectedHash) {
   } catch (error) {
     return false;
   }
+}
+
+function parsePlayerPayload(text) {
+  const trimmed = text.trim();
+  if (!trimmed) {
+    return { source: null, database: null, count: 0, players: [] };
+  }
+
+  const firstNewline = trimmed.indexOf("\n");
+  if (firstNewline > 0) {
+    try {
+      const header = JSON.parse(trimmed.slice(0, firstNewline).trim());
+      if (header?.format === PLAYER_STREAM_FORMAT) {
+        const players = trimmed
+          .slice(firstNewline + 1)
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .map((line) => JSON.parse(line));
+        return {
+          source: header.source,
+          database: header.database,
+          count: header.count,
+          players
+        };
+      }
+    } catch (error) {
+      // Fall through to legacy JSON parsing.
+    }
+  }
+
+  const legacy = JSON.parse(trimmed);
+  return {
+    source: legacy.source,
+    database: legacy.database,
+    count: legacy.count,
+    players: Array.isArray(legacy) ? legacy : legacy.players
+  };
 }
 
 self.addEventListener("message", (event) => {

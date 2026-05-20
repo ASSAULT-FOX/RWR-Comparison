@@ -235,8 +235,8 @@ if not errorlevel 1 (
 
 findstr /x /c:"data/rwr-players-pacific.json" "%CONFLICT_LIST%" >nul 2>nul
 if not errorlevel 1 (
-  echo Resolving data/rwr-players-pacific.json with remote version...
-  git checkout --theirs -- "data\rwr-players-pacific.json"
+  echo Resolving data/rwr-players-pacific.json with local stream format...
+  git checkout --ours -- "data\rwr-players-pacific.json"
   if errorlevel 1 (
     del "%CONFLICT_LIST%" >nul 2>nul
     exit /b 1
@@ -250,8 +250,8 @@ if not errorlevel 1 (
 
 findstr /x /c:"data/rwr-players-pacific.meta.json" "%CONFLICT_LIST%" >nul 2>nul
 if not errorlevel 1 (
-  echo Resolving data/rwr-players-pacific.meta.json with remote version...
-  git checkout --theirs -- "data\rwr-players-pacific.meta.json"
+  echo Resolving data/rwr-players-pacific.meta.json with local stream format metadata...
+  git checkout --ours -- "data\rwr-players-pacific.meta.json"
   if errorlevel 1 (
     del "%CONFLICT_LIST%" >nul 2>nul
     exit /b 1

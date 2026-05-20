@@ -23,7 +23,9 @@ const includeExt = new Set([".html", ".js", ".json", ".webp", ".png", ".jpg", ".
 const outputFile = path.join("data", "asset-manifest.json");
 const excludeFiles = new Set([
   "data/rwr-players-pacific.json",
-  "data/rwr-players-pacific.meta.json"
+  "data/rwr-players-pacific.meta.json",
+  "data/rwr-players-pacific.json.tmp",
+  "data/rwr-players-pacific.meta.json.tmp"
 ]);
 
 function walk(dir) {

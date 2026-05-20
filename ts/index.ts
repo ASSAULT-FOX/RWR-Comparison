@@ -194,6 +194,9 @@ let dataErrors = {
 };
 let playersLoading = false;
 let playersLoadError = "";
+const PLAYER_STREAM_FORMAT = "rwr-player-stream-v1";
+const PLAYER_PAGE_SIZE = 100;
+const PLAYER_STREAM_BATCH_SIZE = 500;
 const imagePromiseCache = new Map();
 const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
 const isCompactPlayerPagination = () => window.matchMedia("(max-width: 640px)").matches;
@@ -453,15 +456,156 @@ async function loadDataIncremental() {
   registerServiceWorker();
 }
 
-function setPlayers(playerList) {
-  players = playerList.map((player, index) => ({
+function normalizePlayer(player, index) {
+  return {
     ...player,
     index,
     searchText: [player.username, player.leaderboard_position, player.xp, player.kills, player.score].join("\n").toLowerCase()
-  }));
+  };
+}
+
+function setPlayers(playerList) {
+  players = playerList.map((player, index) => normalizePlayer(player, index));
   playerRankings = buildPlayerRankings(players);
   currentPlayerList = players;
   filteredPlayerList = players;
+}
+
+function appendPlayers(playerList, final = false) {
+  const startIndex = players.length;
+  const normalized = playerList.map((player, offset) => normalizePlayer(player, startIndex + offset));
+  players = players.concat(normalized);
+  currentPlayerList = players;
+  filteredPlayerList = players;
+  if (final) {
+    playerRankings = buildPlayerRankings(players);
+  }
+}
+
+async function loadPlayerResponse(response) {
+  const probe = response.clone();
+  const header = await readPlayerStreamHeader(probe);
+  if (header?.format === PLAYER_STREAM_FORMAT) {
+    await readPlayerStream(response);
+    return;
+  }
+
+  const playerData = await response.json();
+  const playerList = Array.isArray(playerData) ? playerData : playerData.players;
+  if (!Array.isArray(playerList)) throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
+  setPlayers(playerList);
+}
+
+async function readPlayerStreamHeader(response) {
+  if (!response.body) return null;
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let doneReading = false;
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (value) buffer += decoder.decode(value, { stream: !done });
+      const newlineIndex = buffer.indexOf("\n");
+      if (newlineIndex >= 0) {
+        const firstLine = buffer.slice(0, newlineIndex).trim();
+        buffer = buffer.slice(newlineIndex + 1);
+        if (!firstLine) continue;
+        try {
+          return JSON.parse(firstLine);
+        } catch {
+          return null;
+        }
+      }
+      if (done) {
+        doneReading = true;
+        const firstLine = buffer.trim();
+        if (!firstLine) return null;
+        try {
+          return JSON.parse(firstLine);
+        } catch {
+          return null;
+        }
+      }
+    }
+  } finally {
+    if (!doneReading) reader.cancel().catch(() => null);
+  }
+}
+
+async function readPlayerStream(response) {
+  if (!response.body) {
+    const fallback = await response.json();
+    const playerList = Array.isArray(fallback) ? fallback : fallback.players;
+    if (!Array.isArray(playerList)) throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
+    setPlayers(playerList);
+    return;
+  }
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let headerParsed = false;
+  let pendingPlayers = [];
+  let doneReading = false;
+  try {
+    while (true) {
+      const { value, done } = await reader.read();
+      if (value) buffer += decoder.decode(value, { stream: !done });
+      if (done) doneReading = true;
+
+      if (!headerParsed) {
+        const newlineIndex = buffer.indexOf("\n");
+        if (newlineIndex < 0 && !done) continue;
+        const firstLine = buffer.slice(0, newlineIndex >= 0 ? newlineIndex : buffer.length).trim();
+        buffer = newlineIndex >= 0 ? buffer.slice(newlineIndex + 1) : "";
+        if (!firstLine) {
+          if (done) break;
+          continue;
+        }
+        const header = JSON.parse(firstLine);
+        if (header.format !== PLAYER_STREAM_FORMAT) {
+          throw new Error("玩家数据格式错误：不支持的流格式");
+        }
+        headerParsed = true;
+      }
+
+      let newlineIndex = buffer.indexOf("\n");
+      while (newlineIndex >= 0) {
+        const line = buffer.slice(0, newlineIndex).trim();
+        buffer = buffer.slice(newlineIndex + 1);
+        if (line) pendingPlayers.push(JSON.parse(line));
+        if (pendingPlayers.length >= PLAYER_STREAM_BATCH_SIZE) {
+          appendPlayers(pendingPlayers);
+          pendingPlayers = [];
+          if (activeTab === "players") scheduleApplyView();
+        }
+        newlineIndex = buffer.indexOf("\n");
+      }
+
+      if (done) break;
+    }
+
+    const tail = buffer.trim();
+    if (tail) {
+      if (!headerParsed) {
+        const playerData = JSON.parse(tail);
+        const playerList = Array.isArray(playerData) ? playerData : playerData.players;
+        if (!Array.isArray(playerList)) throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
+        setPlayers(playerList);
+        return;
+      }
+      pendingPlayers.push(JSON.parse(tail));
+    }
+
+    if (pendingPlayers.length) appendPlayers(pendingPlayers, true);
+    else playerRankings = buildPlayerRankings(players);
+    currentPlayerList = players;
+    filteredPlayerList = players;
+    if (activeTab === "players") scheduleApplyView();
+  } finally {
+    if (!doneReading) reader.cancel().catch(() => null);
+  }
 }
 
 async function loadPlayersInBackground() {
@@ -471,10 +615,7 @@ async function loadPlayersInBackground() {
   try {
     const response = await fetchWithTimeout("data/rwr-players-pacific.json", { cache: "no-store" }, 45000);
     if (!response.ok) throw new Error(`玩家数据加载失败：${response.status}`);
-    const playerData = await response.json();
-    const playerList = Array.isArray(playerData) ? playerData : playerData.players;
-    if (!Array.isArray(playerList)) throw new Error("玩家数据格式错误：根节点或 players 必须是数组");
-    setPlayers(playerList);
+    await loadPlayerResponse(response);
   } catch (error) {
     playersLoadError = error.message || "玩家数据加载失败";
     console.warn(error);
@@ -1165,7 +1306,7 @@ function renderPlayerTable(list) {
     renderPlayerPagination(1);
     return;
   }
-  const pageSize = 100;
+  const pageSize = PLAYER_PAGE_SIZE;
   const totalPages = Math.max(1, Math.ceil(list.length / pageSize));
   if (playerPage > totalPages) playerPage = totalPages;
   if (playerPage < 1) playerPage = 1;

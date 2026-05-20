@@ -256,19 +256,14 @@ CSV 文件使用 UTF-8 with BOM 编码，Excel 通常可以正常识别中文。
 http://rwr.runningwithrifles.com/rwr_stats/view_players.php?db=pacific
 ```
 
-文件结构为：
+文件采用 JSON Lines 流式结构。第一行是快照元数据，后续每一行是一个玩家对象：
 
 ```json
-{
-  "fetchedAt": "2026-05-19T05:36:47+00:00",
-  "source": "http://rwr.runningwithrifles.com/rwr_stats/view_players.php?db=pacific",
-  "database": "pacific",
-  "count": 100,
-  "players": []
-}
+{"format":"rwr-player-stream-v1","version":"...","generatedAt":"2026-05-20T03:27:54+00:00","source":"http://rwr.runningwithrifles.com/rwr_stats/view_players.php?db=pacific","database":"pacific","count":25002}
+{"leaderboard_position":1,"username":"KMSCT","kills":1310953,"deaths":6451,"score":1304502,"kd_ratio":203.22,"time_played":8288280,"longest_kill_streak":2319,"targets_destroyed":23985,"vehicles_destroyed":18031,"soldiers_healed":3020,"teamkills":3931,"distance_moved":2127.1,"shots_fired":6778048,"throwables_thrown":38495,"xp":13777880}
 ```
 
-`players` 中每个玩家保存和 RWRS `Player.load()` 一致的字段：
+每个玩家保存和 RWRS `Player.load()` 一致的字段：
 
 ```text
 leaderboard_position
@@ -289,13 +284,13 @@ throwables_thrown
 xp
 ```
 
-抓取脚本会按 RWRS 的解析方式处理玩家名编码：页面内容先按 `iso-8859-1` 读取，玩家名再转换为 UTF-8。若个别玩家名包含非法 UTF-8 字节，脚本会用替换字符保留该玩家并继续抓取，同时在 Actions 日志中输出 warning，避免单个异常名字导致整次更新失败。
+抓取脚本会按 RWRS 的解析方式处理玩家名编码：页面内容先按 `iso-8859-1` 读取，玩家名再转换为 UTF-8。若个别玩家名包含非法 UTF-8 字节，脚本会用替换字符保留该玩家并继续抓取，同时在 Actions 日志中输出 warning，避免单个异常名字导致整次更新失败。脚本会先根据稳定字段计算哈希；如果抓取结果和当前快照一致，会直接跳过写入，GitHub Actions 因而不会产生空的数据更新提交。
 
-玩家列表页会显示 `ID - XP - 击杀数 - 死亡数 - K/D - 最长连杀`，ID 以浅蓝色药丸徽章显示，支持按数值列全量升降排序，每页显示 100 个玩家。列表下方有独立分页容器，容器中左侧显示 `第 X / Y 页 · 共 N 名玩家`，右侧放置上一页、页码和下一页控件；该容器不属于表格滚动层，会固定作为内容容器的底部区域。点击玩家行会打开详情弹窗，顶部先显示大号玩家名卡片，再显示排名卡片，并显示 XP、击杀、死亡、分数、KD、游戏时间、最长连杀、摧毁目标、摧毁车辆、治疗士兵、误伤、移动距离、开火次数、投掷物次数在当前快照所有玩家中的排名。
+玩家列表页会流式读取 `data/rwr-players-pacific.json`，边下载边解析玩家行并分批刷新列表。列表显示 `ID - XP - 击杀数 - 死亡数 - K/D - 最长连杀`，ID 以浅蓝色药丸徽章显示，支持按数值列全量升降排序，每页显示 100 个玩家。列表下方有独立分页容器，容器中左侧显示 `第 X / Y 页 · 共 N 名玩家`，右侧放置上一页、页码和下一页控件；该容器不属于表格滚动层，会固定作为内容容器的底部区域。点击玩家行会打开详情弹窗，顶部先显示大号玩家名卡片，再显示排名卡片，并显示 XP、击杀、死亡、分数、KD、游戏时间、最长连杀、摧毁目标、摧毁车辆、治疗士兵、误伤、移动距离、开火次数、投掷物次数在当前快照所有玩家中的排名。
 
 ### data/rwr-players-pacific.meta.json
 
-这是玩家统计快照的哈希元数据文件，页面和 Service Worker 用它判断 `data/rwr-players-pacific.json` 是否可以复用缓存。`version` 是玩家内容的稳定 SHA-256，只根据 `source`、`database`、`count` 和 `players` 计算，`generatedAt` 只表示这份元数据写入时间，不参与缓存判断。
+这是玩家统计快照的哈希元数据文件，页面和 Service Worker 用它判断 `data/rwr-players-pacific.json` 是否可以复用缓存。`version` 是玩家内容的稳定 SHA-256，只根据 `source`、`database`、`count` 和玩家稳定字段计算，`generatedAt` 只表示这份元数据写入时间，不参与缓存判断。
 
 ### data/maps.json
 
@@ -479,7 +474,7 @@ splash.webp
 scripts/index.js
 ```
 
-`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 不写入主资源清单。前者保存玩家快照，后者保存对应的 SHA-256 元数据。Service Worker 会先读取 `meta.json`，哈希命中时直接复用玩家 JSON 缓存，哈希缺失或不一致时才请求网络文件。
+`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 不写入主资源清单。前者保存玩家快照流，后者保存对应的 SHA-256 元数据。Service Worker 会先读取 `meta.json`，哈希命中时直接复用玩家 JSONL 缓存，哈希缺失或不一致时才请求网络文件。
 
 `README.md`、`csv/`、`ts/` 和辅助脚本不参与网页运行时加载，因此不写入资源清单；`scripts/index.js` 是浏览器运行时代码，会写入资源清单。
 
@@ -506,7 +501,7 @@ Service Worker 处理普通静态资源时，也会先请求最新清单，并�
 清单请求失败                                  失败，不使用旧缓存降级
 ```
 
-`data/rwr-players-pacific.json` 由独立的玩家元数据哈希驱动缓存判断。`meta.json` 能正常加载时，哈希命中就复用缓存；哈希缺失、读取失败或哈希不一致时，再请求网络文件并更新缓存。
+`data/rwr-players-pacific.json` 由独立的玩家元数据哈希驱动缓存判断。`meta.json` 能正常加载时，哈希命中就复用缓存；哈希缺失、读取失败或哈希不一致时，再请求网络文件并更新缓存。Service Worker 同时兼容旧的大 JSON 对象和新的 JSON Lines 流式格式。
 
 `data/asset-manifest.json` 本身使用 network-only 策略。请求失败就是失败，不从缓存返回旧清单。
 
