@@ -27,7 +27,7 @@ http://127.0.0.1:8765/index.html
 地图点位文件   20 个，保存在 maps/<地图名>/map-data.json
 地图点位     3054 个，按阵营和视图状态分组
 模型数据       71 条，保存在 model/models.json，模型文件保存在 model/<安全英文id>/
-玩家数据        由 GitHub Actions 每 3 小时从 RWR 官方统计页更新到 data/rwr-players-pacific.json
+玩家数据        由 GitHub Actions 每 12 小时从 RWR 官方统计页更新到 data/rwr-players-pacific.json
 玩家哈希元数据  由 GitHub Actions 同步生成 data/rwr-players-pacific.meta.json
 ```
 
@@ -53,7 +53,7 @@ http://127.0.0.1:8765/index.html
 │   ├── convert_png_to_webp.py    PNG 转 WebP 的辅助脚本
 │   └── fetch-rwr-players.py      抓取太平洋玩家统计并生成静态 JSONL
 ├── .github/workflows/
-│   └── fetch-rwr-players.yml     每 3 小时更新玩家统计的 GitHub Actions 工作流
+│   └── fetch-rwr-players.yml     每 12 小时更新玩家统计的 GitHub Actions 工作流
 ├── csv/
 │   ├── weapons.csv               枪械源数据，开发时主要编辑它
 │   └── vehicles.csv              载具源数据，开发时主要编辑它
@@ -251,7 +251,7 @@ CSV 文件使用 UTF-8 with BOM 编码，Excel 通常可以正常识别中文。
 
 ### data/rwr-players-pacific.json
 
-这是网页运行时读取的太平洋玩家统计快照，由 `.github/workflows/fetch-rwr-players.yml` 每 3 小时运行 `scripts/fetch-rwr-players.py` 生成。数据来源为：
+这是网页运行时读取的太平洋玩家统计快照，由 `.github/workflows/fetch-rwr-players.yml` 每 12 小时运行 `scripts/fetch-rwr-players.py` 生成。数据来源为：
 
 ```text
 http://rwr.runningwithrifles.com/rwr_stats/view_players.php?db=pacific
@@ -285,7 +285,7 @@ throwables_thrown
 xp
 ```
 
-抓取脚本会按 RWRS 的解析方式处理玩家名编码：页面内容先按 `iso-8859-1` 读取，玩家名再转换为 UTF-8。若个别玩家名包含非法 UTF-8 字节，脚本会用替换字符保留该玩家并继续抓取，同时在 Actions 日志中输出 warning，避免单个异常名字导致整次更新失败。脚本会先根据稳定字段计算哈希；如果抓取结果和当前快照一致，会直接跳过写入，GitHub Actions 因而不会产生空的数据更新提交。
+抓取脚本会按 RWRS 的解析方式处理玩家名编码：页面内容先按 `iso-8859-1` 读取，玩家名再转换为 UTF-8。若个别玩家名包含非法 UTF-8 字节，脚本会用替换字符保留该玩家并继续抓取，同时在 Actions 日志中输出 warning，避免单个异常名字导致整次更新失败。脚本会先根据稳定字段计算哈希；如果抓取结果和当前快照一致，会直接跳过写入，GitHub Actions 因而不会产生空的数据更新提交。玩家更新工作流只提交 `data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json`，不会刷新主静态资源清单 `data/asset-manifest.json`。
 
 玩家列表页会流式读取 `data/rwr-players-pacific.json`，边下载边解析玩家行并分批刷新列表。列表显示 `ID - XP - 击杀数 - 死亡数 - K/D - 最长连杀`，ID 以浅蓝色药丸徽章显示，支持按数值列全量升降排序，每页显示 100 个玩家。列表下方有独立分页容器，容器中左侧显示 `第 X / Y 页 · 共 N 名玩家`，右侧放置上一页、页码和下一页控件；该容器不属于表格滚动层，会固定作为内容容器的底部区域。点击玩家行会打开详情弹窗，顶部先显示大号玩家名卡片，再显示排名卡片，并显示 XP、击杀、死亡、分数、KD、游戏时间、最长连杀、摧毁目标、摧毁车辆、治疗士兵、误伤、移动距离、开火次数、投掷物次数在当前快照所有玩家中的排名。
 
