@@ -196,6 +196,7 @@ let playersLoadError = "";
 const PLAYER_STREAM_FORMAT = "rwr-player-stream-v1";
 const PLAYER_PAGE_SIZE = 100;
 const PLAYER_STREAM_BATCH_SIZE = 500;
+const APP_SHELL_REFRESH_FILES = ["index.html", "scripts/index.js", "sw.js"];
 const imagePromiseCache = new Map();
 const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
 const isCompactPlayerPagination = () => window.matchMedia("(max-width: 640px)").matches;
@@ -2763,17 +2764,6 @@ function registerServiceWorker() {
         });
     });
 }
-async function clearAppCaches() {
-    if ("caches" in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys
-            .filter((key) => key.startsWith("rwr-cache-"))
-            .map((key) => caches.delete(key)));
-    }
-    if (navigator.serviceWorker?.controller) {
-        navigator.serviceWorker.controller.postMessage({ type: "CLEAR_RWR_CACHES" });
-    }
-}
 function safeStorage(storage) {
     try {
         const probe = "__rwr_storage_probe__";
@@ -2784,6 +2774,12 @@ function safeStorage(storage) {
     catch (error) {
         return null;
     }
+}
+function appShellSignature(manifest) {
+    const files = manifest?.files || {};
+    return APP_SHELL_REFRESH_FILES
+        .map((file) => `${file}:${files[file] || ""}`)
+        .join("|");
 }
 async function checkAssetManifest() {
     if (!/^https?:$/.test(location.protocol))
@@ -2804,17 +2800,21 @@ async function checkAssetManifest() {
         return false;
     }
     const key = "rwrAssetManifestVersion";
+    const shellKey = "rwrAssetShellSignature";
     const previous = local.getItem(key);
+    const previousShell = local.getItem(shellKey);
+    const currentShell = appShellSignature(manifest);
     const refreshedKey = "rwrAssetManifestRefreshed";
-    const refreshedVersion = session.getItem(refreshedKey);
-    if (refreshedVersion === manifest.version)
+    const refreshedShell = session.getItem(refreshedKey);
+    if (refreshedShell === currentShell)
         session.removeItem(refreshedKey);
     const versionChanged = Boolean(previous && previous !== manifest.version);
-    canUseCachedResources = Boolean(previous && previous === manifest.version && refreshedVersion !== manifest.version);
+    const shellChanged = Boolean(previousShell && previousShell !== currentShell);
+    canUseCachedResources = Boolean(previous && (!versionChanged || refreshedShell === currentShell || !shellChanged));
     local.setItem(key, manifest.version);
-    if (versionChanged) {
-        await clearAppCaches();
-        session.setItem(refreshedKey, manifest.version);
+    local.setItem(shellKey, currentShell);
+    if (versionChanged && shellChanged) {
+        session.setItem(refreshedKey, currentShell);
         location.reload();
         return true;
     }
