@@ -102,48 +102,10 @@ if errorlevel 1 (
 
 echo.
 echo Fetching remote changes...
-git fetch origin %BRANCH%
+call :syncRemoteBeforePush
 if errorlevel 1 (
-  echo.
-  echo Failed to fetch remote changes.
   pause
   exit /b 1
-)
-
-git merge-base --is-ancestor origin/%BRANCH% HEAD
-if errorlevel 1 (
-  echo Merging remote history and keeping remote player data...
-  git merge -s ours --no-commit origin/%BRANCH%
-  if errorlevel 1 (
-    echo.
-    echo Failed to record remote history. Please resolve conflicts and run this script again.
-    pause
-    exit /b 1
-  )
-
-  git cat-file -e origin/%BRANCH%:data/rwr-players-pacific.json
-  if not errorlevel 1 (
-    git checkout origin/%BRANCH% -- "data\rwr-players-pacific.json"
-    if errorlevel 1 (
-      echo.
-      echo Failed to restore data\rwr-players-pacific.json from origin/%BRANCH%.
-      pause
-      exit /b 1
-    )
-  )
-
-  git cat-file -e origin/%BRANCH%:data/rwr-players-pacific.meta.json
-  if not errorlevel 1 (
-    git checkout origin/%BRANCH% -- "data\rwr-players-pacific.meta.json"
-    if errorlevel 1 (
-      echo.
-      echo Failed to restore data\rwr-players-pacific.meta.json from origin/%BRANCH%.
-      pause
-      exit /b 1
-    )
-  )
-) else (
-  echo Remote history is already included locally.
 )
 
 echo Rebuilding assets after remote sync check...
@@ -208,3 +170,98 @@ if errorlevel 1 (
 echo.
 echo Done.
 pause
+exit /b 0
+
+:syncRemoteBeforePush
+git fetch origin %BRANCH%
+if errorlevel 1 (
+  echo.
+  echo Failed to fetch remote changes.
+  exit /b 1
+)
+
+git merge-base --is-ancestor origin/%BRANCH% HEAD
+if not errorlevel 1 (
+  echo Remote history is already included locally.
+  exit /b 0
+)
+
+for /f %%A in ('git rev-list --count HEAD..origin/%BRANCH%') do set "REMOTE_NEW_COMMITS=%%A"
+echo Remote has %REMOTE_NEW_COMMITS% new commit(s). Merging origin/%BRANCH% before upload...
+
+git merge --no-ff --no-commit origin/%BRANCH%
+if not errorlevel 1 (
+  echo Remote changes merged locally. Assets will be rebuilt before committing the merge.
+  exit /b 0
+)
+
+call :resolveKnownMergeConflicts
+if errorlevel 1 (
+  exit /b 1
+)
+
+echo Known generated/data conflicts were resolved. Assets will be rebuilt before committing the merge.
+exit /b 0
+
+:resolveKnownMergeConflicts
+set "CONFLICT_LIST=%TEMP%\rwr-upload-conflicts-%RANDOM%.txt"
+git diff --name-only --diff-filter=U > "%CONFLICT_LIST%"
+
+for /f "usebackq delims=" %%F in ("%CONFLICT_LIST%") do (
+  if /i not "%%F"=="data/asset-manifest.json" if /i not "%%F"=="data/rwr-players-pacific.json" if /i not "%%F"=="data/rwr-players-pacific.meta.json" (
+    echo.
+    echo Automatic merge stopped because this file has a real conflict:
+    echo   %%F
+    echo Resolve it manually, then run this script again.
+    del "%CONFLICT_LIST%" >nul 2>nul
+    exit /b 1
+  )
+)
+
+findstr /x /c:"data/asset-manifest.json" "%CONFLICT_LIST%" >nul 2>nul
+if not errorlevel 1 (
+  echo Resolving generated data/asset-manifest.json conflict...
+  git checkout --ours -- "data\asset-manifest.json"
+  if errorlevel 1 (
+    del "%CONFLICT_LIST%" >nul 2>nul
+    exit /b 1
+  )
+  git add "data\asset-manifest.json"
+  if errorlevel 1 (
+    del "%CONFLICT_LIST%" >nul 2>nul
+    exit /b 1
+  )
+)
+
+findstr /x /c:"data/rwr-players-pacific.json" "%CONFLICT_LIST%" >nul 2>nul
+if not errorlevel 1 (
+  echo Resolving data/rwr-players-pacific.json with remote version...
+  git checkout --theirs -- "data\rwr-players-pacific.json"
+  if errorlevel 1 (
+    del "%CONFLICT_LIST%" >nul 2>nul
+    exit /b 1
+  )
+  git add "data\rwr-players-pacific.json"
+  if errorlevel 1 (
+    del "%CONFLICT_LIST%" >nul 2>nul
+    exit /b 1
+  )
+)
+
+findstr /x /c:"data/rwr-players-pacific.meta.json" "%CONFLICT_LIST%" >nul 2>nul
+if not errorlevel 1 (
+  echo Resolving data/rwr-players-pacific.meta.json with remote version...
+  git checkout --theirs -- "data\rwr-players-pacific.meta.json"
+  if errorlevel 1 (
+    del "%CONFLICT_LIST%" >nul 2>nul
+    exit /b 1
+  )
+  git add "data\rwr-players-pacific.meta.json"
+  if errorlevel 1 (
+    del "%CONFLICT_LIST%" >nul 2>nul
+    exit /b 1
+  )
+)
+
+del "%CONFLICT_LIST%" >nul 2>nul
+exit /b 0
