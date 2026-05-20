@@ -7,6 +7,7 @@ set "BRANCH=main"
 set "SAFE_DIR=%CD:\=/%"
 
 call :initColors
+@echo off
 
 call :logStep "准备 Git 环境..."
 git config --global --add safe.directory "%SAFE_DIR%" >nul 2>nul
