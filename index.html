@@ -2600,32 +2600,33 @@
 
       .pagination-panel {
         width: 100%;
-        padding: 4px 10px;
-        gap: 6px;
-        min-height: 64px;
+        padding: 4px 6px;
+        gap: 5px;
+        min-height: 46px;
         overflow: hidden;
       }
 
       .pagination-panel.show {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) auto;
         justify-items: center;
       }
 
       .pagination-info {
         width: 100%;
         min-width: 0;
-        padding: 0 8px;
-        font-size: 12px;
+        padding: 0 3px;
+        font-size: 11px;
       }
 
       .pagination {
-        width: 100%;
-        gap: 8px;
+        width: auto;
+        gap: 5px;
       }
 
       .page-button.page-nav {
-        width: 42px;
-        min-width: 42px;
+        width: 36px;
+        min-width: 36px;
+        min-height: 34px;
         padding: 0;
         font-size: 0;
       }

@@ -1,12 +1,12 @@
 {
-  "version": "ac668b5b6a738dd64be0881cc24ea14a4014dd32b7fd6d720e670468e3f8f0ae",
-  "generatedAt": "2026-05-20T06:33:07.248Z",
+  "version": "610624d788bcc3b32afe2faed13ad71bdbb6478647194d9563d362eb652881c3",
+  "generatedAt": "2026-05-20T07:00:53.672Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
     "data/weapons.json": "97fa4544c7b90231511680c479060724c9bb66a69bb791c20acdcce20e8469a5",
     "ico.webp": "2a47046b17dde309cb9c8318a9d5a6f07283b5422f757de6c0be85f016dcb70d",
-    "index.html": "0aa02e130cc82a6c85dcbf2748d3930a35d7e5c0cd1e0ab65f42609578699ff5",
+    "index.html": "440452c97e3c433a27c21c931798e04bba7ffa9d3f4e3cdf85e7639c1873229d",
     "maps_textures/0.webp": "f15787f9c25d3522b5ec686316e79a68629ddc9a4d7e197ef3ec56c5e0f0f89e",
     "maps_textures/1.webp": "dce5d0cf7f6c68cfc805ba14db887a992974018e3b056bef798a39b6a8361998",
     "maps_textures/2.webp": "e441346912be37d51e7543bb99a50b87051097413396a001dcf169ba0bc2a498",
