@@ -3,6 +3,41 @@ setlocal
 chcp 65001 >nul
 cd /d "%~dp0"
 
+set "BRANCH=main"
+set "SAFE_DIR=%CD:\=/%"
+
+echo Preparing Git environment...
+git config --global --add safe.directory "%SAFE_DIR%" >nul 2>nul
+git status --short >nul 2>nul
+if errorlevel 1 (
+  echo.
+  echo Git repository check failed.
+  git status --short
+  pause
+  exit /b 1
+)
+
+if exist ".git\rebase-merge" (
+  echo.
+  echo A Git rebase is already in progress. Run "git rebase --abort" or finish it, then run this script again.
+  pause
+  exit /b 1
+)
+
+if exist ".git\rebase-apply" (
+  echo.
+  echo A Git rebase or apply operation is already in progress. Run "git rebase --abort" or finish it, then run this script again.
+  pause
+  exit /b 1
+)
+
+if exist ".git\MERGE_HEAD" (
+  echo.
+  echo A Git merge is already in progress. Run "git merge --abort" or finish it, then run this script again.
+  pause
+  exit /b 1
+)
+
 if not exist "ts\node_modules\typescript\bin\tsc" (
   echo Installing TypeScript dependencies...
   cmd /c npm --prefix ts install
@@ -66,8 +101,8 @@ if errorlevel 1 (
 )
 
 echo.
-echo Fetching remote player data...
-git fetch origin main
+echo Fetching remote changes...
+git fetch origin %BRANCH%
 if errorlevel 1 (
   echo.
   echo Failed to fetch remote changes.
@@ -75,35 +110,47 @@ if errorlevel 1 (
   exit /b 1
 )
 
-git merge -s ours --no-commit origin/main
+git merge-base --is-ancestor origin/%BRANCH% HEAD
 if errorlevel 1 (
-  echo.
-  echo Failed to record remote history. Please resolve conflicts and run this script again.
-  pause
-  exit /b 1
+  echo Merging remote history and keeping remote player data...
+  git merge -s ours --no-commit origin/%BRANCH%
+  if errorlevel 1 (
+    echo.
+    echo Failed to record remote history. Please resolve conflicts and run this script again.
+    pause
+    exit /b 1
+  )
+
+  git cat-file -e origin/%BRANCH%:data/rwr-players-pacific.json
+  if not errorlevel 1 (
+    git checkout origin/%BRANCH% -- "data\rwr-players-pacific.json"
+    if errorlevel 1 (
+      echo.
+      echo Failed to restore data\rwr-players-pacific.json from origin/%BRANCH%.
+      pause
+      exit /b 1
+    )
+  )
+
+  git cat-file -e origin/%BRANCH%:data/rwr-players-pacific.meta.json
+  if not errorlevel 1 (
+    git checkout origin/%BRANCH% -- "data\rwr-players-pacific.meta.json"
+    if errorlevel 1 (
+      echo.
+      echo Failed to restore data\rwr-players-pacific.meta.json from origin/%BRANCH%.
+      pause
+      exit /b 1
+    )
+  )
+) else (
+  echo Remote history is already included locally.
 )
 
-git checkout origin/main -- "data\rwr-players-pacific.json"
-if errorlevel 1 (
-  echo.
-  echo Failed to restore data\rwr-players-pacific.json from origin/main.
-  pause
-  exit /b 1
-)
-
-git checkout origin/main -- "data\rwr-players-pacific.meta.json"
-if errorlevel 1 (
-  echo.
-  echo Failed to restore data\rwr-players-pacific.meta.json from origin/main.
-  pause
-  exit /b 1
-)
-
-echo Rebuilding assets after remote player data sync...
+echo Rebuilding assets after remote sync check...
 cmd /c npm --prefix ts run build:ts
 if errorlevel 1 (
   echo.
-  echo Failed to compile TypeScript after remote player data sync.
+  echo Failed to compile TypeScript after remote sync check.
   pause
   exit /b 1
 )
@@ -111,7 +158,7 @@ if errorlevel 1 (
 node scripts/build-asset-manifest.js
 if errorlevel 1 (
   echo.
-  echo Failed to update asset-manifest.json after remote player data sync.
+  echo Failed to update asset-manifest.json after remote sync check.
   pause
   exit /b 1
 )
@@ -119,38 +166,38 @@ if errorlevel 1 (
 git add .
 if errorlevel 1 (
   echo.
-  echo git add failed after remote sync.
+  echo git add failed after remote sync check.
   pause
   exit /b 1
 )
 
 if exist ".git\MERGE_HEAD" (
-  echo Committing remote player data sync...
+  echo Committing remote sync...
   git commit -m "Update assets"
   if errorlevel 1 (
     echo.
-    echo remote player data sync commit failed.
+    echo remote sync commit failed.
     pause
     exit /b 1
   )
 ) else (
   git diff --cached --quiet
   if errorlevel 1 (
-    echo Committing remote player data sync...
+    echo Committing post-sync changes...
     git commit -m "Update assets"
     if errorlevel 1 (
       echo.
-      echo remote player data sync commit failed.
+      echo post-sync commit failed.
       pause
       exit /b 1
     )
   ) else (
-    echo No remote player data changes to commit.
+    echo No post-sync changes to commit.
   )
 )
 
 echo Running git push...
-git push
+git push origin %BRANCH%
 if errorlevel 1 (
   echo.
   echo git push failed.
