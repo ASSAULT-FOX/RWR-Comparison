@@ -1,8 +1,8 @@
-﻿# RWR 参数查询器
+# RWR 参数查询器
 
 这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息、地图设施点位、载具模型和太平洋玩家统计，并支持排序、搜索、详情弹窗、双对象对比、索敌优先级计算、生成带设施图标的地图视图，以及在独立页面中查看 GLB 模型。
 
-项目没有后端，GitHub Pages 直接发布静态文件。浏览器加载 `index.html` 后引用 `scripts/index.js`，再通过 `fetch()` 读取 `data/`、`maps/` 和 `model/` 目录中的 JSON 文件，并在前端完成渲染和交互。`scripts/index.js` 由 `ts/index.ts` 编译生成，开发时优先修改 TypeScript 源文件。
+项目没有后端，GitHub Pages 直接发布静态文件。浏览器加载 `index.html` 后引用 `scripts/index.js`，再通过 `fetch()` 读取 `data/`、`maps/` 和 `model/` 目录中的 JSON/JSONL 文件，并在前端完成渲染和交互。`scripts/index.js` 由 `ts/index.ts` 编译生成，开发时优先修改 TypeScript 源文件。
 
 本地推荐运行方式：
 
@@ -40,7 +40,7 @@ http://127.0.0.1:8765/index.html
 ├── ico.webp                      网页图标
 ├── splash.webp                   首页顶部操作容器左侧的品牌图
 ├── update-assets-and-upload.bat  编译 TypeScript、更新数据、刷新资源清单并上传的脚本
-├── README.md                     当前说明文档，UTF-8 with BOM 编码
+├── README.md                     当前说明文档，UTF-8 no BOM 编码
 ├── ts/
 │   ├── index.ts                  主页面前端逻辑源码
 │   ├── package.json              TypeScript 构建脚本和开发依赖
@@ -51,7 +51,7 @@ http://127.0.0.1:8765/index.html
 │   ├── sync-csv-json.js          CSV 和 JSON 同步脚本
 │   ├── build-asset-manifest.js   生成 data/asset-manifest.json 的脚本
 │   ├── convert_png_to_webp.py    PNG 转 WebP 的辅助脚本
-│   └── fetch-rwr-players.py      抓取太平洋玩家统计并生成静态 JSON
+│   └── fetch-rwr-players.py      抓取太平洋玩家统计并生成静态 JSONL
 ├── .github/workflows/
 │   └── fetch-rwr-players.yml     每 3 小时更新玩家统计的 GitHub Actions 工作流
 ├── csv/
@@ -118,11 +118,12 @@ maps/<地图名>/map-data.json
 5. git add .
 6. git commit -m "Update assets"（如有变更）
 7. git fetch origin main
-8. git merge -s ours --no-commit origin/main，只记录远端历史，不把远端普通文件覆盖到本地
-9. git checkout origin/main -- data/rwr-players-pacific.json，只同步 GitHub Actions 更新的玩家数据
-10. git checkout origin/main -- data/rwr-players-pacific.meta.json，只同步 GitHub Actions 更新的玩家哈希元数据
+8. 如果远端 `origin/main` 已经包含在本地历史中，直接进入推送前重建
+9. 如果远端有新提交，执行 `git merge --no-ff --no-commit origin/main`，先把远端历史和文件合并到本地
+10. 如果只遇到已知生成物冲突，自动处理：`data/asset-manifest.json` 保留本地并稍后重建，玩家 JSONL 和玩家元数据采用远端 GitHub Actions 版本
 11. 再次编译 TypeScript 并刷新 data/asset-manifest.json
-12. git push
+12. 提交远端合并或重建后的变化
+13. git push
 ```
 
 CSV 同步步骤会读取：
@@ -145,7 +146,7 @@ TypeScript 编译步骤会读取 `ts/index.ts`，使用 `ts/tsconfig.json` 生�
 
 资源清单步骤会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
 
-上传脚本会先提交本地构建结果，再拉取远端 `main`。为避免远端普通文件覆盖本地修改，脚本使用 `git merge -s ours --no-commit origin/main` 只记录远端提交历史，然后只从 `origin/main` 取回 `data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json`。这两个文件是 GitHub Actions 自动更新的玩家数据及其哈希元数据；取回后脚本会再次编译 TypeScript、刷新资源清单，然后推送到 Git。
+上传脚本会先提交本地构建结果，再拉取远端 `main`。如果远端有 GitHub Actions 刚更新的玩家数据，脚本会正常合并远端提交；只有遇到已知生成物冲突时才自动处理。`data/asset-manifest.json` 是本地重建产物，冲突时先保留本地版本，随后再次生成；`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 是 Actions 自动更新的玩家 JSONL 及其哈希元数据，冲突时采用远端版本。处理完成后脚本会再次编译 TypeScript、刷新资源清单，提交合并结果并推送到 Git。
 
 ## CSV 编辑说明
 
@@ -501,7 +502,7 @@ Service Worker 处理普通静态资源时，也会先请求最新清单，并�
 清单请求失败                                  失败，不使用旧缓存降级
 ```
 
-`data/rwr-players-pacific.json` 由独立的玩家元数据哈希驱动缓存判断。`meta.json` 能正常加载时，哈希命中就复用缓存；哈希缺失、读取失败或哈希不一致时，再请求网络文件并更新缓存。Service Worker 同时兼容旧的大 JSON 对象和新的 JSON Lines 流式格式。
+`data/rwr-players-pacific.json` 由独立的玩家元数据哈希驱动缓存判断。`meta.json` 能正常加载时，哈希命中就复用缓存；哈希缺失、读取失败或哈希不一致时，再请求网络文件并更新缓存。页面和 Service Worker 只接受新的 JSON Lines 流式格式，不再兼容旧的大 JSON 对象格式。
 
 `data/asset-manifest.json` 本身使用 network-only 策略。请求失败就是失败，不从缓存返回旧清单。
 
