@@ -261,6 +261,7 @@
       border: 1px solid var(--line);
       border-radius: 18px;
       background: #fff;
+      contain: layout paint;
     }
 
     body.players-pagination-visible.modal-open .content-panel {
@@ -663,6 +664,8 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      justify-self: center;
+      align-self: center;
       position: relative;
       z-index: 1;
     }
@@ -686,6 +689,7 @@
       justify-content: center;
       gap: 18px;
       position: relative;
+      contain: layout paint;
     }
 
     .pagination-panel::before {
@@ -699,8 +703,10 @@
 
     .pagination-panel.show {
       display: grid;
-      grid-template-columns: minmax(180px, auto) minmax(0, 1fr);
+      grid-template-columns: minmax(220px, auto) minmax(220px, auto);
       align-items: center;
+      justify-content: center;
+      justify-items: center;
     }
 
     body.modal-open .pagination-panel.show {
@@ -727,6 +733,8 @@
     }
 
     .page-button {
+      display: inline-grid;
+      place-items: center;
       min-width: 42px;
       min-height: 38px;
       border: 1px solid rgba(93, 125, 159, 0.2);
@@ -738,6 +746,22 @@
       font-weight: 850;
       font-variant-numeric: tabular-nums;
       transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .page-button-icon {
+      display: none;
+      width: 0;
+      height: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+    }
+
+    .page-button.prev .page-button-icon {
+      border-right: 10px solid currentColor;
+    }
+
+    .page-button.next .page-button-icon {
+      border-left: 10px solid currentColor;
     }
 
     .page-button:hover:not(:disabled) {
@@ -2451,6 +2475,9 @@
         background: rgba(255, 255, 255, 0.82);
         box-shadow: 0 8px 20px rgba(35, 76, 124, 0.08);
         overflow: hidden;
+        content-visibility: auto;
+        contain: layout paint style;
+        contain-intrinsic-size: auto 294px;
       }
 
       #playerTable tbody tr:nth-child(even) {
@@ -2572,14 +2599,49 @@
       }
 
       .pagination-panel {
-        justify-content: center;
-        grid-template-columns: 1fr;
-        gap: 4px;
-        min-height: 54px;
+        width: 100%;
+        padding: 4px 10px;
+        gap: 6px;
+        min-height: 64px;
+        overflow: hidden;
+      }
+
+      .pagination-panel.show {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
       }
 
       .pagination-info {
         width: 100%;
+        min-width: 0;
+        padding: 0 8px;
+        font-size: 12px;
+      }
+
+      .pagination {
+        width: 100%;
+        gap: 8px;
+      }
+
+      .page-button.page-nav {
+        width: 42px;
+        min-width: 42px;
+        padding: 0;
+        font-size: 0;
+      }
+
+      .page-button.page-nav .page-button-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+      }
+
+      .page-button.page-nav .page-button-icon {
+        display: block;
       }
 
       #compareModal .dialog-body {

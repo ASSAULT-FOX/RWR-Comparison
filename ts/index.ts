@@ -1334,12 +1334,18 @@ function renderPlayerPagination(totalPages) {
   const items = isCompactPlayerPagination() ? [] : playerPageItems(totalPages);
   playerPaginationEl.classList.add("show");
   playerPaginationEl.innerHTML = `
-    <button class="page-button" data-page="${playerPage - 1}" type="button"${playerPage === 1 ? " disabled" : ""}>上一页</button>
+    <button class="page-button page-nav prev" data-page="${playerPage - 1}" type="button" aria-label="上一页"${playerPage === 1 ? " disabled" : ""}>
+      <span class="page-button-icon" aria-hidden="true"></span>
+      <span class="page-button-text">上一页</span>
+    </button>
     ${items.map((item) => item === "..."
       ? '<span class="page-ellipsis">...</span>'
       : `<button class="page-button ${item === playerPage ? "active" : ""}" data-page="${item}" type="button">${item}</button>`
     ).join("")}
-    <button class="page-button" data-page="${playerPage + 1}" type="button"${playerPage === totalPages ? " disabled" : ""}>下一页</button>
+    <button class="page-button page-nav next" data-page="${playerPage + 1}" type="button" aria-label="下一页"${playerPage === totalPages ? " disabled" : ""}>
+      <span class="page-button-icon" aria-hidden="true"></span>
+      <span class="page-button-text">下一页</span>
+    </button>
   `;
 }
 
