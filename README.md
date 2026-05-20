@@ -116,14 +116,15 @@ maps/<地图名>/map-data.json
 3. node scripts/sync-csv-json.js csv-to-json
 4. node scripts/build-asset-manifest.js
 5. git add .
-6. git commit -m "Update assets"（如有变更）
-7. git fetch origin main
-8. 如果远端 `origin/main` 已经包含在本地历史中，直接进入推送前重建
-9. 如果远端有新提交，执行 `git merge --no-ff --no-commit origin/main`，先把远端历史和文件合并到本地
-10. 如果只遇到已知生成物冲突，自动处理：`data/asset-manifest.json` 保留本地并稍后重建，玩家 JSONL 和玩家元数据采用远端 GitHub Actions 版本
-11. 再次编译 TypeScript 并刷新 data/asset-manifest.json
-12. 提交远端合并或重建后的变化
-13. git push
+6. git fetch origin main，用远端状态判断提交类型
+7. git commit（如暂存文件包含远端不存在的路径，提交信息为“新增文件”；否则为“功能增加或修复”）
+8. 再次 git fetch origin main
+9. 如果远端 `origin/main` 已经包含在本地历史中，直接进入推送前重建
+10. 如果远端有新提交，执行 `git merge --no-ff --no-commit origin/main`，先把远端历史和文件合并到本地
+11. 如果只遇到已知生成物冲突，自动处理：`data/asset-manifest.json` 保留本地并稍后重建，玩家 JSONL 和玩家元数据采用远端 GitHub Actions 版本
+12. 再次编译 TypeScript 并刷新 data/asset-manifest.json
+13. 提交远端合并或重建后的变化，提交信息同样按远端是否已有文件判断
+14. git push
 ```
 
 CSV 同步步骤会读取：
@@ -146,7 +147,7 @@ TypeScript 编译步骤会读取 `ts/index.ts`，使用 `ts/tsconfig.json` 生�
 
 资源清单步骤会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
 
-上传脚本会先提交本地构建结果，再拉取远端 `main`。如果远端有 GitHub Actions 刚更新的玩家数据，脚本会正常合并远端提交；只有遇到已知生成物冲突时才自动处理。`data/asset-manifest.json` 是本地重建产物，冲突时先保留本地版本，随后再次生成；`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 是 Actions 自动更新的玩家 JSONL 及其哈希元数据，冲突时采用远端版本。处理完成后脚本会再次编译 TypeScript、刷新资源清单，提交合并结果并推送到 Git。
+上传脚本会先获取远端 `main`，用 `origin/main` 判断暂存文件在远端是否已经存在：只要本次暂存文件里有任意路径在远端不存在，提交信息就是“新增文件”；否则提交信息是“功能增加或修复”。提交本地构建结果后，脚本会再次拉取远端状态。如果远端有 GitHub Actions 刚更新的玩家数据，脚本会正常合并远端提交；只有遇到已知生成物冲突时才自动处理。`data/asset-manifest.json` 是本地重建产物，冲突时先保留本地版本，随后再次生成；`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 是 Actions 自动更新的玩家 JSONL 及其哈希元数据，冲突时采用远端版本。处理完成后脚本会再次编译 TypeScript、刷新资源清单，提交合并结果并推送到 Git。脚本输出使用中文提示，并用不同颜色区分步骤、信息、成功、注意和错误。
 
 ## CSV 编辑说明
 

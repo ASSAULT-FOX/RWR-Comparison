@@ -304,7 +304,7 @@ for /f "delims=" %%F in ('git diff --cached --name-only --diff-filter=ACMRT') do
 exit /b 0
 
 :initColors
-for /F "tokens=1,2 delims=#" %%A in ('"prompt #$E# & echo on & for %%B in (1) do rem"') do set "ESC=%%B"
+for /F "delims=" %%A in ('powershell -NoProfile -Command "[char]27"') do set "ESC=%%A"
 if defined ESC (
   set "COLOR_RESET=%ESC%[0m"
   set "COLOR_STEP=%ESC%[96m"
