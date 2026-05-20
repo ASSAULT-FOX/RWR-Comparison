@@ -28,6 +28,7 @@ http://127.0.0.1:8765/index.html
 地图点位     3054 个，按阵营和视图状态分组
 模型数据       71 条，保存在 model/models.json，模型文件保存在 model/<安全英文id>/
 玩家数据        由 GitHub Actions 每 3 小时从 RWR 官方统计页更新到 data/rwr-players-pacific.json
+玩家哈希元数据  由 GitHub Actions 同步生成 data/rwr-players-pacific.meta.json
 ```
 
 ## 项目结构
@@ -60,6 +61,7 @@ http://127.0.0.1:8765/index.html
 │   ├── weapons.json              枪械发布数据，由 csv/weapons.csv 生成
 │   ├── vehicles.json             载具发布数据，由 csv/vehicles.csv 生成
 │   ├── rwr-players-pacific.json  太平洋玩家统计快照，由 GitHub Actions 更新
+│   ├── rwr-players-pacific.meta.json  玩家统计快照哈希元数据，由 GitHub Actions 更新
 │   ├── maps.json                 地图摘要数据
 │   └── asset-manifest.json       静态资源 SHA-256 哈希清单，由脚本生成
 ├── maps/
@@ -75,7 +77,7 @@ http://127.0.0.1:8765/index.html
 └── weapons_textures/             枪械表格和详情使用的图标
 ```
 
-根目录保留 `.editorconfig`、`.gitignore` 和 `sw.js`：前两个文件需要在仓库根目录生效，`sw.js` 需要留在根目录以保持 Service Worker 作用域覆盖整站。TypeScript 相关的 npm 配置集中放在 `ts/`，避免根目录继续堆放构建配置文件。
+根目录保留 `.gitignore` 和 `sw.js`：`.gitignore` 需要在仓库根目录生效，`sw.js` 需要留在根目录以保持 Service Worker 作用域覆盖整站。编码和换行约定记录在 `AGENTS.md`。TypeScript 相关的 npm 配置集中放在 `ts/`，避免根目录继续堆放构建配置文件。
 
 ## 数据维护方式
 
@@ -95,6 +97,7 @@ data/weapons.json
 data/vehicles.json
 data/maps.json
 data/rwr-players-pacific.json
+data/rwr-players-pacific.meta.json
 model/models.json
 maps/<地图名>/map-data.json
 ```
@@ -117,8 +120,9 @@ maps/<地图名>/map-data.json
 7. git fetch origin main
 8. git merge -s ours --no-commit origin/main，只记录远端历史，不把远端普通文件覆盖到本地
 9. git checkout origin/main -- data/rwr-players-pacific.json，只同步 GitHub Actions 更新的玩家数据
-10. 再次编译 TypeScript 并刷新 data/asset-manifest.json
-11. git push
+10. git checkout origin/main -- data/rwr-players-pacific.meta.json，只同步 GitHub Actions 更新的玩家哈希元数据
+11. 再次编译 TypeScript 并刷新 data/asset-manifest.json
+12. git push
 ```
 
 CSV 同步步骤会读取：
@@ -141,7 +145,7 @@ TypeScript 编译步骤会读取 `ts/index.ts`，使用 `ts/tsconfig.json` 生�
 
 资源清单步骤会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
 
-上传脚本会先提交本地构建结果，再拉取远端 `main`。为避免远端普通文件覆盖本地修改，脚本使用 `git merge -s ours --no-commit origin/main` 只记录远端提交历史，然后只从 `origin/main` 取回 `data/rwr-players-pacific.json`。这个文件是 GitHub Actions 自动更新的玩家数据；取回后脚本会再次编译 TypeScript、刷新资源清单，然后推送到 Git。
+上传脚本会先提交本地构建结果，再拉取远端 `main`。为避免远端普通文件覆盖本地修改，脚本使用 `git merge -s ours --no-commit origin/main` 只记录远端提交历史，然后只从 `origin/main` 取回 `data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json`。这两个文件是 GitHub Actions 自动更新的玩家数据及其哈希元数据；取回后脚本会再次编译 TypeScript、刷新资源清单，然后推送到 Git。
 
 ## CSV 编辑说明
 
@@ -288,6 +292,10 @@ xp
 抓取脚本会按 RWRS 的解析方式处理玩家名编码：页面内容先按 `iso-8859-1` 读取，玩家名再转换为 UTF-8。若个别玩家名包含非法 UTF-8 字节，脚本会用替换字符保留该玩家并继续抓取，同时在 Actions 日志中输出 warning，避免单个异常名字导致整次更新失败。
 
 玩家列表页会显示 `ID - XP - 击杀数 - 死亡数 - K/D - 最长连杀`，ID 以浅蓝色药丸徽章显示，支持按数值列全量升降排序，每页显示 100 个玩家。列表下方有独立分页容器，容器中左侧显示 `第 X / Y 页 · 共 N 名玩家`，右侧放置上一页、页码和下一页控件；该容器不属于表格滚动层，会固定作为内容容器的底部区域。点击玩家行会打开详情弹窗，顶部先显示大号玩家名卡片，再显示排名卡片，并显示 XP、击杀、死亡、分数、KD、游戏时间、最长连杀、摧毁目标、摧毁车辆、治疗士兵、误伤、移动距离、开火次数、投掷物次数在当前快照所有玩家中的排名。
+
+### data/rwr-players-pacific.meta.json
+
+这是玩家统计快照的哈希元数据文件，页面和 Service Worker 用它判断 `data/rwr-players-pacific.json` 是否可以复用缓存。`version` 是玩家内容的稳定 SHA-256，只根据 `source`、`database`、`count` 和 `players` 计算，`generatedAt` 只表示这份元数据写入时间，不参与缓存判断。
 
 ### data/maps.json
 
@@ -439,7 +447,8 @@ fetch("data/vehicles.json")                 // 按清单版本决定是否可用
 fetch("data/weapons.json")                  // 按清单版本决定是否可用缓存
 fetch("data/maps.json")                     // 按清单版本决定是否可用缓存
 fetch("model/models.json")                  // 按清单版本决定是否可用缓存
-fetch("data/rwr-players-pacific.json")      // 始终 cache: "no-store" 请求网络
+fetch("data/rwr-players-pacific.meta.json")  // 判断玩家 JSON 的缓存版本
+fetch("data/rwr-players-pacific.json")       // 版本命中时可复用缓存，否则请求网络
 ```
 
 地图详情数据按需读取：
@@ -470,7 +479,7 @@ splash.webp
 scripts/index.js
 ```
 
-`data/rwr-players-pacific.json` 不写入资源清单，也不由 Service Worker 缓存。它由 GitHub Actions 定时更新，页面每次加载都会用 `cache: "no-store"` 重新请求网络文件，避免玩家列表使用旧快照。
+`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 不写入主资源清单。前者保存玩家快照，后者保存对应的 SHA-256 元数据。Service Worker 会先读取 `meta.json`，哈希命中时直接复用玩家 JSON 缓存，哈希缺失或不一致时才请求网络文件。
 
 `README.md`、`csv/`、`ts/` 和辅助脚本不参与网页运行时加载，因此不写入资源清单；`scripts/index.js` 是浏览器运行时代码，会写入资源清单。
 
@@ -497,7 +506,7 @@ Service Worker 处理普通静态资源时，也会先请求最新清单，并�
 清单请求失败                                  失败，不使用旧缓存降级
 ```
 
-`data/rwr-players-pacific.json` 是例外：Service Worker 对它使用 network-only/no-store 策略，请求前后都会删除运行时缓存中的同名条目，不参与哈希校验缓存。
+`data/rwr-players-pacific.json` 由独立的玩家元数据哈希驱动缓存判断。`meta.json` 能正常加载时，哈希命中就复用缓存；哈希缺失、读取失败或哈希不一致时，再请求网络文件并更新缓存。
 
 `data/asset-manifest.json` 本身使用 network-only 策略。请求失败就是失败，不从缓存返回旧清单。
 

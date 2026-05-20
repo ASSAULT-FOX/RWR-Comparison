@@ -196,6 +196,7 @@ let playersLoading = false;
 let playersLoadError = "";
 const imagePromiseCache = new Map();
 const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
+const isCompactPlayerPagination = () => window.matchMedia("(max-width: 640px)").matches;
 const antiTankWeapons = [
   { label: "反坦克枪榴弹", file: "kar98k_rifle_grenade_at.weapon", blast: 2.3 },
   { label: "巴祖卡火箭筒", file: "m1_bazooka.weapon", blast: 4.4 },
@@ -1232,7 +1233,7 @@ function renderPlayerPagination(totalPages) {
     playerPaginationEl.innerHTML = "";
     return;
   }
-  const items = playerPageItems(totalPages);
+  const items = isCompactPlayerPagination() ? [] : playerPageItems(totalPages);
   playerPaginationEl.classList.add("show");
   playerPaginationEl.innerHTML = `
     <button class="page-button" data-page="${playerPage - 1}" type="button"${playerPage === 1 ? " disabled" : ""}>上一页</button>
@@ -2730,10 +2731,11 @@ async function checkAssetManifest() {
   const previous = local.getItem(key);
   const refreshedKey = "rwrAssetManifestRefreshed";
   const refreshedVersion = session.getItem(refreshedKey);
-  local.setItem(key, manifest.version);
-  canUseCachedResources = Boolean(previous && previous === manifest.version && refreshedVersion !== manifest.version);
   if (refreshedVersion === manifest.version) session.removeItem(refreshedKey);
-  if (previous && previous !== manifest.version) {
+  const versionChanged = Boolean(previous && previous !== manifest.version);
+  canUseCachedResources = Boolean(previous && previous === manifest.version && refreshedVersion !== manifest.version);
+  local.setItem(key, manifest.version);
+  if (versionChanged) {
     await clearAppCaches();
     session.setItem(refreshedKey, manifest.version);
     location.reload();

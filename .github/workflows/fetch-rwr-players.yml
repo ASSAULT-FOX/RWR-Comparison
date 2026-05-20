@@ -8,9 +8,9 @@ on:
       - ".github/workflows/fetch-rwr-players.yml"
       - "scripts/fetch-rwr-players.py"
       - "data/rwr-players-pacific.json"
-      - "scripts/build-asset-manifest.js"
+      - "data/rwr-players-pacific.meta.json"
   schedule:
-    - cron: "0 */3 * * *"
+    - cron: "0 */12 * * *"
   workflow_dispatch:
 
 permissions:
@@ -31,11 +31,8 @@ jobs:
       - name: Fetch Pacific player stats
         run: python scripts/fetch-rwr-players.py
 
-      - name: Update asset manifest
-        run: node scripts/build-asset-manifest.js
-
       - name: Commit updated player data
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update RWR Pacific player data"
-          file_pattern: data/rwr-players-pacific.json data/asset-manifest.json
+          file_pattern: data/rwr-players-pacific.json data/rwr-players-pacific.meta.json

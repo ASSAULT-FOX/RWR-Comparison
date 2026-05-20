@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -15,6 +16,24 @@ from urllib.request import Request, urlopen
 BASE_URL = "http://rwr.runningwithrifles.com/rwr_stats/view_players.php"
 DATABASE = "pacific"
 PAGE_SIZE = 100
+STABLE_PLAYER_FIELDS = [
+    "leaderboard_position",
+    "username",
+    "kills",
+    "deaths",
+    "score",
+    "kd_ratio",
+    "time_played",
+    "longest_kill_streak",
+    "targets_destroyed",
+    "vehicles_destroyed",
+    "soldiers_healed",
+    "teamkills",
+    "distance_moved",
+    "shots_fired",
+    "throwables_thrown",
+    "xp",
+]
 PLAYER_FIELDS = [
     ("leaderboard_position", int),
     ("username", str),
@@ -234,11 +253,35 @@ def main():
         "count": len(players),
         "players": players,
     }
+    output_json = json.dumps(output, ensure_ascii=False, indent=2) + "\n"
+    stable_output = {
+        "source": output["source"],
+        "database": output["database"],
+        "count": output["count"],
+        "players": [
+            {field: player.get(field) for field in STABLE_PLAYER_FIELDS}
+            for player in players
+        ],
+    }
+    stable_output_json = json.dumps(stable_output, ensure_ascii=False, separators=(",", ":"))
+    output_hash = hashlib.sha256(stable_output_json.encode("utf-8")).hexdigest()
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(output, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    output_path.write_text(output_json, encoding="utf-8")
+
+    meta_path = output_path.with_suffix(".meta.json")
+    meta = {
+        "version": output_hash,
+        "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source": f"{BASE_URL}?db={DATABASE}",
+        "database": DATABASE,
+        "count": len(players),
+        "dataFile": output_path.name,
+    }
+    meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {output_path} with {len(players)} Pacific players")
+    print(f"Wrote {meta_path} with version {output_hash[:12]}")
     return 0
 
 

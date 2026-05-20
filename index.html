@@ -49,7 +49,18 @@
         linear-gradient(180deg, #fbfdff 0%, var(--bg) 100%);
       overflow: hidden;
       touch-action: pan-x pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
       -webkit-text-size-adjust: 100%;
+    }
+
+    input,
+    textarea,
+    [contenteditable="true"] {
+      user-select: text;
+      -webkit-user-select: text;
+      -webkit-touch-callout: default;
     }
 
     button,
@@ -2395,14 +2406,14 @@
         font-size: 13px;
       }
 
-      table,
-      tbody,
-      tr,
-      td {
+      #playerTable,
+      #playerTable tbody,
+      #playerTable tr,
+      #playerTable td {
         display: block;
       }
 
-      table {
+      #playerTable {
         font-size: 14px;
       }
 
@@ -2450,10 +2461,7 @@
         font-weight: inherit;
       }
 
-      tbody td,
-      #vehicleTable tbody td,
-      #weaponTable tbody td,
-      #modelTable tbody td {
+      #playerTable tbody td {
         min-height: 42px;
         padding: 10px 12px;
         border-bottom: 0;
@@ -2467,11 +2475,11 @@
         line-height: 1.35;
       }
 
-      tbody td:first-child {
+      #playerTable tbody td:first-child {
         border-top: 0;
       }
 
-      tbody td::before {
+      #playerTable tbody td::before {
         content: attr(data-label);
         color: var(--muted);
         font-size: 12px;
@@ -2480,7 +2488,7 @@
         text-align: left;
       }
 
-      tbody td[data-mobile-role="title"] {
+      #playerTable tbody td[data-mobile-role="title"] {
         order: -2;
         grid-template-columns: minmax(0, 1fr);
         min-height: 50px;
@@ -2492,16 +2500,16 @@
         text-align: left;
       }
 
-      tbody td[data-mobile-role="title"]::before {
+      #playerTable tbody td[data-mobile-role="title"]::before {
         display: none;
       }
 
-      tbody td[data-mobile-role="actions"] {
+      #playerTable tbody td[data-mobile-role="actions"] {
         grid-template-columns: minmax(0, 1fr);
         text-align: left;
       }
 
-      tbody td[data-mobile-role="actions"]::before {
+      #playerTable tbody td[data-mobile-role="actions"]::before {
         display: none;
       }
 
@@ -2518,20 +2526,6 @@
 
       .faction {
         justify-self: end;
-      }
-
-      .map-actions {
-        justify-content: stretch;
-        gap: 8px;
-      }
-
-      tbody td[data-mobile-role="actions"] > .map-action-button {
-        width: 100%;
-      }
-
-      .map-action-button {
-        min-height: 40px;
-        flex: 1 1 132px;
       }
 
       .compare-grid {
@@ -2589,17 +2583,6 @@
       .row-icon {
         width: 58px;
         height: 58px;
-      }
-
-      .pagination {
-        justify-content: flex-start;
-        overflow-x: auto;
-        scrollbar-width: none;
-        max-width: 100%;
-      }
-
-      .pagination::-webkit-scrollbar {
-        display: none;
       }
 
       .pagination-panel {
@@ -2907,6 +2890,9 @@
       document.addEventListener("gesturestart", (event) => event.preventDefault(), { passive: false });
       document.addEventListener("gesturechange", (event) => event.preventDefault(), { passive: false });
       document.addEventListener("gestureend", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("selectstart", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("copy", (event) => event.preventDefault(), { passive: false });
+      document.addEventListener("cut", (event) => event.preventDefault(), { passive: false });
       document.addEventListener("touchmove", (event) => {
         if (event.touches.length > 1) event.preventDefault();
       }, { passive: false });

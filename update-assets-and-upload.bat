@@ -91,6 +91,14 @@ if errorlevel 1 (
   exit /b 1
 )
 
+git checkout origin/main -- "data\rwr-players-pacific.meta.json"
+if errorlevel 1 (
+  echo.
+  echo Failed to restore data\rwr-players-pacific.meta.json from origin/main.
+  pause
+  exit /b 1
+)
+
 echo Rebuilding assets after remote player data sync...
 cmd /c npm --prefix ts run build:ts
 if errorlevel 1 (

@@ -2,9 +2,34 @@ const CACHE_VERSION = "rwr-cache-2026-05-19-1";
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const RUNTIME_CACHE = `${CACHE_VERSION}-runtime`;
 const MANIFEST_URL = "./data/asset-manifest.json";
+const PLAYER_MANIFEST_URL = "./data/rwr-players-pacific.meta.json";
 const MANIFEST_TTL = 30000;
+const PLAYER_STABLE_FIELDS = [
+  "leaderboard_position",
+  "username",
+  "kills",
+  "deaths",
+  "score",
+  "kd_ratio",
+  "time_played",
+  "longest_kill_streak",
+  "targets_destroyed",
+  "vehicles_destroyed",
+  "soldiers_healed",
+  "teamkills",
+  "distance_moved",
+  "shots_fired",
+  "throwables_thrown",
+  "xp"
+];
 
 let manifestState = {
+  checkedAt: 0,
+  latest: null,
+  cached: null,
+  promise: null
+};
+let playerManifestState = {
   checkedAt: 0,
   latest: null,
   cached: null,
@@ -21,6 +46,7 @@ const APP_SHELL = [
   "./data/vehicles.json",
   "./data/weapons.json",
   "./data/maps.json",
+  "./data/rwr-players-pacific.meta.json",
   "./model/models.json"
 ];
 
@@ -54,8 +80,13 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  if (url.pathname.endsWith("/data/rwr-players-pacific.meta.json")) {
+    event.respondWith(playerManifestCache(request));
+    return;
+  }
+
   if (url.pathname.endsWith("/data/rwr-players-pacific.json")) {
-    event.respondWith(networkOnlyNoStore(request));
+    event.respondWith(playerDataCache(request));
     return;
   }
 
@@ -73,16 +104,6 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(manifestAwareCache(request));
     return;
   }
-});
-
-self.addEventListener("message", (event) => {
-  if (event.data?.type !== "CLEAR_RWR_CACHES") return;
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys
-        .filter((key) => key.startsWith("rwr-cache-"))
-        .map((key) => caches.delete(key))))
-  );
 });
 
 async function networkFirst(request) {
@@ -133,6 +154,57 @@ async function networkOnlyNoStore(request) {
   return response;
 }
 
+async function playerManifestCache(request) {
+  const cache = await caches.open(RUNTIME_CACHE);
+  const cached = await cache.match(request);
+  try {
+    const response = await fetch(request, { cache: "no-store" });
+    if (response.ok) {
+      cache.put(request, response.clone());
+      return response;
+    }
+    if (response.status === 404 || response.status === 410) {
+      await cache.delete(request);
+    }
+    return response;
+  } catch (error) {
+    return cached || Response.error();
+  }
+}
+
+async function playerDataCache(request) {
+  const cache = await caches.open(RUNTIME_CACHE);
+  const cached = await cache.match(request);
+  const manifests = await getPlayerManifests().catch(() => ({ latest: null, cached: null }));
+  const latestHash = manifests.latest?.version || null;
+
+  if (cached && latestHash && await cachedResponseMatches(request.url, cached.clone(), latestHash)) {
+    return cached;
+  }
+
+  if (!latestHash && cached) {
+    return cached;
+  }
+
+  try {
+    const response = await fetch(request, { cache: "no-store" });
+    if (response.ok) {
+      if (latestHash && !await responseMatchesPlayerHash(response.clone(), latestHash)) {
+        await cache.delete(request);
+        return response;
+      }
+      rememberVerified(request.url, latestHash);
+      cache.put(request, response.clone());
+    } else if (response.status === 404 || response.status === 410) {
+      await cache.delete(request);
+    }
+    return response;
+  } catch (error) {
+    if (cached) return cached;
+    throw error;
+  }
+}
+
 async function manifestAwareCache(request) {
   const path = requestPath(request.url);
   const cache = await caches.open(RUNTIME_CACHE);
@@ -152,7 +224,7 @@ async function manifestAwareCache(request) {
   try {
     const response = await fetch(request, { cache: "no-store" });
     if (response.ok) {
-      if (latestHash && !await responseMatchesHash(response.clone(), latestHash)) {
+      if (latestHash && !await responseMatchesHashText(response.clone(), latestHash)) {
         await cache.delete(request);
         return response;
       }
@@ -171,7 +243,7 @@ async function manifestAwareCache(request) {
 async function cachedResponseMatches(requestUrl, response, expectedHash) {
   const cacheKey = verifiedCacheKey(requestUrl, expectedHash);
   if (verifiedResponses.get(cacheKey)) return true;
-  const matches = await responseMatchesHash(response, expectedHash);
+  const matches = await responseMatchesHashText(response, expectedHash);
   if (matches) rememberVerified(requestUrl, expectedHash);
   return matches;
 }
@@ -188,7 +260,7 @@ function verifiedCacheKey(requestUrl, expectedHash) {
   return `${requestPath(requestUrl)}:${expectedHash}`;
 }
 
-async function responseMatchesHash(response, expectedHash) {
+async function responseMatchesHashText(response, expectedHash) {
   try {
     const buffer = await response.arrayBuffer();
     const digest = await crypto.subtle.digest("SHA-256", buffer);
@@ -237,6 +309,88 @@ async function loadAssetManifestPair() {
   };
   return { latest, cached };
 }
+
+async function getPlayerManifests() {
+  if (playerManifestState.promise) return playerManifestState.promise;
+  if (playerManifestState.latest && Date.now() - playerManifestState.checkedAt < MANIFEST_TTL) {
+    return { latest: playerManifestState.latest, cached: playerManifestState.cached };
+  }
+  playerManifestState.promise = loadPlayerManifestPair().finally(() => {
+    playerManifestState.promise = null;
+  });
+  return playerManifestState.promise;
+}
+
+async function loadPlayerManifestPair() {
+  const cache = await caches.open(RUNTIME_CACHE);
+  const cachedResponse = await cache.match(PLAYER_MANIFEST_URL);
+  const cached = cachedResponse ? await cachedResponse.clone().json().catch(() => null) : null;
+  let latest = null;
+  try {
+    const response = await fetch(PLAYER_MANIFEST_URL, { cache: "no-store" });
+    if (response.ok) {
+      latest = await response.clone().json();
+      await cache.put(PLAYER_MANIFEST_URL, response);
+    }
+  } catch (error) {
+    latest = null;
+  }
+  playerManifestState = {
+    checkedAt: Date.now(),
+    latest,
+    cached,
+    promise: null
+  };
+  return { latest, cached };
+}
+
+async function responseMatchesPlayerHash(response, expectedHash) {
+  try {
+    const json = await response.json();
+    const stablePayload = {
+      source: json.source,
+      database: json.database,
+      count: json.count,
+      players: Array.isArray(json.players)
+        ? json.players.map((player) => {
+          const entry = {};
+          for (const field of PLAYER_STABLE_FIELDS) {
+            entry[field] = player?.[field] ?? null;
+          }
+          return entry;
+        })
+        : []
+    };
+    const buffer = new TextEncoder().encode(JSON.stringify(stablePayload));
+    const digest = await crypto.subtle.digest("SHA-256", buffer);
+    return hexDigest(digest) === expectedHash;
+  } catch (error) {
+    return false;
+  }
+}
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type !== "CLEAR_RWR_CACHES") return;
+  manifestState = {
+    checkedAt: 0,
+    latest: null,
+    cached: null,
+    promise: null
+  };
+  playerManifestState = {
+    checkedAt: 0,
+    latest: null,
+    cached: null,
+    promise: null
+  };
+  verifiedResponses.clear();
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys
+        .filter((key) => key.startsWith("rwr-cache-"))
+        .map((key) => caches.delete(key))))
+  );
+});
 
 function requestPath(requestUrl) {
   const url = new URL(requestUrl);

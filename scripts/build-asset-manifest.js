@@ -22,7 +22,8 @@ const rootFiles = [
 const includeExt = new Set([".html", ".js", ".json", ".webp", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico", ".glb", ".blend"]);
 const outputFile = path.join("data", "asset-manifest.json");
 const excludeFiles = new Set([
-  "data/rwr-players-pacific.json"
+  "data/rwr-players-pacific.json",
+  "data/rwr-players-pacific.meta.json"
 ]);
 
 function walk(dir) {
