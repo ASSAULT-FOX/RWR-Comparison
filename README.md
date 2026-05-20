@@ -147,7 +147,7 @@ TypeScript 编译步骤会读取 `ts/index.ts`，使用 `ts/tsconfig.json` 生�
 
 资源清单步骤会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
 
-上传脚本会先获取远端 `main`，用 `origin/main` 判断暂存文件在远端是否已经存在：只要本次暂存文件里有任意路径在远端不存在，提交信息就是“新增文件”；否则提交信息是“功能增加或修复”。提交本地构建结果后，脚本会再次拉取远端状态。如果远端有 GitHub Actions 刚更新的玩家数据，脚本会正常合并远端提交；只有遇到已知生成物冲突时才自动处理。`data/asset-manifest.json` 是本地重建产物，冲突时先保留本地版本，随后再次生成；`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 是 Actions 自动更新的玩家 JSONL 及其哈希元数据，冲突时采用远端版本。处理完成后脚本会再次编译 TypeScript、刷新资源清单，提交合并结果并推送到 Git。脚本输出使用中文提示，并用不同颜色区分步骤、信息、成功、注意和错误。
+上传脚本会先获取远端 `main`，用 `origin/main` 判断暂存文件在远端是否已经存在：只要本次暂存文件里有任意路径在远端不存在，提交信息就是“新增文件”；否则提交信息是“功能增加或修复”。提交本地构建结果后，脚本会再次拉取远端状态。如果远端有 GitHub Actions 刚更新的玩家数据，脚本会正常合并远端提交；只有遇到已知生成物冲突时才自动处理。`data/asset-manifest.json` 是本地重建产物，冲突时先保留本地版本，随后再次生成；`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 是 Actions 自动更新的玩家 JSONL 及其哈希元数据，冲突时采用远端版本。处理完成后脚本会再次编译 TypeScript、刷新资源清单，提交合并结果并推送到 Git。脚本输出使用中文提示，并用不同颜色区分步骤、信息、成功、注意和错误。脚本开头保留两行 `@echo off` 是为了兼容 UTF-8 BOM 批处理文件，避免 Windows `cmd.exe` 回显批处理命令本身。
 
 ## CSV 编辑说明
 

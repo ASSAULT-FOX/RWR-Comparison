@@ -35,6 +35,7 @@
 
 - 默认文本文件使用 UTF-8 no BOM、LF、保留文件末尾换行；不要自动清理行尾空白，除非任务明确要求。
 - `*.bat` 和 `*.cmd` 必须保留 UTF-8 BOM 与 CRLF，避免 Windows 批处理中文路径或中文输出出现编码问题。
+- 因为 `*.bat` 带 UTF-8 BOM 时，Windows `cmd.exe` 可能无法正确执行第一行的 `@echo off`，所以批处理文件开头如果需要关闭命令回显，应保留连续两行 `@echo off`；不要把第二行当作重复代码删除。
 - `*.ps1` 使用 UTF-8 no BOM 与 CRLF。
 - Markdown、HTML、JavaScript、TypeScript、JSON、CSV 等项目文本文件使用 UTF-8 no BOM 与 LF。
 - 读写 JSON、CSV、HTML、JS、TS、MD 等文本文件时，不要转换成 ANSI、GBK、UTF-16 或 UTF-8 BOM。
@@ -63,6 +64,7 @@ Set-Content -LiteralPath <path> -Value <text> -Encoding utf8BOM
 - 不要重写或格式化大型文件，除非任务明确要求。
 - 不要修改 `data/`、`csv/`、`model/`、`maps/`、`maps_textures/`、`weapons_textures/` 中的生成物或资源文件，除非任务明确要求。
 - 修改脚本或生成流程后，尽量运行对应的最小验证命令。
+- 修改 `update-assets-and-upload.bat` 后，必须实际运行脚本验证开头输出，确认没有回显 `cd /d`、`set`、`call`、`for /F`、`exit /b` 等批处理命令本身。
 
 ## Project Notes
 
