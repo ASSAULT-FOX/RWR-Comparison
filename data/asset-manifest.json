@@ -1,10 +1,10 @@
 {
-  "version": "a2ece7d8e4417aff58730707b5fb030e67243c3295cc43ff74d1005c96d2b026",
-  "generatedAt": "2026-05-20T07:49:25.560Z",
+  "version": "94b222bc128fd84ee28002d568b913275fdc1e476bb7141ef6bc039592c77d24",
+  "generatedAt": "2026-05-29T10:09:55.327Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
-    "data/weapons.json": "97fa4544c7b90231511680c479060724c9bb66a69bb791c20acdcce20e8469a5",
+    "data/weapons.json": "c493c5d019de40f04831f23bc86aff833498f2c4f6e3474a200b40504c6fe4ed",
     "ico.webp": "2a47046b17dde309cb9c8318a9d5a6f07283b5422f757de6c0be85f016dcb70d",
     "index.html": "2b2966cd175e0471f37f0929d1555f617b4c12c18a332a3f0abaa25b7d0d9939",
     "maps_textures/0.webp": "f15787f9c25d3522b5ec686316e79a68629ddc9a4d7e197ef3ec56c5e0f0f89e",
@@ -283,7 +283,7 @@
     "model/willys_mb_recoilless_rifle/willys_mb_recoilless_rifle.glb": "cff91dac74fbedf8e4d9f63f9d5cbbaf2a514f2af32d57f2ee5ca4dbf7f85432",
     "model/willys_mb/willys_mb.blend": "a7ae02a0ba1e2bbfb068ecbae002dbe6f0f8dc85a595dccca25157b7c7a376a9",
     "model/willys_mb/willys_mb.glb": "ff6975747b9f6247b1aad71dbb217779e2999d5aa238c6bd9bf84e6a9001fb94",
-    "scripts/index.js": "fa51b5d34e6e93bd0d25c33a41a7e966b27e6f83f8c02cc702273f69d84b2417",
+    "scripts/index.js": "6632a168a17580c7de3587f0e80c9e0826802e31fc154f854accb1f917164304",
     "splash.webp": "86d76d62491f6288f3dc02ca6f7a99fc8c2b1feaeaa9010f66ed897bff6e7cd4",
     "sw.js": "f86793292fd96775020a4268c32852ab7ecf3f6b22bb2c05fbad3842610b4997",
     "weapons_textures/hud_austen_mki.webp": "8c44b0bf85815b253d5f6d73cb6c7e359e29a39e731cee3e26c84a847b2b0a4c",
