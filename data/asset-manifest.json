@@ -1,10 +1,10 @@
 {
-  "version": "94b222bc128fd84ee28002d568b913275fdc1e476bb7141ef6bc039592c77d24",
-  "generatedAt": "2026-05-29T10:09:55.327Z",
+  "version": "110b8b4a7fd2d22b45df6c5a086aaea42904fd42d94c71b38df8c84a14bcff82",
+  "generatedAt": "2026-05-29T10:29:17.605Z",
   "files": {
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
     "data/vehicles.json": "1867e5dafa5eca2ed61bc6be00230c5656d4247d24e17939b26944c723de416b",
-    "data/weapons.json": "c493c5d019de40f04831f23bc86aff833498f2c4f6e3474a200b40504c6fe4ed",
+    "data/weapons.json": "20f861b714770138eab7a8976df50262fc25e2732d00ec5dbe28b70c1a38465d",
     "ico.webp": "2a47046b17dde309cb9c8318a9d5a6f07283b5422f757de6c0be85f016dcb70d",
     "index.html": "2b2966cd175e0471f37f0929d1555f617b4c12c18a332a3f0abaa25b7d0d9939",
     "maps_textures/0.webp": "f15787f9c25d3522b5ec686316e79a68629ddc9a4d7e197ef3ec56c5e0f0f89e",
