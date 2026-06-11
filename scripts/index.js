@@ -932,49 +932,53 @@ function scheduleApplyView() {
 }
 function renderTable(list) {
     currentList = list;
+    if (!list.length) {
+        rowsEl.innerHTML = '<div class="model-empty">没有找到匹配的载具</div>';
+        return;
+    }
     const selectedSet = new Set(selectedIndices);
     rowsEl.innerHTML = list.map((vehicle) => {
         const index = vehicle.index;
-        const rowClasses = [];
+        const cardClasses = ["asset-card"];
         if (selectedSet.has(index))
-            rowClasses.push("selected");
+            cardClasses.push("selected");
         if (targetMode && isUnarmedVehicle(vehicle))
-            rowClasses.push("no-target-weapon");
-        const classAttr = rowClasses.length ? ` class="${rowClasses.join(" ")}"` : "";
+            cardClasses.push("no-target-weapon");
+        const iconSrc = vehicleIconSrc(vehicle);
+        const iconHtml = iconSrc
+            ? assetIconHtml(iconSrc, vehicle.name, "asset-card-icon")
+            : '<span class="asset-card-placeholder">无图标</span>';
         return `
-    <tr data-index="${escapeHtml(index)}"${classAttr}>
-      <td data-label="阵营">${factionBadge(vehicle)}</td>
-      <td data-label="载具名" data-mobile-role="title">${escapeHtml(vehicle.name)}</td>
-      <td class="table-icon-cell" data-label="图标">${assetIconHtml(vehicleIconSrc(vehicle), vehicle.name, "row-icon")}</td>
-      <td class="num" data-label="生命值">${fmt(vehicle.hp)}</td>
-      <td class="num" data-label="最大速度">${fmt(vehicle.speed)}</td>
-      <td class="num" data-label="加速度">${fmt(vehicle.acceleration)}</td>
-      <td class="num" data-label="炮塔转速">${fmt(vehicle.turret)}</td>
-      <td class="num" data-label="受击门槛">${fmt(vehicle.threshold)}</td>
-      <td class="num" data-label="爆炸减伤">${fmt(vehicle.reduction)}</td>
-      <td class="num" data-label="装填速度">${fmt(vehicle.reload)}</td>
-      <td class="num" data-label="玩家视野修正">${fmt(vehicle.vision)}</td>
-      <td class="num" data-label="爆炸伤害">${fmt(vehicle.blast)}</td>
-    </tr>
+    <button class="${cardClasses.join(" ")}" data-index="${escapeHtml(index)}" type="button" title="${escapeHtml(vehicle.name)}">
+      <span class="asset-card-faction">${factionBadge(vehicle)}</span>
+      <span class="asset-card-art">${iconHtml}</span>
+      <span class="asset-card-name">${escapeHtml(vehicle.name)}</span>
+    </button>
   `;
     }).join("");
 }
 function renderWeaponTable(list) {
     currentWeaponList = list;
+    if (!list.length) {
+        weaponRowsEl.innerHTML = '<div class="model-empty">没有找到匹配的枪械</div>';
+        return;
+    }
     const selectedSet = new Set(selectedWeaponIndices);
     weaponRowsEl.innerHTML = list.map((weapon) => {
-        const selected = selectedSet.has(weapon.id) ? " class=\"selected\"" : "";
+        const cardClasses = ["asset-card"];
+        if (selectedSet.has(weapon.id))
+            cardClasses.push("selected");
+        const name = displayValue(weapon["枪械名称"]);
+        const iconSrc = weaponIconSrc(weapon);
+        const iconHtml = iconSrc
+            ? assetIconHtml(iconSrc, name, "asset-card-icon weapon-icon")
+            : '<span class="asset-card-placeholder">无图标</span>';
         return `
-    <tr data-index="${escapeHtml(weapon.id)}"${selected}>
-      <td data-label="阵营">${factionBadge({ faction: weapon["阵营"] })}</td>
-      <td data-label="类型">${escapeHtml(displayValue(weapon["类型"]))}</td>
-      <td data-label="枪械名称" data-mobile-role="title">${escapeHtml(displayValue(weapon["枪械名称"]))}</td>
-      <td class="table-icon-cell" data-label="图标">${assetIconHtml(weaponIconSrc(weapon), displayValue(weapon["枪械名称"]), "row-icon weapon-icon")}</td>
-      <td class="num" data-label="致死">${escapeHtml(weaponKillDisplay(weapon))}</td>
-      <td class="num" data-label="射速">${escapeHtml(displayValue(weapon["射速"]))}</td>
-      <td class="num" data-label="单发后坐力">${escapeHtml(displayValue(weapon["单发后坐力"]))}</td>
-      <td class="num" data-label="衰减开始距离">${escapeHtml(displayValue(weapon["衰减开始距离"]))}</td>
-    </tr>
+    <button class="${cardClasses.join(" ")}" data-index="${escapeHtml(weapon.id)}" type="button" title="${escapeHtml(name)}">
+      <span class="asset-card-faction">${factionBadge({ faction: weapon["阵营"] })}</span>
+      <span class="asset-card-art">${iconHtml}</span>
+      <span class="asset-card-name">${escapeHtml(name)}</span>
+    </button>
   `;
     }).join("");
 }
@@ -1292,7 +1296,7 @@ function renderPlayerTable(list) {
     renderPlayerPagination(totalPages);
 }
 function renderTableLoadingState(table, message) {
-    const body = table.querySelector("tbody") || table.querySelector(".map-series-list") || table.querySelector(".model-card-grid");
+    const body = table.querySelector("tbody") || table.querySelector(".asset-card-grid") || table.querySelector(".map-series-list") || table.querySelector(".model-card-grid");
     if (!body)
         return;
     if (body.tagName === "TBODY") {
@@ -2530,7 +2534,7 @@ mobileMenuBtn.addEventListener("click", () => {
 tagTabs.forEach((button) => {
     button.addEventListener("click", () => setActiveTab(button.dataset.tab));
 });
-sortableHeaders = Array.from(document.querySelectorAll("th.sortable"));
+sortableHeaders = Array.from(document.querySelectorAll(".sortable"));
 sortableHeaders.forEach((header) => {
     header.addEventListener("click", () => {
         const key = header.dataset.sort;
@@ -2580,10 +2584,10 @@ confirmCompareBtn.addEventListener("click", () => {
     setCompareMode(false);
 });
 rowsEl.addEventListener("click", (event) => {
-    const row = event.target.closest("tr[data-index]");
-    if (!row)
+    const card = event.target.closest(".asset-card[data-index]");
+    if (!card)
         return;
-    const index = Number(row.dataset.index);
+    const index = Number(card.dataset.index);
     if (compareMode) {
         toggleRowSelection(index);
         return;
@@ -2599,10 +2603,10 @@ rowsEl.addEventListener("click", (event) => {
     openDetail(index);
 });
 weaponRowsEl.addEventListener("click", (event) => {
-    const row = event.target.closest("tr[data-index]");
-    if (!row)
+    const card = event.target.closest(".asset-card[data-index]");
+    if (!card)
         return;
-    const index = Number(row.dataset.index);
+    const index = Number(card.dataset.index);
     if (compareMode) {
         toggleRowSelection(index);
         return;

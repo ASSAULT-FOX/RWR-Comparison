@@ -165,7 +165,7 @@
     "model": "model/usf_armoury_para/usf_armoury_para.glb",
     "sourceBlend": "model/usf_armoury_para/usf_armoury_para.blend",
     "icon": 22,
-    "faction": "美军"
+    "faction": "通用"
   },
   {
     "id": "rubber_boat",

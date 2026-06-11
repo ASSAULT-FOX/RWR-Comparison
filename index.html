@@ -672,11 +672,16 @@
 
     .pagination.show {
       display: flex;
+      align-items: center;
+      align-self: center;
+      justify-content: center;
+      justify-self: auto;
     }
 
     .pagination-panel {
       z-index: 15;
       display: none;
+      width: 100%;
       min-height: 54px;
       padding: 4px 14px;
       border: 1px solid var(--line);
@@ -686,7 +691,7 @@
       backdrop-filter: blur(10px) saturate(125%);
       -webkit-backdrop-filter: blur(10px) saturate(125%);
       align-items: center;
-      justify-content: center;
+      justify-content: stretch;
       gap: 18px;
       position: relative;
       contain: layout paint;
@@ -703,10 +708,17 @@
 
     .pagination-panel.show {
       display: grid;
-      grid-template-columns: minmax(220px, auto) minmax(220px, auto);
+      grid-template-columns: minmax(240px, 1fr);
       align-items: center;
-      justify-content: center;
-      justify-items: center;
+      justify-content: stretch;
+      justify-items: start;
+    }
+
+    .pagination-panel.show .pagination {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
 
     body.modal-open .pagination-panel.show {
@@ -718,7 +730,9 @@
       z-index: 1;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      justify-self: start;
+      align-self: center;
       min-height: 34px;
       padding: 0 12px;
       border: 1px solid rgba(93, 125, 159, 0.16);
@@ -830,8 +844,8 @@
     .map-series {
       min-width: 0;
       display: grid;
-      gap: 14px;
-      padding: 24px 18px 18px;
+      gap: 16px;
+      padding: 18px;
       border: 1px solid rgba(93, 125, 159, 0.18);
       border-radius: 8px;
       background:
@@ -846,22 +860,26 @@
       align-items: center;
       justify-content: flex-start;
       gap: 12px;
-      min-height: 68px;
+      min-height: 40px;
     }
 
     .map-series-title {
       color: #203244;
-      font-size: 36px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      font-size: 32px;
       font-weight: 950;
-      line-height: 1.25;
+      line-height: 1;
     }
 
     .map-series-title .faction {
-      min-height: 52px;
-      padding: 0 28px;
+      min-height: 40px;
+      padding: 8px 24px;
       border-radius: 999px;
-      font-size: 28px;
+      font-size: 24px;
       line-height: 1;
+      align-items: center;
     }
 
     .player-id-badge {
@@ -887,6 +905,7 @@
       align-content: start;
     }
 
+    .asset-card-grid,
     .model-card-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -896,6 +915,7 @@
     }
 
     .map-card,
+    .asset-card,
     .model-card {
       min-width: 0;
       min-height: 218px;
@@ -933,6 +953,7 @@
 
     @media (hover: hover) and (pointer: fine) {
       .map-card:hover,
+      .asset-card:hover,
       .model-card:not(:disabled):hover {
         z-index: 2;
         transform: translateY(-4px) scale(1.04);
@@ -945,12 +966,14 @@
     }
 
     .map-card:focus-visible,
+    .asset-card:focus-visible,
     .model-card:focus-visible {
       outline: 3px solid rgba(63, 124, 255, 0.38);
       outline-offset: 3px;
     }
 
     .map-card:active,
+    .asset-card:active,
     .model-card:active:not(:disabled) {
       transform: scale(0.98);
     }
@@ -982,6 +1005,7 @@
       font-weight: 850;
     }
 
+    .asset-card-faction,
     .map-card-name,
     .model-card-faction {
       justify-self: center;
@@ -1001,12 +1025,14 @@
       justify-content: center;
     }
 
+    .asset-card-art,
     .model-card-art {
       min-width: 0;
       display: grid;
       place-items: center;
     }
 
+    .asset-card-icon,
     .model-card-icon {
       width: min(138px, 82%);
       height: 112px;
@@ -1015,6 +1041,13 @@
       filter: drop-shadow(0 16px 18px rgba(35, 76, 124, 0.18));
     }
 
+    .asset-card-icon.weapon-icon {
+      width: min(142px, 86%);
+      height: 108px;
+      transform: rotate(90deg);
+    }
+
+    .asset-card-placeholder,
     .model-card-placeholder {
       width: 112px;
       height: 82px;
@@ -1026,6 +1059,7 @@
       font-weight: 800;
     }
 
+    .asset-card-name,
     .model-card-name {
       min-height: 42px;
       display: grid;
@@ -1035,6 +1069,27 @@
       font-weight: 900;
       line-height: 1.3;
       overflow-wrap: anywhere;
+    }
+
+    body.compare-mode .asset-card,
+    body.target-mode .asset-card {
+      cursor: pointer;
+    }
+
+    body.compare-mode .asset-card.selected {
+      border-color: rgba(32, 182, 108, 0.48);
+      background:
+        linear-gradient(180deg, rgba(238, 255, 247, 0.98), rgba(218, 250, 231, 0.84)),
+        rgba(255, 255, 255, 0.94);
+      box-shadow:
+        inset 0 0 0 2px rgba(32, 182, 108, 0.44),
+        0 14px 30px rgba(24, 126, 82, 0.16);
+    }
+
+    body.target-mode .asset-card.no-target-weapon {
+      opacity: 0.58;
+      filter: grayscale(0.28);
+      cursor: not-allowed;
     }
 
     .model-empty {
@@ -2365,23 +2420,25 @@
 
       .map-series {
         padding: 12px;
+        gap: 12px;
       }
 
       .map-series-head {
         align-items: flex-start;
         flex-direction: column;
-        gap: 4px;
-        min-height: 44px;
+        gap: 6px;
+        min-height: 36px;
       }
 
       .map-series-title {
-        font-size: 28px;
+        min-height: 36px;
+        font-size: 24px;
       }
 
       .map-series-title .faction {
-        min-height: 42px;
-        padding: 0 20px;
-        font-size: 22px;
+        min-height: 36px;
+        padding: 7px 18px;
+        font-size: 20px;
       }
 
       .map-card-grid {
@@ -2407,12 +2464,14 @@
         font-size: 13px;
       }
 
+      .asset-card-grid,
       .model-card-grid {
         grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
         gap: 12px;
         padding: 14px 2px 82px;
       }
 
+      .asset-card,
       .model-card {
         min-height: 188px;
         padding: 12px 10px;
@@ -2420,11 +2479,18 @@
         gap: 10px;
       }
 
+      .asset-card-icon,
       .model-card-icon {
         width: min(118px, 86%);
         height: 92px;
       }
 
+      .asset-card-icon.weapon-icon {
+        width: min(122px, 88%);
+        height: 88px;
+      }
+
+      .asset-card-name,
       .model-card-name {
         min-height: 38px;
         font-size: 13px;
@@ -2444,66 +2510,6 @@
       #playerTable {
         width: 100%;
         min-width: 0;
-      }
-
-      #vehicleTable {
-        width: 1320px;
-        min-width: 1320px;
-      }
-
-      #weaponTable {
-        width: 980px;
-        min-width: 980px;
-      }
-
-      #vehicleTable col.faction-col {
-        width: 96px;
-      }
-
-      #vehicleTable col.name-col {
-        width: 210px;
-      }
-
-      #vehicleTable col.icon-col {
-        width: 150px;
-      }
-
-      #vehicleTable col.short-col {
-        width: 92px;
-      }
-
-      #vehicleTable col.medium-col,
-      #vehicleTable col.vision-col,
-      #vehicleTable col.blast-col {
-        width: 110px;
-      }
-
-      #weaponTable col.weapon-faction-col {
-        width: 92px;
-      }
-
-      #weaponTable col.weapon-type-col {
-        width: 112px;
-      }
-
-      #weaponTable col.weapon-name-col {
-        width: 250px;
-      }
-
-      #weaponTable col.icon-col {
-        width: 138px;
-      }
-
-      #weaponTable col.weapon-stat-col {
-        width: 96px;
-      }
-
-      #vehicleTable thead th,
-      #weaponTable thead th,
-      #vehicleTable tbody td,
-      #weaponTable tbody td {
-        overflow-wrap: normal;
-        word-break: normal;
       }
 
       #playerTable colgroup,
@@ -2659,6 +2665,13 @@
       .pagination-panel.show {
         grid-template-columns: minmax(0, 1fr) auto;
         justify-items: center;
+      }
+
+      .pagination-panel.show .pagination {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
       }
 
       .pagination-info {
@@ -3035,64 +3048,12 @@
             <div class="loading-subtitle">正在请求并解析载具、枪械、地图、模型和玩家数据</div>
           </div>
         </div>
-        <table id="vehicleTable">
-          <colgroup>
-            <col class="faction-col">
-            <col class="name-col">
-            <col class="icon-col">
-            <col class="short-col">
-            <col class="medium-col">
-            <col class="short-col">
-            <col class="medium-col">
-            <col class="medium-col">
-            <col class="medium-col">
-            <col class="short-col">
-            <col class="vision-col">
-            <col class="blast-col">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>阵营</th>
-              <th>载具名</th>
-              <th>图标</th>
-              <th class="sortable" data-sort="hp">生命值<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="speed">最大速度<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="acceleration">加速度<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="turret">炮塔转速<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="threshold">受击门槛<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="reduction">爆炸减伤<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="reload">装填速度<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="vision">玩家视野修正<span class="sort-indicator"></span></th>
-              <th class="sortable" data-sort="blast">爆炸伤害<span class="sort-indicator"></span></th>
-            </tr>
-          </thead>
-          <tbody id="vehicleRows"></tbody>
-        </table>
-        <table id="weaponTable" class="hidden">
-          <colgroup>
-            <col class="weapon-faction-col">
-            <col class="weapon-type-col">
-            <col class="weapon-name-col">
-            <col class="icon-col">
-            <col class="weapon-stat-col">
-            <col class="weapon-stat-col">
-            <col class="weapon-stat-col">
-            <col class="weapon-stat-col">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>阵营</th>
-              <th>类型</th>
-              <th>枪械名称</th>
-              <th>图标</th>
-              <th class="sortable weapon-sort" data-sort="致死">致死<span class="sort-indicator"></span></th>
-              <th class="sortable weapon-sort" data-sort="射速">射速<span class="sort-indicator"></span></th>
-              <th class="sortable weapon-sort" data-sort="单发后坐力">单发后坐力<span class="sort-indicator"></span></th>
-              <th class="sortable weapon-sort" data-sort="衰减开始距离">衰减开始距离<span class="sort-indicator"></span></th>
-            </tr>
-          </thead>
-          <tbody id="weaponRows"></tbody>
-        </table>
+        <section id="vehicleTable" class="asset-panel" aria-label="载具卡片">
+          <div class="asset-card-grid" id="vehicleRows"></div>
+        </section>
+        <section id="weaponTable" class="asset-panel hidden" aria-label="枪械卡片">
+          <div class="asset-card-grid" id="weaponRows"></div>
+        </section>
         <table id="playerTable" class="hidden">
           <colgroup>
             <col class="player-name-col">
