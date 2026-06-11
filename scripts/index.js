@@ -174,6 +174,7 @@ let weaponSortState = { key: null, mode: null };
 let playerSortState = { key: null, mode: null };
 let playerPage = 1;
 let viewFrame = null;
+let searchTimer = null;
 let scoreFrame = null;
 let pendingScoreUpdate = false;
 let sortableHeaders = [];
@@ -930,6 +931,13 @@ function scheduleApplyView() {
         return;
     viewFrame = window.requestAnimationFrame(applyView);
 }
+function scheduleSearchView() {
+    window.clearTimeout(searchTimer);
+    searchTimer = window.setTimeout(() => {
+        searchTimer = null;
+        scheduleApplyView();
+    }, 90);
+}
 function renderTable(list) {
     currentList = list;
     if (!list.length) {
@@ -1362,13 +1370,20 @@ function renderPlayerPagination(totalPages) {
 function assetIconHtml(src, alt, className) {
     if (!src)
         return '<span class="muted">-</span>';
-    return `<img class="${escapeHtml(className)}" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" fetchpriority="low">`;
+    const dimensions = className.includes("model-card-icon")
+        ? ' width="138" height="112"'
+        : (className.includes("row-icon")
+            ? ' width="66" height="66"'
+            : (className.includes("compare-icon")
+                ? ' width="88" height="88"'
+                : (className.includes("detail-large-icon") ? ' width="260" height="200"' : "")));
+    return `<img class="${escapeHtml(className)}"${dimensions} src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" fetchpriority="low">`;
 }
 function mapThumbnailHtml(map) {
     const src = overviewMapImageSources(map)[0];
     if (!src)
         return '<span class="map-card-placeholder">无地图图</span>';
-    return `<img class="map-card-image" src="${escapeHtml(src)}" alt="${escapeHtml(map.name)}" loading="lazy" decoding="async" fetchpriority="low">`;
+    return `<img class="map-card-image" width="320" height="154" src="${escapeHtml(src)}" alt="${escapeHtml(map.name)}" loading="lazy" decoding="async" fetchpriority="low">`;
 }
 function vehicleIconSrc(vehicle) {
     const icon = vehicle?.icon ?? vehicle?.["图标号"];
@@ -2526,7 +2541,7 @@ function openComparison(indexA, indexB) {
 searchInput.addEventListener("input", () => {
     if (activeTab === "players")
         playerPage = 1;
-    scheduleApplyView();
+    scheduleSearchView();
 });
 mobileMenuBtn.addEventListener("click", () => {
     setMobileNavOpen(!document.body.classList.contains("mobile-nav-open"));
