@@ -3045,7 +3045,7 @@
       --soft-shadow: 0 8px 18px rgba(74, 67, 54, 0.08);
       --focus-ring: 0 0 0 4px rgba(84, 119, 184, 0.22);
       --row-hover: rgba(255, 241, 168, 0.46);
-      --row-hover-line: #d84d2f;
+      --row-hover-line: rgba(216, 77, 47, 0.62);
       --radius: 8px;
       font-family: "Segoe Print", "Comic Sans MS", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
     }
@@ -3167,11 +3167,11 @@
     }
 
     .tag-tab.active {
-      color: #223c70;
-      background:
-        linear-gradient(transparent 54%, rgba(255, 241, 168, 0.88) 54%),
-        rgba(255, 250, 241, 0.82);
-      box-shadow: inset 0 -2px 0 rgba(216, 77, 47, 0.5);
+      color: var(--text);
+      background: rgba(255, 241, 168, 0.92);
+      box-shadow:
+        inset 0 0 0 1px rgba(83, 78, 67, 0.2),
+        3px 3px 0 rgba(83, 78, 67, 0.08);
     }
 
     .search input {
@@ -3343,19 +3343,38 @@
       border-bottom: 1px dashed rgba(83, 78, 67, 0.2);
     }
 
-    body:not(.compare-mode) tbody tr:hover,
-    body.compare-mode tbody tr.selected,
-    body.compare-mode .asset-card.selected {
+    body:not(.compare-mode) tbody tr:hover {
       background: var(--row-hover);
       box-shadow:
         inset 4px 0 0 var(--row-hover-line),
         4px 4px 0 rgba(216, 77, 47, 0.12);
     }
 
-    body:not(.compare-mode) tbody tr:hover td,
-    body.compare-mode tbody tr.selected td {
+    body.compare-mode tbody tr.selected,
+    body.compare-mode .asset-card.selected {
+      background: rgba(216, 237, 220, 0.72);
+      border-color: rgba(57, 123, 85, 0.72);
+      box-shadow:
+        inset 0 0 0 2px rgba(57, 123, 85, 0.72),
+        4px 4px 0 rgba(57, 123, 85, 0.12);
+    }
+
+    body:not(.compare-mode) tbody tr:hover td {
       background: rgba(255, 241, 168, 0.3);
       color: var(--text);
+    }
+
+    body.compare-mode tbody tr.selected td {
+      background: rgba(216, 237, 220, 0.32);
+      color: var(--text);
+    }
+
+    body:not(.compare-mode) #playerTable tbody tr:hover {
+      box-shadow: none;
+    }
+
+    body:not(.compare-mode) #playerTable tbody tr:hover td {
+      background: rgba(255, 241, 168, 0.24);
     }
 
     .faction,
@@ -3374,15 +3393,31 @@
       color: #6e521d;
     }
 
-    .faction.de,
+    .faction.de {
+      color: #6d4e2a;
+      background: #ead7bd;
+    }
+
     .faction.us,
-    .faction.jp,
-    .faction.uk,
-    .faction.common,
     .faction.map-edelweiss,
     .faction.map-island {
-      color: var(--text);
-      background: rgba(255, 241, 168, 0.56);
+      color: #245b8f;
+      background: #d9ecff;
+    }
+
+    .faction.uk {
+      color: #2f6845;
+      background: #d8eddc;
+    }
+
+    .faction.jp {
+      color: #91423d;
+      background: #f6d2cc;
+    }
+
+    .faction.common {
+      color: #7a5b11;
+      background: #fff0b8;
     }
 
     .detail-section-title,
@@ -3704,6 +3739,5 @@
   <script src="scripts/index.js" defer></script>
 </body>
 </html>
-
 
 
