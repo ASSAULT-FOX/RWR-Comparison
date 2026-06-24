@@ -62,6 +62,7 @@ Set-Content -LiteralPath <path> -Value <text> -Encoding utf8BOM
 - 优先保持现有代码风格、目录结构和命名方式。
 - 修改范围要小，只改用户要求相关的文件。
 - 不要重写或格式化大型文件，除非任务明确要求。
+- 修改前端界面逻辑时，优先修改 TypeScript 源文件 `ts/index.ts`，再运行 `cmd /c npm --prefix ts run build:ts` 生成 `scripts/index.js`；不要只改生成后的 `scripts/index.js`，否则后续运行上传脚本会被重新编译覆盖。
 - 不要修改 `data/`、`csv/`、`model/`、`maps/`、`maps_textures/`、`weapons_textures/` 中的生成物或资源文件，除非任务明确要求。
 - 修改脚本或生成流程后，尽量运行对应的最小验证命令。
 - 修改 `update-assets-and-upload.bat` 后，必须实际运行脚本验证开头输出，确认没有回显 `cd /d`、`set`、`call`、`for /F`、`exit /b` 等批处理命令本身。
@@ -77,4 +78,5 @@ Set-Content -LiteralPath <path> -Value <text> -Encoding utf8BOM
 
 - 这是一个 RWR 参数查询器项目，主要由静态前端、数据 JSON/CSV、模型和贴图资源组成。
 - 根目录的 `index.html`、`model-viewer.html`、`sw.js` 是用户可见行为的重要入口，修改时要格外注意兼容性。
+- 前端主逻辑源文件是 `ts/index.ts`，构建输出是 `scripts/index.js`；`update-assets-and-upload.bat` 会在上传前自动运行 TypeScript 构建。
 - `scripts/` 中的脚本负责资源或数据同步，修改数据结构时要同时检查脚本输出和前端读取逻辑。
