@@ -66,6 +66,13 @@ Set-Content -LiteralPath <path> -Value <text> -Encoding utf8BOM
 - 修改脚本或生成流程后，尽量运行对应的最小验证命令。
 - 修改 `update-assets-and-upload.bat` 后，必须实际运行脚本验证开头输出，确认没有回显 `cd /d`、`set`、`call`、`for /F`、`exit /b` 等批处理命令本身。
 
+## UI Verification
+
+- 修改界面、交互、布局、样式或用户可见前端行为后，必须启动本地服务器验证效果。
+- 本地服务器优先使用当前项目目录作为根目录，例如 `python -m http.server <port>`；如果端口被占用，换用其他空闲端口。
+- 浏览器验证必须使用 Kimi WebBridge 技能访问本地服务器页面，检查修改后的实际显示或交互效果。
+- 验证完成后必须关闭本次启动的本地服务器；不要留下后台服务进程。
+
 ## Project Notes
 
 - 这是一个 RWR 参数查询器项目，主要由静态前端、数据 JSON/CSV、模型和贴图资源组成。
