@@ -13,6 +13,7 @@ const tagTabs = document.querySelectorAll(".tag-tab");
 const tableWrap = document.querySelector(".table-wrap");
 const vehicleTable = document.getElementById("vehicleTable");
 const weaponTable = document.getElementById("weaponTable");
+const playerTableContainer = document.getElementById("playerTableContainer");
 const playerTable = document.getElementById("playerTable");
 const mapTable = document.getElementById("mapTable");
 const modelTable = document.getElementById("modelTable");
@@ -1601,7 +1602,7 @@ function setActiveTab(tab) {
   tagTabs.forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
   vehicleTable.classList.toggle("hidden", tab !== "vehicles");
   weaponTable.classList.toggle("hidden", tab !== "weapons");
-  playerTable.classList.toggle("hidden", tab !== "players");
+  playerTableContainer.classList.toggle("hidden", tab !== "players");
   mapTable.classList.toggle("hidden", tab !== "maps");
   modelTable.classList.toggle("hidden", tab !== "models");
   targetModeBtn.classList.toggle("hidden", tab !== "vehicles");
