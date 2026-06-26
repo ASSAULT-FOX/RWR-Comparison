@@ -288,7 +288,7 @@ exit /b 0
 :commitMergeChanges
 set "COMMIT_LABEL=%~1"
 call :chooseCommitMessage
-set "COMMIT_MESSAGE=🔀 合并远端 | %COMMIT_MESSAGE%"
+set "COMMIT_MESSAGE=🔀 合并远端 | %COMMIT_MESSAGE%"
 call :logStep "%COMMIT_LABEL%：提交信息为“%COMMIT_MESSAGE%”。"
 git commit -m "%COMMIT_MESSAGE%"
 if errorlevel 1 (
@@ -302,9 +302,12 @@ exit /b 0
 set "COMMIT_MESSAGE=功能增加或修复"
 set "PS_FILE=%CD%\scripts\generate-commit-message.ps1"
 if not exist "%PS_FILE%" set "PS_FILE=%~dp0scripts\generate-commit-message.ps1"
-if exist "%PS_FILE%" (
-  for /f "delims=" %%M in ('powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" 2^>nul') do set "COMMIT_MESSAGE=%%M"
-)
+if not exist "%PS_FILE%" exit /b 0
+set "MSG_TMP=%TEMP%\rwr-commit-msg-%RANDOM%.txt"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" > "%MSG_TMP%" 2>nul
+if not exist "%MSG_TMP%" exit /b 0
+set /p COMMIT_MESSAGE=<"%MSG_TMP%"
+del "%MSG_TMP%" >nul 2>nul
 if not defined COMMIT_MESSAGE set "COMMIT_MESSAGE=功能增加或修复"
 exit /b 0
 
