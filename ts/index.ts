@@ -2035,12 +2035,9 @@ async function openProcessedMap(factionId, mapData = currentMap, popup = null, s
       }
       const objectUrl = URL.createObjectURL(blob);
       popup.document.title = pageTitle;
+      popup.document.head.innerHTML = "";
       popup.document.body.innerHTML = "";
-      popup.document.body.style.margin = "0";
-      popup.document.body.style.background = "#101820";
-      popup.document.body.style.display = "grid";
-      popup.document.body.style.placeItems = "center";
-      popup.document.body.style.overflow = "hidden";
+      popup.document.body.style.cssText = "margin:0;min-height:100vh;background:#101820;display:grid;place-items:center;overflow:hidden;";
       const image = popup.document.createElement("img");
       image.src = objectUrl;
       image.alt = pageTitle;

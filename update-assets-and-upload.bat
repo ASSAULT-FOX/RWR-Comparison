@@ -288,6 +288,7 @@ exit /b 0
 :commitMergeChanges
 set "COMMIT_LABEL=%~1"
 call :chooseCommitMessage
+set "COMMIT_MESSAGE=🔀 合并远端 | %COMMIT_MESSAGE%"
 call :logStep "%COMMIT_LABEL%：提交信息为“%COMMIT_MESSAGE%”。"
 git commit -m "%COMMIT_MESSAGE%"
 if errorlevel 1 (
@@ -299,10 +300,12 @@ exit /b 0
 
 :chooseCommitMessage
 set "COMMIT_MESSAGE=功能增加或修复"
-for /f "delims=" %%F in ('git diff --cached --name-only --diff-filter=ACMRT') do (
-  git cat-file -e "origin/%BRANCH%:%%F" >nul 2>nul
-  if errorlevel 1 set "COMMIT_MESSAGE=新增文件"
+set "PS_FILE=%CD%\scripts\generate-commit-message.ps1"
+if not exist "%PS_FILE%" set "PS_FILE=%~dp0scripts\generate-commit-message.ps1"
+if exist "%PS_FILE%" (
+  for /f "delims=" %%M in ('powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" 2^>nul') do set "COMMIT_MESSAGE=%%M"
 )
+if not defined COMMIT_MESSAGE set "COMMIT_MESSAGE=功能增加或修复"
 exit /b 0
 
 :initColors
