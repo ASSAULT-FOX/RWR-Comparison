@@ -273,17 +273,17 @@ foreach ($g in $grouped.GetEnumerator()) {
     $parts += "$($action.Emoji)$catEmoji$($action.Verb)$catLabel`：$detail"
 }
 
-$message = $parts -join ' | '
+$message = $parts -join '，'
 
 # 合并提交加前缀
 if ($IsMerge) {
-    $message = "🔀合并远端 | $message"
+    $message = "🔀合并远端，$message"
 }
 
 # 长度控制
 if ($message.Length -gt 120) {
     # 保留前两个 part
-    $short = ($parts[0..([Math]::Min(1, $parts.Count - 1))] -join ' | ')
+    $short = ($parts[0..([Math]::Min(1, $parts.Count - 1))] -join '，')
     if ($parts.Count -gt 2) {
         $remaining = $parts.Count - 2
         $short += " +$remaining"

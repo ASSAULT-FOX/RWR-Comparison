@@ -276,9 +276,16 @@ if not errorlevel 1 (
 )
 
 call :chooseCommitMessage
-call :logStep "%COMMIT_LABEL%：提交信息为“%COMMIT_MESSAGE%”。"
-git commit -m "%COMMIT_MESSAGE%"
 if errorlevel 1 (
+  echo.
+  call :logError "生成提交信息失败。"
+  exit /b 1
+)
+call :logStep "%COMMIT_LABEL%：正在提交暂存变更。"
+git commit -F "%COMMIT_MSG_FILE%"
+set "COMMIT_RESULT=%ERRORLEVEL%"
+del "%COMMIT_MSG_FILE%" >nul 2>nul
+if not "%COMMIT_RESULT%"=="0" (
   echo.
   call :logError "%COMMIT_LABEL%失败。"
   exit /b 1
@@ -287,11 +294,17 @@ exit /b 0
 
 :commitMergeChanges
 set "COMMIT_LABEL=%~1"
-call :chooseCommitMessage
-set "COMMIT_MESSAGE=🔀 合并远端 | %COMMIT_MESSAGE%"
-call :logStep "%COMMIT_LABEL%：提交信息为“%COMMIT_MESSAGE%”。"
-git commit -m "%COMMIT_MESSAGE%"
+call :chooseCommitMessage merge
 if errorlevel 1 (
+  echo.
+  call :logError "生成提交信息失败。"
+  exit /b 1
+)
+call :logStep "%COMMIT_LABEL%：正在提交暂存变更。"
+git commit -F "%COMMIT_MSG_FILE%"
+set "COMMIT_RESULT=%ERRORLEVEL%"
+del "%COMMIT_MSG_FILE%" >nul 2>nul
+if not "%COMMIT_RESULT%"=="0" (
   echo.
   call :logError "%COMMIT_LABEL%失败。"
   exit /b 1
@@ -299,16 +312,23 @@ if errorlevel 1 (
 exit /b 0
 
 :chooseCommitMessage
-set "COMMIT_MESSAGE=功能增加或修复"
 set "PS_FILE=%CD%\scripts\generate-commit-message.ps1"
 if not exist "%PS_FILE%" set "PS_FILE=%~dp0scripts\generate-commit-message.ps1"
-if not exist "%PS_FILE%" exit /b 0
-set "MSG_TMP=%TEMP%\rwr-commit-msg-%RANDOM%.txt"
-powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" > "%MSG_TMP%" 2>nul
-if not exist "%MSG_TMP%" exit /b 0
-set /p COMMIT_MESSAGE=<"%MSG_TMP%"
-del "%MSG_TMP%" >nul 2>nul
-if not defined COMMIT_MESSAGE set "COMMIT_MESSAGE=功能增加或修复"
+set "COMMIT_MSG_FILE=%TEMP%\rwr-commit-msg-%RANDOM%.txt"
+if not exist "%PS_FILE%" (
+  > "%COMMIT_MSG_FILE%" echo 功能增加或修复
+  exit /b 0
+)
+if /i "%~1"=="merge" (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" -IsMerge > "%COMMIT_MSG_FILE%" 2>nul
+) else (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" > "%COMMIT_MSG_FILE%" 2>nul
+)
+if errorlevel 1 (
+  del "%COMMIT_MSG_FILE%" >nul 2>nul
+  exit /b 1
+)
+if not exist "%COMMIT_MSG_FILE%" exit /b 1
 exit /b 0
 
 :initColors

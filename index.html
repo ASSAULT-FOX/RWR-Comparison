@@ -1406,6 +1406,13 @@
       transform: translateZ(0);
     }
 
+    .dialog-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
     .dialog-body {
       min-height: 0;
       overflow: auto;
@@ -1421,14 +1428,18 @@
     }
 
     .icon-button {
+      display: inline-grid;
+      place-items: center;
       width: 38px;
       height: 38px;
       border: 1px solid var(--line);
       border-radius: 8px;
+      padding: 0;
       background: rgba(255, 255, 255, 0.72);
       color: var(--muted);
       font-size: 22px;
       line-height: 1;
+      text-align: center;
       cursor: pointer;
       transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease;
     }
@@ -1437,6 +1448,72 @@
       color: var(--text);
       background: #fff;
       transform: translateY(-1px);
+    }
+
+    .icon-button svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      margin: auto;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .icon-button .close-icon {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+    }
+
+    .share-dialog {
+      width: min(900px, 96vw);
+    }
+
+    .share-body {
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .share-preview-frame {
+      min-height: 260px;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.68);
+      overflow: auto;
+    }
+
+    .share-preview-frame.loading {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .share-preview-frame img {
+      display: block;
+      width: min(100%, 720px);
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 26px rgba(35, 76, 124, 0.12);
+    }
+
+    .share-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .share-actions .primary {
+      min-height: 50px;
+      width: 100%;
+      font-size: 16px;
     }
 
     .map-dialog {
@@ -2940,6 +3017,14 @@
         flex: 0 0 40px;
       }
 
+      .share-body {
+        padding: 12px;
+      }
+
+      .share-actions {
+        grid-template-columns: 1fr;
+      }
+
       .detail-hero,
       .detail-icon-panel,
       .detail-rows {
@@ -3198,11 +3283,14 @@
 
     .mobile-menu-button::before {
       content: "";
-      width: 18px;
-      height: 13px;
-      border-top: 1.5px solid currentColor;
-      border-bottom: 1.5px solid currentColor;
-      box-shadow: inset 0 5px 0 currentColor;
+      width: 22px;
+      height: 16px;
+      border: 0;
+      background:
+        linear-gradient(currentColor, currentColor) 0 0 / 22px 2px no-repeat,
+        linear-gradient(currentColor, currentColor) 0 7px / 22px 2px no-repeat,
+        linear-gradient(currentColor, currentColor) 0 14px / 22px 2px no-repeat;
+      box-shadow: none;
     }
 
     .tag-tabs {
@@ -3743,7 +3831,23 @@
     <div class="dialog">
       <div class="dialog-head">
         <h2 id="compareTitle">载具对比</h2>
-        <button class="icon-button" id="closeModal" title="关闭">×</button>
+        <div class="dialog-actions">
+          <button class="icon-button" id="shareCompareModal" title="分享" aria-label="分享对比结果">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <path d="M8.6 10.7 15.4 6.3"></path>
+              <path d="M8.6 13.3 15.4 17.7"></path>
+            </svg>
+          </button>
+          <button class="icon-button" id="closeModal" title="关闭" aria-label="关闭">
+            <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5.75 5.75 18.25 18.25"></path>
+              <path d="M18.25 5.75 5.75 18.25"></path>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="dialog-body">
         <div class="compare-grid" id="compareCards"></div>
@@ -3752,11 +3856,37 @@
     </div>
   </div>
 
+  <div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="dialog share-dialog">
+      <div class="dialog-head">
+        <h2 id="shareTitle">分享对比结果</h2>
+        <button class="icon-button" id="closeShareModal" title="关闭" aria-label="关闭">
+          <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5.75 5.75 18.25 18.25"></path>
+            <path d="M18.25 5.75 5.75 18.25"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="dialog-body share-body">
+        <div class="share-preview-frame loading" id="sharePreview">正在生成图片</div>
+        <div class="share-actions">
+          <button class="primary" id="downloadShareImage" type="button">下载</button>
+          <button class="primary" id="copyShareImage" type="button">复制</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="detailModal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
     <div class="dialog detail-dialog">
       <div class="dialog-head">
         <h2 id="detailTitle">载具详细参数</h2>
-        <button class="icon-button" id="closeDetailModal" title="关闭">×</button>
+        <button class="icon-button" id="closeDetailModal" title="关闭" aria-label="关闭">
+          <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5.75 5.75 18.25 18.25"></path>
+            <path d="M18.25 5.75 5.75 18.25"></path>
+          </svg>
+        </button>
       </div>
       <div class="dialog-body">
         <div class="detail-hero" id="detailHero"></div>
@@ -3769,7 +3899,12 @@
     <div class="dialog target-dialog">
       <div class="dialog-head">
         <h2 id="targetTitle">载具索敌优选</h2>
-        <button class="icon-button" id="closeTargetModal" title="关闭">×</button>
+        <button class="icon-button" id="closeTargetModal" title="关闭" aria-label="关闭">
+          <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5.75 5.75 18.25 18.25"></path>
+            <path d="M18.25 5.75 5.75 18.25"></path>
+          </svg>
+        </button>
       </div>
       <div class="dialog-body">
         <div class="target-layout">
@@ -3797,7 +3932,12 @@
         <div>
           <h2 id="mapTitle">地图详情</h2>
         </div>
-        <button class="icon-button" id="closeMapModal" title="关闭">×</button>
+        <button class="icon-button" id="closeMapModal" title="关闭" aria-label="关闭">
+          <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5.75 5.75 18.25 18.25"></path>
+            <path d="M18.25 5.75 5.75 18.25"></path>
+          </svg>
+        </button>
       </div>
       <div class="dialog-body map-body">
         <div class="map-viewer-area">

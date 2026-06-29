@@ -33,8 +33,14 @@ const confirmCompareBtn = document.getElementById("confirmCompareBtn");
 const compareHint = document.getElementById("compareHint");
 const modal = document.getElementById("compareModal");
 const closeModal = document.getElementById("closeModal");
+const shareCompareModal = document.getElementById("shareCompareModal");
 const compareCards = document.getElementById("compareCards");
 const compareMetrics = document.getElementById("compareMetrics");
+const shareModal = document.getElementById("shareModal");
+const closeShareModal = document.getElementById("closeShareModal");
+const sharePreview = document.getElementById("sharePreview");
+const downloadShareImage = document.getElementById("downloadShareImage");
+const copyShareImage = document.getElementById("copyShareImage");
 const detailModal = document.getElementById("detailModal");
 const closeDetailModal = document.getElementById("closeDetailModal");
 const detailTitle = document.getElementById("detailTitle");
@@ -163,6 +169,9 @@ let compareMode = false;
 let targetMode = false;
 let selectedIndices = [];
 let selectedWeaponIndices = [];
+let currentComparison = null;
+let shareImageBlob = null;
+let shareImageUrl = "";
 let currentList = [];
 let filteredList = [];
 let currentWeaponList = [];
@@ -698,6 +707,25 @@ function factionBadge(vehicle) {
   return `<span class="faction ${escapeHtml(factionClass(vehicle.faction))}">${escapeHtml(vehicle.faction)}</span>`;
 }
 
+function shareFactionColors(faction) {
+  if (faction === "德军") return { badgeFill: "#e1e1dd", badgeColor: "#46423b" };
+  if (faction === "美军") return { badgeFill: "#d9e9dc", badgeColor: "#2c5a3e" };
+  if (faction === "日军") return { badgeFill: "#f3d4ce", badgeColor: "#8a3128" };
+  if (faction === "英军") return { badgeFill: "#d8ece7", badgeColor: "#23695f" };
+  if (faction === "通用" || faction === "公用") return { badgeFill: "#ebe2bc", badgeColor: "#6f5413" };
+  return { badgeFill: "#e7e0d2", badgeColor: "#6f685c" };
+}
+
+function shareItem(faction, name, subtitle, iconSrc) {
+  return {
+    faction,
+    name,
+    subtitle,
+    iconSrc,
+    ...shareFactionColors(faction)
+  };
+}
+
 function mapGroupClass(group) {
   return group === "雪绒花" ? "map-edelweiss" : "map-island";
 }
@@ -983,7 +1011,7 @@ function resetDialogScroll(dialogRoot) {
 }
 
 function syncModalState() {
-  const hasOpenModal = [modal, detailModal, targetModal, mapModal]
+  const hasOpenModal = [modal, shareModal, detailModal, targetModal, mapModal]
     .some((dialogRoot) => dialogRoot.classList.contains("open"));
   document.body.classList.toggle("modal-open", hasOpenModal);
 }
@@ -1200,6 +1228,329 @@ function metricLabels(rows) {
 
     return `<div class="metric-label">${escapeHtml(row.label)}</div>`;
   }).join("");
+}
+
+function textFromHtml(value) {
+  const template = document.createElement("template");
+  template.innerHTML = String(value ?? "");
+  return (template.content.textContent || "").trim() || "-";
+}
+
+function compareSymbol(row, side) {
+  const comparable = row.comparable !== false;
+  if (!comparable) return { symbol: "", className: "hidden" };
+  const arrow = row.lowerWorse
+    ? compareArrowLowerWorse(row.leftCompare, row.rightCompare)
+    : (row.lowerBetter ? compareArrowLowerBetter(row.leftCompare, row.rightCompare) : compareArrow(row.leftCompare, row.rightCompare));
+  return side === "left"
+    ? { symbol: arrow.left, className: arrow.leftClass }
+    : { symbol: arrow.right, className: arrow.rightClass };
+}
+
+function cleanShareFileName(value) {
+  return String(value || "对比结果")
+    .replace(/[\\/:*?"<>|]/g, "_")
+    .replace(/\s+/g, "_")
+    .slice(0, 80);
+}
+
+function clearShareImage() {
+  if (shareImageUrl) URL.revokeObjectURL(shareImageUrl);
+  shareImageUrl = "";
+  shareImageBlob = null;
+}
+
+function canvasRoundRectPath(ctx, x, y, width, height, radius) {
+  const r = Math.min(radius, width / 2, height / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + width, y, x + width, y + height, r);
+  ctx.arcTo(x + width, y + height, x, y + height, r);
+  ctx.arcTo(x, y + height, x, y, r);
+  ctx.arcTo(x, y, x + width, y, r);
+  ctx.closePath();
+}
+
+function fillRoundRect(ctx, x, y, width, height, radius, fillStyle, strokeStyle = "") {
+  canvasRoundRectPath(ctx, x, y, width, height, radius);
+  ctx.fillStyle = fillStyle;
+  ctx.fill();
+  if (strokeStyle) {
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+}
+
+function wrapCanvasText(ctx, text, maxWidth) {
+  const source = String(text || "-");
+  const lines = [];
+  let line = "";
+  for (const char of source) {
+    const next = line + char;
+    if (line && ctx.measureText(next).width > maxWidth) {
+      lines.push(line);
+      line = char;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.length ? lines : ["-"];
+}
+
+function drawCenteredText(ctx, text, x, y, width, height, options = {}) {
+  ctx.save();
+  ctx.font = options.font || "700 24px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif";
+  ctx.fillStyle = options.color || "#26221c";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  const lineHeight = options.lineHeight || 30;
+  const maxLines = options.maxLines || 2;
+  const lines = wrapCanvasText(ctx, text, width).slice(0, maxLines);
+  if (lines.length === maxLines && wrapCanvasText(ctx, text, width).length > maxLines) {
+    let last = lines[lines.length - 1];
+    while (last.length > 1 && ctx.measureText(`${last}...`).width > width) last = last.slice(0, -1);
+    lines[lines.length - 1] = `${last}...`;
+  }
+  const startY = y + height / 2 - ((lines.length - 1) * lineHeight) / 2;
+  lines.forEach((line, index) => ctx.fillText(line, x + width / 2, startY + index * lineHeight));
+  ctx.restore();
+}
+
+async function drawShareIcon(ctx, src, x, y, width, height, rotate = false) {
+  if (!src) return false;
+  try {
+    const image = await loadImageElement(src);
+    const naturalWidth = image.naturalWidth || image.width || width;
+    const naturalHeight = image.naturalHeight || image.height || height;
+    const scale = Math.min(width / naturalWidth, height / naturalHeight);
+    const drawWidth = naturalWidth * scale;
+    const drawHeight = naturalHeight * scale;
+    ctx.save();
+    if (rotate) {
+      ctx.translate(x + width / 2, y + height / 2);
+      ctx.rotate(Math.PI / 2);
+      ctx.drawImage(image, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
+    } else {
+      ctx.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
+    }
+    ctx.restore();
+    return true;
+  } catch (error) {
+    console.warn("Share image icon failed to load", error);
+    return false;
+  }
+}
+
+function drawShareCard(ctx, item, x, y, width, height) {
+  fillRoundRect(ctx, x, y, width, height, 16, "#fffaf1", "#e7e0d2");
+  fillRoundRect(ctx, x + 22, y + 22, 92, 34, 8, item.badgeFill, "");
+  drawCenteredText(ctx, item.faction || "-", x + 22, y + 22, 92, 34, {
+    font: "800 18px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: item.badgeColor,
+    lineHeight: 22,
+    maxLines: 1
+  });
+  drawCenteredText(ctx, item.name, x + 24, y + 70, width - 48, 62, {
+    font: "900 28px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#26221c",
+    lineHeight: 34,
+    maxLines: 2
+  });
+  drawCenteredText(ctx, item.subtitle, x + 24, y + 138, width - 48, 38, {
+    font: "700 18px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#6f685c",
+    lineHeight: 22,
+    maxLines: 1
+  });
+}
+
+function drawShareRow(ctx, row, y, layout) {
+  const { leftX, labelX, rightX, colWidth, labelWidth } = layout;
+  const rowHeight = row.type === "group" ? 44 : 58;
+  if (row.type === "group") {
+    fillRoundRect(ctx, labelX, y, labelWidth, rowHeight, 8, "#ebe2bc", "#d8cfae");
+    drawCenteredText(ctx, row.label, labelX + 8, y, labelWidth - 16, rowHeight, {
+      font: "900 20px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+      color: "#6f5413",
+      lineHeight: 24,
+      maxLines: 1
+    });
+    return rowHeight;
+  }
+
+  const leftSymbol = compareSymbol(row, "left");
+  const rightSymbol = compareSymbol(row, "right");
+  const leftValue = textFromHtml(row.leftDisplay);
+  const rightValue = textFromHtml(row.rightDisplay);
+  const drawValueBox = (x, value, symbol) => {
+    fillRoundRect(ctx, x, y, colWidth, rowHeight, 8, "#fffaf1", "#e7e0d2");
+    drawCenteredText(ctx, value, x + 14, y, colWidth - 58, rowHeight, {
+      font: "900 21px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+      color: "#26221c",
+      lineHeight: 25,
+      maxLines: 2
+    });
+    const color = symbol.className === "up" ? "#15835b" : (symbol.className === "down" ? "#b8423b" : "#6f685c");
+    const fill = symbol.className === "up" ? "#d9e9dc" : (symbol.className === "down" ? "#f3d4ce" : "#e7e0d2");
+    fillRoundRect(ctx, x + colWidth - 44, y + 12, 28, 34, 7, fill, "");
+    drawCenteredText(ctx, symbol.symbol || "=", x + colWidth - 44, y + 12, 28, 34, {
+      font: "900 22px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+      color,
+      lineHeight: 24,
+      maxLines: 1
+    });
+  };
+
+  drawValueBox(leftX, leftValue, leftSymbol);
+  fillRoundRect(ctx, labelX, y, labelWidth, rowHeight, 8, "#f8f4ec", "#e7e0d2");
+  drawCenteredText(ctx, row.label, labelX + 8, y + (row.subtitle ? -5 : 0), labelWidth - 16, row.subtitle ? 36 : rowHeight, {
+    font: "800 19px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#6f685c",
+    lineHeight: 23,
+    maxLines: 2
+  });
+  if (row.subtitle) {
+    drawCenteredText(ctx, row.subtitle, labelX + 8, y + 34, labelWidth - 16, 20, {
+      font: "700 13px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+      color: "#8a8275",
+      lineHeight: 16,
+      maxLines: 1
+    });
+  }
+  drawValueBox(rightX, rightValue, rightSymbol);
+  return rowHeight;
+}
+
+function canvasToBlob(canvas) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((blob) => {
+      if (blob) resolve(blob);
+      else reject(new Error("Canvas export failed"));
+    }, "image/png");
+  });
+}
+
+async function renderComparisonCanvas(comparison) {
+  const rowGap = 10;
+  const layout = {
+    width: 1200,
+    padding: 36,
+    leftX: 36,
+    colWidth: 410,
+    labelX: 461,
+    labelWidth: 278,
+    rightX: 754
+  };
+  const rowHeights = comparison.rows.map((row) => row.type === "group" ? 44 : 58);
+  const contentHeight = rowHeights.reduce((total, height) => total + height, 0) + rowGap * Math.max(0, comparison.rows.length - 1);
+  const headerTop = 94;
+  const cardTop = 142;
+  const cardHeight = 190;
+  const rowsTop = cardTop + cardHeight + 24;
+  const height = rowsTop + contentHeight + 40;
+  const scale = Math.max(1, window.devicePixelRatio || 1);
+  const canvas = document.createElement("canvas");
+  canvas.width = layout.width * scale;
+  canvas.height = height * scale;
+  canvas.style.width = `${layout.width}px`;
+  canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = "#f4efe4";
+  ctx.fillRect(0, 0, layout.width, height);
+  fillRoundRect(ctx, 20, 20, layout.width - 40, height - 40, 18, "#f8f4ec", "#e7e0d2");
+  drawCenteredText(ctx, comparison.title, 60, 42, layout.width - 120, 38, {
+    font: "900 30px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#26221c",
+    lineHeight: 36,
+    maxLines: 1
+  });
+  drawCenteredText(ctx, "RWR 参数查询器", 60, 78, layout.width - 120, 28, {
+    font: "700 15px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#8a8275",
+    lineHeight: 20,
+    maxLines: 1
+  });
+
+  drawShareCard(ctx, comparison.left, layout.leftX, cardTop, layout.colWidth, cardHeight);
+  drawShareCard(ctx, comparison.right, layout.rightX, cardTop, layout.colWidth, cardHeight);
+  const leftIconLoaded = await drawShareIcon(ctx, comparison.left.iconSrc, layout.leftX + layout.colWidth - 124, cardTop + 28, 92, 92, comparison.kind === "weapon");
+  const rightIconLoaded = await drawShareIcon(ctx, comparison.right.iconSrc, layout.rightX + layout.colWidth - 124, cardTop + 28, 92, 92, comparison.kind === "weapon");
+  if (!leftIconLoaded) drawCenteredText(ctx, "-", layout.leftX + layout.colWidth - 124, cardTop + 28, 92, 92, { font: "900 32px sans-serif", color: "#8a8275", maxLines: 1 });
+  if (!rightIconLoaded) drawCenteredText(ctx, "-", layout.rightX + layout.colWidth - 124, cardTop + 28, 92, 92, { font: "900 32px sans-serif", color: "#8a8275", maxLines: 1 });
+
+  let y = rowsTop;
+  comparison.rows.forEach((row, index) => {
+    y += drawShareRow(ctx, row, y, layout);
+    if (index < comparison.rows.length - 1) y += rowGap;
+  });
+
+  return canvas;
+}
+
+async function buildShareImage(comparison) {
+  const canvas = await renderComparisonCanvas(comparison);
+  return canvasToBlob(canvas);
+}
+
+function setSharePreviewLoading(message) {
+  sharePreview.classList.add("loading");
+  sharePreview.textContent = message;
+}
+
+async function openShareDialog() {
+  if (!currentComparison) {
+    showToast("没有可分享的对比结果");
+    return;
+  }
+  closeDialog(modal);
+  clearShareImage();
+  setSharePreviewLoading("正在生成图片");
+  downloadShareImage.disabled = true;
+  copyShareImage.disabled = true;
+  openDialog(shareModal);
+  resetDialogScroll(shareModal);
+
+  try {
+    shareImageBlob = await buildShareImage(currentComparison);
+    shareImageUrl = URL.createObjectURL(shareImageBlob);
+    sharePreview.classList.remove("loading");
+    sharePreview.innerHTML = `<img src="${shareImageUrl}" alt="${escapeHtml(currentComparison.title)}">`;
+    downloadShareImage.disabled = false;
+    copyShareImage.disabled = false;
+  } catch (error) {
+    console.error(error);
+    setSharePreviewLoading("图片生成失败，请重试");
+    showToast("图片生成失败");
+  }
+}
+
+function downloadCurrentShareImage() {
+  if (!shareImageBlob || !shareImageUrl || !currentComparison) return;
+  const link = document.createElement("a");
+  link.href = shareImageUrl;
+  link.download = `${cleanShareFileName(currentComparison.fileName)}.png`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+async function copyCurrentShareImage() {
+  if (!shareImageBlob) return;
+  if (!navigator.clipboard || typeof ClipboardItem === "undefined") {
+    showToast("当前浏览器不支持复制图片");
+    return;
+  }
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": shareImageBlob })]);
+    showToast("图片已复制到剪贴板");
+  } catch (error) {
+    console.error(error);
+    showToast("复制失败，请尝试下载图片");
+  }
 }
 
 function renderMapTable(list) {
@@ -2499,6 +2850,14 @@ function openWeaponComparison(indexA, indexB) {
   const b = weaponById(indexB);
   if (!a || !b) return;
   const rows = weaponCompareRows(a, b);
+  currentComparison = {
+    kind: "weapon",
+    title: "枪械对比",
+    fileName: `${displayValue(a["枪械名称"])}_VS_${displayValue(b["枪械名称"])}_枪械对比`,
+    left: shareItem(displayValue(a["阵营"]), displayValue(a["枪械名称"]), displayValue(a["类型"]), weaponIconSrc(a)),
+    right: shareItem(displayValue(b["阵营"]), displayValue(b["枪械名称"]), displayValue(b["类型"]), weaponIconSrc(b)),
+    rows
+  };
 
   compareCards.innerHTML = `
     <section class="vehicle-card">
@@ -2548,6 +2907,14 @@ function openComparison(indexA, indexB) {
   const aHitsB = hitResult(a, b);
   const bHitsA = hitResult(b, a);
   const rows = buildCompareRows(a, b, aHitsB, bHitsA);
+  currentComparison = {
+    kind: "vehicle",
+    title: "斗 兽 棋 结 果",
+    fileName: `${a.name}_VS_${b.name}_载具对比`,
+    left: shareItem(a.faction, a.name, a.weapon, vehicleIconSrc(a)),
+    right: shareItem(b.faction, b.name, b.weapon, vehicleIconSrc(b)),
+    rows
+  };
 
   compareCards.innerHTML = `
     <section class="vehicle-card">
@@ -2624,6 +2991,13 @@ sortableHeaders.forEach((header) => {
 
 compareBtn.addEventListener("click", () => setCompareMode(!compareMode));
 targetModeBtn.addEventListener("click", () => setTargetMode(!targetMode));
+shareCompareModal.addEventListener("click", () => {
+  openShareDialog();
+});
+downloadShareImage.addEventListener("click", downloadCurrentShareImage);
+copyShareImage.addEventListener("click", () => {
+  copyCurrentShareImage();
+});
 confirmCompareBtn.addEventListener("click", () => {
   if (activeTab === "weapons") {
     if (selectedWeaponIndices.length !== 2) {
@@ -2771,6 +3145,16 @@ closeModal.addEventListener("click", () => closeDialog(modal));
 modal.addEventListener("click", (event) => {
   if (event.target === modal) closeDialog(modal);
 });
+closeShareModal.addEventListener("click", () => {
+  closeDialog(shareModal);
+  clearShareImage();
+});
+shareModal.addEventListener("click", (event) => {
+  if (event.target === shareModal) {
+    closeDialog(shareModal);
+    clearShareImage();
+  }
+});
 closeDetailModal.addEventListener("click", () => closeDialog(detailModal));
 detailModal.addEventListener("click", (event) => {
   if (event.target === detailModal) closeDialog(detailModal);
@@ -2791,9 +3175,11 @@ window.addEventListener("resize", () => {
 window.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     modal.classList.remove("open");
+    shareModal.classList.remove("open");
     detailModal.classList.remove("open");
     targetModal.classList.remove("open");
     mapModal.classList.remove("open");
+    clearShareImage();
     syncModalState();
   }
 });
