@@ -707,22 +707,12 @@ function factionBadge(vehicle) {
   return `<span class="faction ${escapeHtml(factionClass(vehicle.faction))}">${escapeHtml(vehicle.faction)}</span>`;
 }
 
-function shareFactionColors(faction) {
-  if (faction === "德军") return { badgeFill: "#e1e1dd", badgeColor: "#46423b" };
-  if (faction === "美军") return { badgeFill: "#d9e9dc", badgeColor: "#2c5a3e" };
-  if (faction === "日军") return { badgeFill: "#f3d4ce", badgeColor: "#8a3128" };
-  if (faction === "英军") return { badgeFill: "#d8ece7", badgeColor: "#23695f" };
-  if (faction === "通用" || faction === "公用") return { badgeFill: "#ebe2bc", badgeColor: "#6f5413" };
-  return { badgeFill: "#e7e0d2", badgeColor: "#6f685c" };
-}
-
 function shareItem(faction, name, subtitle, iconSrc) {
   return {
     faction,
     name,
     subtitle,
-    iconSrc,
-    ...shareFactionColors(faction)
+    iconSrc
   };
 }
 
@@ -1303,7 +1293,8 @@ function drawCenteredText(ctx, text, x, y, width, height, options = {}) {
   ctx.save();
   ctx.font = options.font || "700 24px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif";
   ctx.fillStyle = options.color || "#26221c";
-  ctx.textAlign = "center";
+  const align = options.align || "center";
+  ctx.textAlign = align;
   ctx.textBaseline = "middle";
   const lineHeight = options.lineHeight || 30;
   const maxLines = options.maxLines || 2;
@@ -1314,7 +1305,8 @@ function drawCenteredText(ctx, text, x, y, width, height, options = {}) {
     lines[lines.length - 1] = `${last}...`;
   }
   const startY = y + height / 2 - ((lines.length - 1) * lineHeight) / 2;
-  lines.forEach((line, index) => ctx.fillText(line, x + width / 2, startY + index * lineHeight));
+  const textX = align === "left" ? x : (align === "right" ? x + width : x + width / 2);
+  lines.forEach((line, index) => ctx.fillText(line, textX, startY + index * lineHeight));
   ctx.restore();
 }
 
@@ -1345,24 +1337,27 @@ async function drawShareIcon(ctx, src, x, y, width, height, rotate = false) {
 
 function drawShareCard(ctx, item, x, y, width, height) {
   fillRoundRect(ctx, x, y, width, height, 16, "#fffaf1", "#e7e0d2");
-  fillRoundRect(ctx, x + 22, y + 22, 92, 34, 8, item.badgeFill, "");
+  const textWidth = width - 168;
+  fillRoundRect(ctx, x + 22, y + 22, 92, 34, 8, "#e7e0d2", "");
   drawCenteredText(ctx, item.faction || "-", x + 22, y + 22, 92, 34, {
     font: "800 18px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
-    color: item.badgeColor,
-    lineHeight: 22,
-    maxLines: 1
-  });
-  drawCenteredText(ctx, item.name, x + 24, y + 70, width - 48, 62, {
-    font: "900 28px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
-    color: "#26221c",
-    lineHeight: 34,
-    maxLines: 2
-  });
-  drawCenteredText(ctx, item.subtitle, x + 24, y + 138, width - 48, 38, {
-    font: "700 18px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
     color: "#6f685c",
     lineHeight: 22,
     maxLines: 1
+  });
+  drawCenteredText(ctx, item.name, x + 24, y + 70, textWidth, 62, {
+    font: "900 28px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#26221c",
+    lineHeight: 34,
+    maxLines: 2,
+    align: "left"
+  });
+  drawCenteredText(ctx, item.subtitle, x + 24, y + 138, textWidth, 38, {
+    font: "700 18px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#6f685c",
+    lineHeight: 22,
+    maxLines: 1,
+    align: "left"
   });
 }
 
