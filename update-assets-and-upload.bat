@@ -337,22 +337,12 @@ if not exist "%COMMIT_MSG_FILE%" exit /b 1
 exit /b 0
 
 :initColors
-for /F "usebackq delims=" %%A in (`"%PWSH%" -NoLogo -NoProfile -Command "[char]27"`) do set "ESC=%%A"
-if defined ESC (
-  set "COLOR_RESET=%ESC%[0m"
-  set "COLOR_STEP=%ESC%[96m"
-  set "COLOR_INFO=%ESC%[94m"
-  set "COLOR_SUCCESS=%ESC%[92m"
-  set "COLOR_WARN=%ESC%[93m"
-  set "COLOR_ERROR=%ESC%[91m"
-) else (
-  set "COLOR_RESET="
-  set "COLOR_STEP="
-  set "COLOR_INFO="
-  set "COLOR_SUCCESS="
-  set "COLOR_WARN="
-  set "COLOR_ERROR="
-)
+set "COLOR_RESET="
+set "COLOR_STEP="
+set "COLOR_INFO="
+set "COLOR_SUCCESS="
+set "COLOR_WARN="
+set "COLOR_ERROR="
 exit /b 0
 
 :logStep
