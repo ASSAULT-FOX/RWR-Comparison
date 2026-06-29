@@ -723,12 +723,26 @@ function factionClass(faction) {
 function factionBadge(vehicle) {
     return `<span class="faction ${escapeHtml(factionClass(vehicle.faction))}">${escapeHtml(vehicle.faction)}</span>`;
 }
+function shareFactionColors(faction) {
+    if (faction === "德军")
+        return { badgeFill: "#ead7bd", badgeColor: "#6d4e2a" };
+    if (faction === "美军")
+        return { badgeFill: "#dde8fb", badgeColor: "#3a5ba0" };
+    if (faction === "日军")
+        return { badgeFill: "#f3d4ce", badgeColor: "#8a3128" };
+    if (faction === "英军")
+        return { badgeFill: "#d9e9dc", badgeColor: "#2c5a3e" };
+    if (faction === "通用" || faction === "公用")
+        return { badgeFill: "#fbf1a4", badgeColor: "#6a6320" };
+    return { badgeFill: "#fbf1a4", badgeColor: "#6a6320" };
+}
 function shareItem(faction, name, subtitle, iconSrc) {
     return {
         faction,
         name,
         subtitle,
-        iconSrc
+        iconSrc,
+        ...shareFactionColors(faction)
     };
 }
 function mapGroupClass(group) {
@@ -1341,10 +1355,10 @@ async function drawShareIcon(ctx, src, x, y, width, height, rotate = false) {
 function drawShareCard(ctx, item, x, y, width, height) {
     fillRoundRect(ctx, x, y, width, height, 16, "#fffaf1", "#e7e0d2");
     const textWidth = width - 168;
-    fillRoundRect(ctx, x + 22, y + 22, 92, 34, 8, "#e7e0d2", "");
+    fillRoundRect(ctx, x + 22, y + 22, 92, 34, 8, item.badgeFill, "");
     drawCenteredText(ctx, item.faction || "-", x + 22, y + 22, 92, 34, {
         font: "800 18px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
-        color: "#6f685c",
+        color: item.badgeColor,
         lineHeight: 22,
         maxLines: 1
     });
