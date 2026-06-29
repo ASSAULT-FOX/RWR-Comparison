@@ -6,6 +6,8 @@ cd /d "%~dp0"
 
 set "BRANCH=main"
 set "SAFE_DIR=%CD:\=/%"
+set "PWSH=E:\ReverseCode\PowerShell-7.6.1\pwsh.exe"
+if not exist "%PWSH%" set "PWSH=pwsh"
 
 call :initColors
 @echo off
@@ -275,22 +277,25 @@ if not errorlevel 1 (
   exit /b 0
 )
 
-call :chooseCommitMessage
-if errorlevel 1 (
-  echo.
-  call :logError "生成提交信息失败。"
-  exit /b 1
-)
-call :logStep "%COMMIT_LABEL%：正在提交暂存变更。"
-git commit -F "%COMMIT_MSG_FILE%"
+call :logStep "%COMMIT_LABEL%：正在按文件分别提交暂存变更。"
+call :commitStagedFiles
 set "COMMIT_RESULT=%ERRORLEVEL%"
-del "%COMMIT_MSG_FILE%" >nul 2>nul
 if not "%COMMIT_RESULT%"=="0" (
   echo.
   call :logError "%COMMIT_LABEL%失败。"
   exit /b 1
 )
 exit /b 0
+
+:commitStagedFiles
+set "COMMIT_FILES_PS=%CD%\scripts\commit-staged-files.ps1"
+if not exist "%COMMIT_FILES_PS%" set "COMMIT_FILES_PS=%~dp0scripts\commit-staged-files.ps1"
+if not exist "%COMMIT_FILES_PS%" (
+  call :logError "缺少逐文件提交脚本：scripts\commit-staged-files.ps1"
+  exit /b 1
+)
+"%PWSH%" -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%COMMIT_FILES_PS%" -RepoPath "%CD%" -Branch "%BRANCH%"
+exit /b %ERRORLEVEL%
 
 :commitMergeChanges
 set "COMMIT_LABEL=%~1"
@@ -320,9 +325,9 @@ if not exist "%PS_FILE%" (
   exit /b 0
 )
 if /i "%~1"=="merge" (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" -IsMerge > "%COMMIT_MSG_FILE%" 2>nul
+  "%PWSH%" -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" -IsMerge > "%COMMIT_MSG_FILE%" 2>nul
 ) else (
-  powershell -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" > "%COMMIT_MSG_FILE%" 2>nul
+  "%PWSH%" -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%PS_FILE%" -RepoPath "%CD%" -Branch "%BRANCH%" > "%COMMIT_MSG_FILE%" 2>nul
 )
 if errorlevel 1 (
   del "%COMMIT_MSG_FILE%" >nul 2>nul
@@ -332,7 +337,7 @@ if not exist "%COMMIT_MSG_FILE%" exit /b 1
 exit /b 0
 
 :initColors
-for /F "delims=" %%A in ('powershell -NoProfile -Command "[char]27"') do set "ESC=%%A"
+for /F "delims=" %%A in ('"%PWSH%" -NoLogo -NoProfile -Command "[char]27"') do set "ESC=%%A"
 if defined ESC (
   set "COLOR_RESET=%ESC%[0m"
   set "COLOR_STEP=%ESC%[96m"
