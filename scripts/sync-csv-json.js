@@ -15,6 +15,13 @@ const DATASETS = [
     csvPath: path.join("csv", "vehicles.csv"),
     indent: 4,
     jsonBom: true
+  },
+  {
+    name: "ammo-blast-power",
+    jsonPath: path.join("data", "ammo-blast-power.json"),
+    csvPath: path.join("csv", "ammo-blast-power.csv"),
+    indent: 2,
+    jsonBom: false
   }
 ];
 
