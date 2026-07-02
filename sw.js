@@ -46,6 +46,7 @@ const APP_SHELL = [
   "./data/asset-manifest.json",
   "./data/vehicles.json",
   "./data/weapons.json",
+  "./data/ammo-blast-power.json",
   "./data/maps.json",
   "./data/rwr-players-pacific.meta.json",
   "./model/models.json"
