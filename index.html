@@ -3881,12 +3881,23 @@
     <div class="dialog detail-dialog">
       <div class="dialog-head">
         <h2 id="detailTitle">载具详细参数</h2>
-        <button class="icon-button" id="closeDetailModal" title="关闭" aria-label="关闭">
-          <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5.75 5.75 18.25 18.25"></path>
-            <path d="M18.25 5.75 5.75 18.25"></path>
-          </svg>
-        </button>
+        <div class="dialog-actions">
+          <button class="icon-button" id="shareDetailModal" title="分享" aria-label="分享详细参数">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <path d="M8.6 10.7 15.4 6.3"></path>
+              <path d="M8.6 13.3 15.4 17.7"></path>
+            </svg>
+          </button>
+          <button class="icon-button" id="closeDetailModal" title="关闭" aria-label="关闭">
+            <svg class="close-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5.75 5.75 18.25 18.25"></path>
+              <path d="M18.25 5.75 5.75 18.25"></path>
+            </svg>
+          </button>
+        </div>
       </div>
       <div class="dialog-body">
         <div class="detail-hero" id="detailHero"></div>
@@ -3965,5 +3976,4 @@
   <script src="scripts/index.js" defer></script>
 </body>
 </html>
-
 
