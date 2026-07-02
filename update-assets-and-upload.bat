@@ -154,8 +154,8 @@ if exist ".git\MERGE_HEAD" (
   )
 )
 
-call :logStep "正在推送到远端..."
-git push origin %BRANCH%
+call :logStep "正在推送当前分支到远端 %BRANCH%..."
+git push origin HEAD:%BRANCH%
 if errorlevel 1 (
   echo.
   call :logError "git push 失败。"
