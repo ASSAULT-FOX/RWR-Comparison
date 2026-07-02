@@ -4,6 +4,7 @@ let weapons = [];
 let maps = [];
 let models = [];
 let players = [];
+let ammoBlastPower = [];
 let playerRankings = {};
 let currentMap = null;
 const mapDataCache = new Map();
@@ -34,6 +35,7 @@ const compareHint = document.getElementById("compareHint");
 const modal = document.getElementById("compareModal");
 const closeModal = document.getElementById("closeModal");
 const shareCompareModal = document.getElementById("shareCompareModal");
+const shareDetailModal = document.getElementById("shareDetailModal");
 const compareCards = document.getElementById("compareCards");
 const compareMetrics = document.getElementById("compareMetrics");
 const shareModal = document.getElementById("shareModal");
@@ -170,6 +172,7 @@ let targetMode = false;
 let selectedIndices = [];
 let selectedWeaponIndices = [];
 let currentComparison = null;
+let currentDetailShare = null;
 let shareImageBlob = null;
 let shareImageUrl = "";
 let currentList = [];
@@ -212,26 +215,6 @@ const APP_SHELL_REFRESH_FILES = ["index.html", "scripts/index.js", "sw.js"];
 const imagePromiseCache = new Map();
 const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
 const isCompactPlayerPagination = () => window.matchMedia("(max-width: 640px)").matches;
-const antiTankWeapons = [
-  { label: "反坦克枪榴弹", file: "kar98k_rifle_grenade_at.weapon", blast: 2.3 },
-  { label: "巴祖卡火箭筒", file: "m1_bazooka.weapon", blast: 4.4 },
-  { label: "M18无后座力炮", file: "m18_recoilless_rifle.weapon", blast: 4.4 },
-  { label: "四式火箭筒", file: "type4_rocket_launcher.weapon", blast: 4.4 },
-  { label: "铁拳发射器", file: "panzerfaust.weapon", blast: 5.4 },
-  { label: "PIAT发射器", file: "piat.weapon", blast: 5.4 },
-  { label: "M1巴祖卡火箭筒", file: "m9a1_bazooka.weapon", blast: 4.7 },
-  { label: "坦克杀手火箭筒", file: "panzerschreck.weapon", blast: 4.7 },
-  { label: "固定式火炮", file: "at_gun.projectile", blast: 6.4 },
-  { label: "固定式重型迫击炮", file: "heavy_mortar_shell.projectile", blast: 3.9 },
-  { label: "堡垒化炮塔火炮", file: "at_gun_fortified_turret_cannon.projectile", blast: 4.7 },
-  { label: "堡垒化炮塔迫击炮", file: "at_gun_fortified_turret_grenade_launcher.projectile", blast: 1.0 },
-  { label: "轻型迫击炮", file: "mortar_shell.projectile", blast: 1.9 },
-  { label: "航空火箭弹", file: "air_strike_rocket.projectile", blast: 4.4 },
-  { label: "航空炸弹", file: "air_strike_bomb.projectile", blast: 8.0 },
-  { label: "轻型舰炮", file: "artillery_shell.projectile", blast: 2.4 },
-  { label: "喷烟者火箭炮", file: "rocket_mortar.projectile", blast: 6.9 },
-  { label: "重型舰炮", file: "naval_artillery_shell.projectile", blast: 8.9 }
-];
 const threatNames = {
   "light_vehicle": "轻型载具",
   "ligh_vehicle": "轻型载具",
@@ -316,6 +299,13 @@ function normalizeVehicle(vehicle) {
     vision: vehicle["玩家视野修正"] ?? vehicle.vision ?? null,
     blast: vehicle["爆炸伤害"] ?? vehicle.blast ?? null,
     vehicleType: vehicle["载具类型"] ?? vehicle.vehicleType ?? ""
+  };
+}
+
+function normalizeAmmoBlastPower(row) {
+  return {
+    label: row["名称"] ?? row.label ?? "",
+    blast: row["爆炸伤害"] ?? row.blast ?? null
   };
 }
 
@@ -460,8 +450,24 @@ async function loadDataIncremental() {
       }
     });
 
+  const loadAmmoBlastPower = fetchWithTimeout("data/ammo-blast-power.json", { cache: cacheMode }, 10000)
+    .then((response) => {
+      if (!response.ok) throw new Error(`弹药爆炸威力数据加载失败：${response.status}`);
+      return response.json();
+    })
+    .then((blastPowerData) => {
+      if (!Array.isArray(blastPowerData)) throw new Error("弹药爆炸威力数据格式错误：根节点必须是数组");
+      ammoBlastPower = blastPowerData
+        .map(normalizeAmmoBlastPower)
+        .filter((item) => item.label && item.blast !== null);
+    })
+    .catch((error) => {
+      ammoBlastPower = [];
+      console.warn(error);
+    });
+
   loadPlayersInBackground();
-  await Promise.all([loadVehicles, loadWeapons, loadMaps, loadModels]);
+  await Promise.all([loadVehicles, loadWeapons, loadMaps, loadModels, loadAmmoBlastPower]);
   if (["vehicles", "weapons", "maps", "models"].includes(activeTab) && (dataReady[activeTab] || dataErrors[activeTab])) {
     hideLoadingPanel();
   }
@@ -1168,7 +1174,7 @@ function buildCompareRows(a, b, aHitsB, bHitsA) {
     { type: "group", label: "伤害抗性" }
   ];
 
-  antiTankWeapons.forEach((weapon) => {
+  ammoBlastPower.forEach((weapon) => {
     const leftResult = weaponHitResult(weapon.blast, a);
     const rightResult = weaponHitResult(weapon.blast, b);
     const comparable = leftResult.valid && rightResult.valid;
@@ -1252,6 +1258,10 @@ function cleanShareFileName(value) {
     .replace(/[\\/:*?"<>|]/g, "_")
     .replace(/\s+/g, "_")
     .slice(0, 80);
+}
+
+function plainText(value) {
+  return textFromHtml(value);
 }
 
 function clearShareImage() {
@@ -1496,8 +1506,183 @@ async function renderComparisonCanvas(comparison) {
   return canvas;
 }
 
+function detailShareRows(title, rows) {
+  return {
+    title,
+    rows: rows.map((row) => {
+      if (row.at) {
+        return {
+          label: row.name,
+          value: `${plainText(row.percent)} / ${plainText(row.shots)}`,
+          subtitle: "单发命中伤害百分比 / 摧毁需多少发"
+        };
+      }
+      return {
+        label: row.name,
+        value: plainText(row.value),
+        rank: row.rank ? plainText(row.rank) : ""
+      };
+    })
+  };
+}
+
+function buildVehicleDetailShare(vehicle) {
+  return {
+    type: "detail",
+    kind: "vehicle",
+    title: "载具详细参数",
+    fileName: `${vehicle.name}_载具详细参数`,
+    item: shareItem(vehicle.faction, vehicle.name, vehicle.weapon, vehicleIconSrc(vehicle)),
+    sections: [
+      detailShareRows("基本信息", detailBaseRows(vehicle)),
+      detailShareRows("可维修性", repairRows(vehicle)),
+      detailShareRows("伤害抗性", detailAntiTankRows(vehicle))
+    ]
+  };
+}
+
+function buildWeaponDetailShare(weapon) {
+  return {
+    type: "detail",
+    kind: "weapon",
+    title: "枪械详细参数",
+    fileName: `${displayValue(weapon["枪械名称"])}_枪械详细参数`,
+    item: shareItem(displayValue(weapon["阵营"]), displayValue(weapon["枪械名称"]), displayValue(weapon["类型"]), weaponIconSrc(weapon)),
+    sections: weaponSections.map((section) => detailShareRows(section.title, weaponDetailRows(weapon, section)))
+  };
+}
+
+function buildPlayerDetailShare(player) {
+  return {
+    type: "detail",
+    kind: "player",
+    title: "玩家详细参数",
+    fileName: `${displayValue(player.username)}_玩家详细参数`,
+    item: shareItem("玩家", displayValue(player.username), `排名 ${formatInteger(player.leaderboard_position)}`, ""),
+    sections: playerDetailSections.map((section) => detailShareRows(section.title, playerDetailRows(player, section)))
+  };
+}
+
+function drawDetailShareRow(ctx, row, y, layout) {
+  const rowHeight = row.subtitle ? 66 : 54;
+  fillRoundRect(ctx, layout.leftX, y, layout.labelWidth, rowHeight, 8, "#f8f4ec", "#e7e0d2");
+  drawCenteredText(ctx, row.label, layout.leftX + 16, y + (row.subtitle ? -5 : 0), layout.labelWidth - 32, row.subtitle ? 38 : rowHeight, {
+    font: "800 19px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#6f685c",
+    lineHeight: 23,
+    maxLines: 2,
+    align: "left"
+  });
+  if (row.subtitle) {
+    drawCenteredText(ctx, row.subtitle, layout.leftX + 16, y + 40, layout.labelWidth - 32, 20, {
+      font: "700 13px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+      color: "#8a8275",
+      lineHeight: 16,
+      maxLines: 1,
+      align: "left"
+    });
+  }
+
+  fillRoundRect(ctx, layout.valueX, y, layout.valueWidth, rowHeight, 8, "#fffaf1", "#e7e0d2");
+  const valueWidth = row.rank ? layout.valueWidth - 96 : layout.valueWidth;
+  drawCenteredText(ctx, row.value, layout.valueX + 18, y, valueWidth - 36, rowHeight, {
+    font: "900 21px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#26221c",
+    lineHeight: 25,
+    maxLines: 2,
+    align: "left"
+  });
+  if (row.rank) {
+    fillRoundRect(ctx, layout.valueX + layout.valueWidth - 88, y + 10, 72, rowHeight - 20, 7, "#ebe2bc", "");
+    drawCenteredText(ctx, row.rank, layout.valueX + layout.valueWidth - 88, y + 10, 72, rowHeight - 20, {
+      font: "900 18px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+      color: "#6f5413",
+      lineHeight: 22,
+      maxLines: 1
+    });
+  }
+  return rowHeight;
+}
+
+async function renderDetailCanvas(detail) {
+  const rowGap = 8;
+  const sectionGap = 16;
+  const layout = {
+    width: 920,
+    padding: 36,
+    cardX: 36,
+    cardWidth: 848,
+    leftX: 52,
+    labelWidth: 306,
+    valueX: 370,
+    valueWidth: 498
+  };
+  const sectionHeights = detail.sections.map((section) => {
+    const rowsHeight = section.rows.reduce((total, row) => total + (row.subtitle ? 66 : 54), 0);
+    return 46 + rowsHeight + rowGap * Math.max(0, section.rows.length - 1);
+  });
+  const contentHeight = sectionHeights.reduce((total, height) => total + height, 0) + sectionGap * Math.max(0, detail.sections.length - 1);
+  const headerTop = 42;
+  const cardTop = 142;
+  const cardHeight = 190;
+  const rowsTop = cardTop + cardHeight + 24;
+  const height = rowsTop + contentHeight + 40;
+  const scale = Math.max(1, window.devicePixelRatio || 1);
+  const canvas = document.createElement("canvas");
+  canvas.width = layout.width * scale;
+  canvas.height = height * scale;
+  canvas.style.width = `${layout.width}px`;
+  canvas.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  ctx.scale(scale, scale);
+
+  ctx.fillStyle = "#f4efe4";
+  ctx.fillRect(0, 0, layout.width, height);
+  fillRoundRect(ctx, 20, 20, layout.width - 40, height - 40, 18, "#f8f4ec", "#e7e0d2");
+  drawCenteredText(ctx, detail.title, 60, headerTop, layout.width - 120, 38, {
+    font: "900 30px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#26221c",
+    lineHeight: 36,
+    maxLines: 1
+  });
+  drawCenteredText(ctx, "RWR 参数查询器", 60, 78, layout.width - 120, 28, {
+    font: "700 15px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+    color: "#8a8275",
+    lineHeight: 20,
+    maxLines: 1
+  });
+
+  drawShareCard(ctx, detail.item, layout.cardX, cardTop, layout.cardWidth, cardHeight);
+  const iconLoaded = await drawShareIcon(ctx, detail.item.iconSrc, layout.cardX + layout.cardWidth - 124, cardTop + 28, 92, 92, detail.kind === "weapon");
+  if (!iconLoaded && detail.kind !== "player") {
+    drawCenteredText(ctx, "-", layout.cardX + layout.cardWidth - 124, cardTop + 28, 92, 92, { font: "900 32px sans-serif", color: "#8a8275", maxLines: 1 });
+  }
+
+  let y = rowsTop;
+  detail.sections.forEach((section, sectionIndex) => {
+    fillRoundRect(ctx, layout.leftX, y, layout.cardWidth - 32, 38, 8, "#ebe2bc", "#d8cfae");
+    drawCenteredText(ctx, section.title, layout.leftX + 14, y, layout.cardWidth - 60, 38, {
+      font: "900 20px 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+      color: "#6f5413",
+      lineHeight: 24,
+      maxLines: 1,
+      align: "left"
+    });
+    y += 46;
+    section.rows.forEach((row, rowIndex) => {
+      y += drawDetailShareRow(ctx, row, y, layout);
+      if (rowIndex < section.rows.length - 1) y += rowGap;
+    });
+    if (sectionIndex < detail.sections.length - 1) y += sectionGap;
+  });
+
+  return canvas;
+}
+
 async function buildShareImage(comparison) {
-  const canvas = await renderComparisonCanvas(comparison);
+  const canvas = comparison.type === "detail"
+    ? await renderDetailCanvas(comparison)
+    : await renderComparisonCanvas(comparison);
   return canvasToBlob(canvas);
 }
 
@@ -1507,11 +1692,13 @@ function setSharePreviewLoading(message) {
 }
 
 async function openShareDialog() {
-  if (!currentComparison) {
-    showToast("没有可分享的对比结果");
+  const sharePayload = currentDetailShare || currentComparison;
+  if (!sharePayload) {
+    showToast("没有可分享的内容");
     return;
   }
   closeDialog(modal);
+  closeDialog(detailModal);
   clearShareImage();
   setSharePreviewLoading("正在生成图片");
   downloadShareImage.disabled = true;
@@ -1520,10 +1707,10 @@ async function openShareDialog() {
   resetDialogScroll(shareModal);
 
   try {
-    shareImageBlob = await buildShareImage(currentComparison);
+    shareImageBlob = await buildShareImage(sharePayload);
     shareImageUrl = URL.createObjectURL(shareImageBlob);
     sharePreview.classList.remove("loading");
-    sharePreview.innerHTML = `<img src="${shareImageUrl}" alt="${escapeHtml(currentComparison.title)}">`;
+    sharePreview.innerHTML = `<img src="${shareImageUrl}" alt="${escapeHtml(sharePayload.title)}">`;
     downloadShareImage.disabled = false;
     copyShareImage.disabled = false;
   } catch (error) {
@@ -1534,10 +1721,11 @@ async function openShareDialog() {
 }
 
 function downloadCurrentShareImage() {
-  if (!shareImageBlob || !shareImageUrl || !currentComparison) return;
+  const sharePayload = currentDetailShare || currentComparison;
+  if (!shareImageBlob || !shareImageUrl || !sharePayload) return;
   const link = document.createElement("a");
   link.href = shareImageUrl;
-  link.download = `${cleanShareFileName(currentComparison.fileName)}.png`;
+  link.download = `${cleanShareFileName(sharePayload.fileName)}.png`;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -1850,7 +2038,7 @@ function detailBaseRows(vehicle) {
 }
 
 function detailAntiTankRows(vehicle) {
-  return antiTankWeapons.map((weapon) => {
+  return ammoBlastPower.map((weapon) => {
     const result = weaponHitResult(weapon.blast, vehicle);
     return {
       at: true,
@@ -1915,6 +2103,7 @@ function renderDetailSection(title, rows) {
 
 function openDetail(index) {
   const vehicle = vehicles[index];
+  currentDetailShare = buildVehicleDetailShare(vehicle);
   detailTitle.textContent = `载具详细参数`;
   detailHero.classList.remove("player-rank-hero");
   detailHero.classList.remove("player-hero");
@@ -2755,6 +2944,7 @@ function weaponDetailRows(weapon, section) {
 function openWeaponDetail(index) {
   const weapon = weaponById(index);
   if (!weapon) return;
+  currentDetailShare = buildWeaponDetailShare(weapon);
   detailTitle.textContent = "枪械详细参数";
   detailHero.classList.remove("player-rank-hero");
   detailHero.classList.remove("player-hero");
@@ -2780,6 +2970,7 @@ function playerDetailRows(player, section) {
 function openPlayerDetail(index) {
   const player = players[index];
   if (!player) return;
+  currentDetailShare = buildPlayerDetailShare(player);
   detailTitle.textContent = "玩家详细参数";
   detailHero.classList.remove("player-rank-hero");
   detailHero.classList.add("player-hero");
@@ -2855,6 +3046,7 @@ function openWeaponComparison(indexA, indexB) {
   const b = weaponById(indexB);
   if (!a || !b) return;
   const rows = weaponCompareRows(a, b);
+  currentDetailShare = null;
   currentComparison = {
     kind: "weapon",
     title: "枪械对比",
@@ -2912,6 +3104,7 @@ function openComparison(indexA, indexB) {
   const aHitsB = hitResult(a, b);
   const bHitsA = hitResult(b, a);
   const rows = buildCompareRows(a, b, aHitsB, bHitsA);
+  currentDetailShare = null;
   currentComparison = {
     kind: "vehicle",
     title: "斗 兽 棋 结 果",
@@ -2997,6 +3190,10 @@ sortableHeaders.forEach((header) => {
 compareBtn.addEventListener("click", () => setCompareMode(!compareMode));
 targetModeBtn.addEventListener("click", () => setTargetMode(!targetMode));
 shareCompareModal.addEventListener("click", () => {
+  currentDetailShare = null;
+  openShareDialog();
+});
+shareDetailModal.addEventListener("click", () => {
   openShareDialog();
 });
 downloadShareImage.addEventListener("click", downloadCurrentShareImage);
