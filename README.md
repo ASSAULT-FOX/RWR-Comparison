@@ -1,6 +1,6 @@
 # RWR 参数查询器
 
-这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、地图信息、地图设施点位、载具模型和太平洋玩家统计，并支持卡片浏览、搜索、详情弹窗、双对象对比、对比结果图片分享、索敌优先级计算、玩家统计排序、生成带设施图标的地图视图，以及在独立页面中查看 GLB 模型。
+这是一个用于浏览和对比 Running With Rifles DLC 数据的纯前端静态工具。页面可以查询枪械参数、载具参数、弹药爆炸威力、地图信息、地图设施点位、载具模型和太平洋玩家统计，并支持卡片浏览、搜索、详情弹窗、双对象对比、详情和对比结果图片分享、索敌优先级计算、玩家统计排序、生成带设施图标的地图视图，以及在独立页面中查看 GLB 模型。
 
 项目没有后端，GitHub Pages 直接发布静态文件。浏览器加载 `index.html` 后引用 `scripts/index.js`，再通过 `fetch()` 读取 `data/`、`maps/` 和 `model/` 目录中的 JSON/JSONL 文件，并在前端完成渲染和交互。`scripts/index.js` 由 `ts/index.ts` 编译生成，开发时优先修改 TypeScript 源文件。
 
@@ -23,6 +23,7 @@ http://127.0.0.1:8765/index.html
 ```text
 枪械数据      161 条，来源 csv/weapons.csv，发布到 data/weapons.json
 载具数据       34 条，来源 csv/vehicles.csv，发布到 data/vehicles.json
+弹药爆炸威力   18 条，来源 csv/ammo-blast-power.csv，发布到 data/ammo-blast-power.json
 地图摘要       20 条，保存在 data/maps.json
 地图点位文件   20 个，保存在 maps/<地图名>/map-data.json
 地图点位     3054 个，按阵营和视图状态分组
@@ -56,10 +57,12 @@ http://127.0.0.1:8765/index.html
 │   └── fetch-rwr-players.yml     每 12 小时更新玩家统计的 GitHub Actions 工作流
 ├── csv/
 │   ├── weapons.csv               枪械源数据，开发时主要编辑它
-│   └── vehicles.csv              载具源数据，开发时主要编辑它
+│   ├── vehicles.csv              载具源数据，开发时主要编辑它
+│   └── ammo-blast-power.csv      弹药爆炸威力源数据，开发时主要编辑它
 ├── data/
 │   ├── weapons.json              枪械发布数据，由 csv/weapons.csv 生成
 │   ├── vehicles.json             载具发布数据，由 csv/vehicles.csv 生成
+│   ├── ammo-blast-power.json     弹药爆炸威力发布数据，由 csv/ammo-blast-power.csv 生成
 │   ├── rwr-players-pacific.json  太平洋玩家统计快照，由 GitHub Actions 更新
 │   ├── rwr-players-pacific.meta.json  玩家统计快照哈希元数据，由 GitHub Actions 更新
 │   ├── maps.json                 地图摘要数据
@@ -88,6 +91,7 @@ http://127.0.0.1:8765/index.html
 ```text
 csv/weapons.csv
 csv/vehicles.csv
+csv/ammo-blast-power.csv
 ```
 
 网页运行时读取：
@@ -95,6 +99,7 @@ csv/vehicles.csv
 ```text
 data/weapons.json
 data/vehicles.json
+data/ammo-blast-power.json
 data/maps.json
 data/rwr-players-pacific.json
 data/rwr-players-pacific.meta.json
@@ -104,7 +109,7 @@ maps/<地图名>/map-data.json
 
 这样做的原因是：CSV 更适合人工增删改查，Excel 或表格编辑器可以直接筛选、排序、批量编辑；JSON 更适合网页读取，结构稳定，浏览器可以直接解析。
 
-不建议手工编辑 `data/weapons.json` 和 `data/vehicles.json`，因为下次执行 CSV 同步时会用 CSV 重新生成它们。
+不建议手工编辑 `data/weapons.json`、`data/vehicles.json` 和 `data/ammo-blast-power.json`，因为下次执行 CSV 同步时会用 CSV 重新生成它们。旧的中文 Markdown 弹药威力表已经移除，弹药爆炸威力现在统一维护在英文文件名的 CSV 中。
 
 ## 上传脚本流程
 
@@ -124,7 +129,7 @@ maps/<地图名>/map-data.json
 11. 如果只遇到已知生成物冲突，自动处理：`data/asset-manifest.json` 保留本地并稍后重建，玩家 JSONL 和玩家元数据采用远端 GitHub Actions 版本
 12. 再次编译 TypeScript 并刷新 data/asset-manifest.json
 13. 提交远端合并或重建后的变化，提交信息同样按远端是否已有文件判断
-14. git push
+14. git push origin HEAD:main，把当前脚本刚处理完的提交推送到远端 main
 ```
 
 CSV 同步步骤会读取：
@@ -132,6 +137,7 @@ CSV 同步步骤会读取：
 ```text
 csv/weapons.csv
 csv/vehicles.csv
+csv/ammo-blast-power.csv
 ```
 
 并生成：
@@ -139,6 +145,7 @@ csv/vehicles.csv
 ```text
 data/weapons.json
 data/vehicles.json
+data/ammo-blast-power.json
 ```
 
 如果 CSV 转换后的 JSON 内容和现有 JSON 完全一致，脚本会输出 `Unchanged`，不会重写 JSON 文件。因此对应文件的 SHA-256 哈希不会变化，也不会让用户浏览器重新请求没有变化的数据资源。
@@ -147,7 +154,7 @@ TypeScript 编译步骤会读取 `ts/index.ts`，使用 `ts/tsconfig.json` 生�
 
 资源清单步骤会扫描静态资源并生成 `data/asset-manifest.json`。如果所有参与清单的文件哈希都没有变化，脚本不会仅因为 `generatedAt` 不同而重写清单。
 
-上传脚本会先获取远端 `main`，用 `origin/main` 判断暂存文件在远端是否已经存在：只要本次暂存文件里有任意路径在远端不存在，提交信息就是“新增文件”；否则提交信息是“功能增加或修复”。提交本地构建结果后，脚本会再次拉取远端状态。如果远端有 GitHub Actions 刚更新的玩家数据，脚本会正常合并远端提交；只有遇到已知生成物冲突时才自动处理。`data/asset-manifest.json` 是本地重建产物，冲突时先保留本地版本，随后再次生成；`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 是 Actions 自动更新的玩家 JSONL 及其哈希元数据，冲突时采用远端版本。处理完成后脚本会再次编译 TypeScript、刷新资源清单，提交合并结果并推送到 Git。脚本输出使用中文提示，并用不同颜色区分步骤、信息、成功、注意和错误。脚本开头保留两行 `@echo off` 是为了兼容 UTF-8 BOM 批处理文件，避免 Windows `cmd.exe` 回显批处理命令本身。
+上传脚本会先获取远端 `main`，用 `origin/main` 判断暂存文件在远端是否已经存在：只要本次暂存文件里有任意路径在远端不存在，提交信息就是“新增文件”；否则提交信息是“功能增加或修复”。提交本地构建结果后，脚本会再次拉取远端状态。如果远端有 GitHub Actions 刚更新的玩家数据，脚本会正常合并远端提交；只有遇到已知生成物冲突时才自动处理。`data/asset-manifest.json` 是本地重建产物，冲突时先保留本地版本，随后再次生成；`data/rwr-players-pacific.json` 和 `data/rwr-players-pacific.meta.json` 是 Actions 自动更新的玩家 JSONL 及其哈希元数据，冲突时采用远端版本。处理完成后脚本会再次编译 TypeScript、刷新资源清单，提交合并结果并推送当前 `HEAD` 到远端 `main`。因此即使在功能分支上双击脚本，也不会误推落后的本地 `main` 分支。脚本输出使用中文提示，并用不同颜色区分步骤、信息、成功、注意和错误。脚本开头保留两行 `@echo off` 是为了兼容 UTF-8 BOM 批处理文件，避免 Windows `cmd.exe` 回显批处理命令本身。
 
 ## CSV 编辑说明
 
@@ -215,6 +222,17 @@ id
 
 新增载具时，在 CSV 中增加一行即可。`图标号` 对应 `maps_textures/<编号>.webp`。
 
+### ammo-blast-power.csv
+
+`csv/ammo-blast-power.csv` 是弹药爆炸威力数据源，替代旧的中文 Markdown 表。当前字段包括：
+
+```text
+名称
+爆炸伤害
+```
+
+载具详细参数弹窗里的“伤害抗性”会按这个 CSV 的行顺序展示弹药条目，并使用 `爆炸伤害` 作为载具伤害计算中的弹药威力。新增、删除或调整弹药时，直接编辑这个 CSV；如果只想改变弹窗里的显示顺序，也调整 CSV 行顺序。
+
 ### 空值和类型规则
 
 CSV 中留空的单元格会转换成 JSON 的 `null`。
@@ -251,6 +269,10 @@ CSV 文件使用 UTF-8 no BOM 编码和 LF 换行。用表格软件编辑后保�
 索敌优先级工具
 搜索
 ```
+
+### data/ammo-blast-power.json
+
+这是网页运行时读取的弹药爆炸威力发布数据，由 `csv/ammo-blast-power.csv` 生成。载具详情弹窗会用它生成“伤害抗性”行，并按 JSON 中的数组顺序显示；这个顺序来自 CSV 的行顺序。
 
 ### data/rwr-players-pacific.json
 
@@ -421,15 +443,15 @@ layer         原始图层信息
 玩家列表
 ```
 
-载具查询使用和模型查询一致的卡片式布局。每张卡片显示阵营徽章、载具图标和载具名，支持搜索、详情、对比和索敌优先级工具；点击卡片会打开载具详细参数，比较模式下点击卡片会选择两个载具进行对比，索敌优先级模式下点击有武器的载具会打开索敌优先级弹窗。载具对比弹窗右上角提供分享按钮，点击后会关闭当前对比弹窗，并打开对比图片预览弹窗；预览图由前端 canvas 根据当前对比数据重新绘制，支持下载 PNG 图片或复制 PNG 图片到剪贴板。
+载具查询使用和模型查询一致的卡片式布局。每张卡片显示阵营徽章、载具图标和载具名，支持搜索、详情、对比和索敌优先级工具；点击卡片会打开载具详细参数，比较模式下点击卡片会选择两个载具进行对比，索敌优先级模式下点击有武器的载具会打开索敌优先级弹窗。载具详情弹窗右上角在关闭按钮左侧提供分享按钮，分享入口复用对比结果的分享图标和图片预览弹窗；载具对比弹窗右上角也提供分享按钮。分享预览图由前端 canvas 根据当前详情或对比数据重新绘制，支持下载 PNG 图片或复制 PNG 图片到剪贴板。载具详情中的“伤害抗性”数据来自 `data/ammo-blast-power.json`，展示行数和顺序跟 `csv/ammo-blast-power.csv` 保持一致。
 
-枪械查询使用和模型查询一致的卡片式布局。每张卡片显示阵营徽章、顺时针旋转 90 度后的枪械图标和枪械名称，支持搜索、详情和对比；点击卡片会打开枪械详细参数，比较模式下点击卡片会选择两个枪械进行对比。枪械对比弹窗同样提供分享按钮，对比结果可以生成完整 PNG 预览图，并支持下载或复制到剪贴板。枪械查询页不提供排序控件。
+枪械查询使用和模型查询一致的卡片式布局。每张卡片显示阵营徽章、顺时针旋转 90 度后的枪械图标和枪械名称，支持搜索、详情和对比；点击卡片会打开枪械详细参数，比较模式下点击卡片会选择两个枪械进行对比。枪械详情弹窗和枪械对比弹窗右上角都提供分享按钮，分享入口复用同一套图片预览弹窗，可以生成完整 PNG 预览图，并支持下载或复制到剪贴板。枪械查询页不提供排序控件。
 
 地图查询使用和模型查询一致的卡片式布局，按雪绒花和太平洋分组显示，分组标题只保留放大的系列徽标文字，不再显示“系列”或地图数量；桌面端系列徽标使用统一高度和上下内边距，避免雪绒花、太平洋两个徽标的视觉间距不一致；每张卡片展示地图缩略图和地图名，悬停时有卡片抬升动效。点击地图卡片后打开基础地图预览，弹窗右侧提供按阵营和占领状态生成带设施图标地图视图的按钮，按钮宽度按文字内容收缩并保留左右留白，外层使用和地图图片区一致的圆角容器；手机端这些按钮会移动到地图下方。
 
 模型查询支持从 `model/models.json` 列出模型，并直接使用模型清单中的 `icon` 显示 `maps_textures/<图标号>.webp`；没有 `icon` 时显示“无图标”占位，不再按载具名匹配 `data/vehicles.json`。点击“查看模型”会打开 `model-viewer.html`，使用 Three.js、GLTFLoader 和 OrbitControls 加载 GLB，支持旋转、平移、滚轮缩放和部件显示/隐藏。模型查看页右侧的部件显示控制为单列纵向列表，按钮列宽按最长部件名收缩，部件较多时在面板内上下滚动；渲染器会在低 DPR 屏幕上使用轻量超采样，并保留贴图原始分辨率和各向异性过滤。
 
-玩家列表读取 `data/rwr-players-pacific.json`，展示太平洋数据库的玩家统计快照。列表页按 100 个玩家分页，玩家 ID 使用和地图分组标题相近的浅蓝色药丸徽章；分页栏是内容容器底部的独立容器，不属于表格滚动层，左侧显示当前页、总页数和玩家总数，分页按钮组水平居中并垂直居中于分页容器，手机端会隐藏数字页码并将上一页和下一页改为左右三角图标按钮，页数信息和三角按钮保持同一行；数值列点击表头后会对全部已加载玩家排序，而不是只排序当前页。玩家详情弹窗顶部先显示大号玩家名，再显示大号排名数字，下方列出全部玩家统计字段，并在可排名字段右侧显示该玩家在当前快照中的全量排名。
+玩家列表读取 `data/rwr-players-pacific.json`，展示太平洋数据库的玩家统计快照。列表页按 100 个玩家分页，玩家 ID 使用和地图分组标题相近的浅蓝色药丸徽章；分页栏是内容容器底部的独立容器，不属于表格滚动层，左侧显示当前页、总页数和玩家总数，分页按钮组水平居中并垂直居中于分页容器，手机端会隐藏数字页码并将上一页和下一页改为左右三角图标按钮，页数信息和三角按钮保持同一行；数值列点击表头后会对全部已加载玩家排序，而不是只排序当前页。玩家详情弹窗顶部先显示大号玩家名，再显示大号排名数字，下方列出全部玩家统计字段，并在可排名字段右侧显示该玩家在当前快照中的全量排名。玩家详情弹窗右上角同样在关闭按钮左侧提供分享按钮，可生成玩家详情 PNG 预览图。
 
 页面包含移动端适配：`860px` 以下顶部操作栏纵向排列并保持在结果滚动层上方，载具查询、枪械查询、地图查询和模型查询都使用响应式卡片网格；枪械卡片图标在移动端同样保持顺时针 90 度旋转。玩家列表在手机端改为卡片式行布局，保留纵向浏览效率。主查询结果限制在 `.table-wrap` 内上下滚动，避免页面主体被结果内容撑出横向滚动；载具对比和枪械对比弹窗在手机端保留完整三栏对比结构，并在弹窗内容区内左右滑动查看。对比结果分享弹窗在手机端使用单列按钮布局，预览图在弹窗内容区内自适应缩放。`640px` 以下主导航折叠为“菜单”按钮，详情、地图和索敌优先级弹窗贴合手机视口显示，按钮和输入框保持触控友好的高度与间距。桌面端从其他分类切换到地图查询、模型查询或玩家列表时，列表滚动位置会回到顶部，避免沿用上一分类停留的行位置。
 
@@ -444,6 +466,7 @@ layer         原始图层信息
 ```js
 fetch("data/vehicles.json")                 // 按清单和入口文件签名决定是否可用缓存
 fetch("data/weapons.json")                  // 按清单和入口文件签名决定是否可用缓存
+fetch("data/ammo-blast-power.json")         // 按清单和入口文件签名决定是否可用缓存
 fetch("data/maps.json")                     // 按清单和入口文件签名决定是否可用缓存
 fetch("model/models.json")                  // 按清单和入口文件签名决定是否可用缓存
 fetch("data/rwr-players-pacific.meta.json")  // 判断玩家 JSON 的缓存版本
@@ -598,7 +621,8 @@ python -m http.server 8765 --bind 127.0.0.1
 ## 维护建议
 
 - 修改枪械和载具数据时，优先编辑 `csv/` 目录下的 CSV。
-- 不建议直接编辑 `data/weapons.json` 和 `data/vehicles.json`。
+- 修改弹药爆炸威力或载具伤害抗性显示顺序时，编辑 `csv/ammo-blast-power.csv`。
+- 不建议直接编辑 `data/weapons.json`、`data/vehicles.json` 和 `data/ammo-blast-power.json`。
 - 新增枪械后，检查 `weapons_textures/` 中是否存在对应图标。
 - 新增载具后，检查 `maps_textures/` 中是否存在对应编号图标。
 - 新增模型时，在 `model/` 下创建安全英文 id 子目录，放入同一模型对应的 `.glb` 和可选 `.blend`，然后手动在 `model/models.json` 中增加对应条目。
