@@ -9,6 +9,12 @@ let playerRankings = {};
 let currentMap = null;
 const mapDataCache = new Map();
 
+interface Window {
+  htmlToImage?: {
+    toBlob: (node: HTMLElement, options?: Record<string, unknown>) => Promise<Blob | null>;
+  };
+}
+
 const mobileMenuBtn = document.getElementById("mobileMenuBtn");
 const tagTabs = document.querySelectorAll(".tag-tab");
 const tableWrap = document.querySelector(".table-wrap");
@@ -173,6 +179,7 @@ let selectedIndices = [];
 let selectedWeaponIndices = [];
 let currentComparison = null;
 let currentDetailShare = null;
+let currentShareDialog = null;
 let shareImageBlob = null;
 let shareImageUrl = "";
 let currentList = [];
@@ -1686,17 +1693,130 @@ async function buildShareImage(comparison) {
   return canvasToBlob(canvas);
 }
 
+function shareDialogTitle(dialogRoot) {
+  const title = dialogRoot?.querySelector(".dialog-head h2")?.textContent?.trim();
+  return title || "分享图片";
+}
+
+function cloneDialogForShare(dialogRoot) {
+  const dialog = dialogRoot?.querySelector(".dialog");
+  if (!dialog) return null;
+
+  const body = dialog.querySelector(".dialog-body");
+  const bodyScrollLeft = body ? body.scrollLeft : 0;
+  const clone = dialog.cloneNode(true);
+  const cloneBody = clone.querySelector(".dialog-body");
+  const dialogWidth = Math.ceil(dialog.getBoundingClientRect().width || dialog.scrollWidth || dialog.offsetWidth);
+  const bodyScrollWidth = body ? Math.ceil(body.scrollWidth) : 0;
+  const captureWidth = Math.max(dialogWidth, bodyScrollWidth);
+  const captureHeight = Math.ceil(dialog.scrollHeight || dialog.offsetHeight);
+
+  clone.classList.add("share-capture-dialog");
+  clone.style.position = "fixed";
+  clone.style.left = "0";
+  clone.style.top = "0";
+  clone.style.width = `${captureWidth}px`;
+  clone.style.maxWidth = "none";
+  clone.style.maxHeight = "none";
+  clone.style.height = "auto";
+  clone.style.overflow = "visible";
+  clone.style.animation = "none";
+  clone.style.transform = "none";
+  clone.style.contain = "none";
+  clone.style.pointerEvents = "none";
+  clone.style.zIndex = "-1";
+
+  const cloneActions = clone.querySelector(".dialog-actions");
+  if (cloneActions) cloneActions.remove();
+
+  const closeButton = clone.querySelector("#closeShareModal, #closeModal, #closeDetailModal");
+  if (closeButton) closeButton.remove();
+
+  if (cloneBody) {
+    cloneBody.style.overflow = "visible";
+    cloneBody.style.maxHeight = "none";
+    cloneBody.style.height = "auto";
+    cloneBody.style.scrollbarGutter = "auto";
+    cloneBody.style.contain = "none";
+    cloneBody.scrollLeft = bodyScrollLeft;
+  }
+
+  document.body.appendChild(clone);
+  const fullWidth = Math.max(captureWidth, Math.ceil(clone.scrollWidth || clone.offsetWidth));
+  const fullHeight = Math.max(captureHeight, Math.ceil(clone.scrollHeight || clone.offsetHeight));
+  clone.style.width = `${fullWidth}px`;
+  return { clone, width: fullWidth, height: fullHeight };
+}
+
+async function buildDialogSnapshotImage(dialogRoot, preparedCapture = null) {
+  const capture = preparedCapture || cloneDialogForShare(dialogRoot);
+  if (!capture) throw new Error("Share dialog target is not available");
+
+  const htmlToImage = window.htmlToImage;
+
+  try {
+    if (!htmlToImage || typeof htmlToImage.toBlob !== "function") {
+      throw new Error("html-to-image is not available");
+    }
+    const blob = await htmlToImage.toBlob(capture.clone, {
+      backgroundColor: "#ffffff",
+      cacheBust: true,
+      pixelRatio: Math.max(1, window.devicePixelRatio || 1),
+      width: capture.width,
+      height: capture.height,
+      style: {
+        width: `${capture.width}px`,
+        height: `${capture.height}px`,
+        maxWidth: "none",
+        maxHeight: "none",
+        overflow: "visible",
+        transform: "none"
+      }
+    });
+    if (!blob) throw new Error("Dialog snapshot export failed");
+    return blob;
+  } finally {
+    capture.clone.remove();
+  }
+}
+
+async function buildCurrentShareImage(sharePayload) {
+  if (currentShareDialog) {
+    try {
+      return await buildDialogSnapshotImage(currentShareDialog);
+    } catch (error) {
+      console.warn("Dialog snapshot failed, falling back to canvas share image", error);
+    }
+  }
+  return buildShareImage(sharePayload);
+}
+
+async function buildPreparedShareImage(sharePayload, preparedCapture) {
+  if (preparedCapture) {
+    try {
+      return await buildDialogSnapshotImage(currentShareDialog, preparedCapture);
+    } catch (error) {
+      console.warn("Dialog snapshot failed, falling back to canvas share image", error);
+    }
+  }
+  return buildCurrentShareImage(sharePayload);
+}
+
 function setSharePreviewLoading(message) {
   sharePreview.classList.add("loading");
   sharePreview.textContent = message;
 }
 
-async function openShareDialog() {
+async function openShareDialog(sourceDialogRoot = null) {
   const sharePayload = currentDetailShare || currentComparison;
   if (!sharePayload) {
     showToast("没有可分享的内容");
     return;
   }
+  currentShareDialog = sourceDialogRoot;
+  const shareTitle = document.getElementById("shareTitle");
+  if (shareTitle) shareTitle.textContent = `分享${shareDialogTitle(sourceDialogRoot)}`;
+  const preparedCapture = currentShareDialog ? cloneDialogForShare(currentShareDialog) : null;
   closeDialog(modal);
   closeDialog(detailModal);
   clearShareImage();
@@ -1707,10 +1827,10 @@ async function openShareDialog() {
   resetDialogScroll(shareModal);
 
   try {
-    shareImageBlob = await buildShareImage(sharePayload);
+    shareImageBlob = await buildPreparedShareImage(sharePayload, preparedCapture);
     shareImageUrl = URL.createObjectURL(shareImageBlob);
     sharePreview.classList.remove("loading");
-    sharePreview.innerHTML = `<img src="${shareImageUrl}" alt="${escapeHtml(sharePayload.title)}">`;
+    sharePreview.innerHTML = `<img src="${shareImageUrl}" alt="${escapeHtml(shareDialogTitle(sourceDialogRoot))}">`;
     downloadShareImage.disabled = false;
     copyShareImage.disabled = false;
   } catch (error) {
@@ -3191,10 +3311,10 @@ compareBtn.addEventListener("click", () => setCompareMode(!compareMode));
 targetModeBtn.addEventListener("click", () => setTargetMode(!targetMode));
 shareCompareModal.addEventListener("click", () => {
   currentDetailShare = null;
-  openShareDialog();
+  openShareDialog(modal);
 });
 shareDetailModal.addEventListener("click", () => {
-  openShareDialog();
+  openShareDialog(detailModal);
 });
 downloadShareImage.addEventListener("click", downloadCurrentShareImage);
 copyShareImage.addEventListener("click", () => {
@@ -3349,11 +3469,13 @@ modal.addEventListener("click", (event) => {
 });
 closeShareModal.addEventListener("click", () => {
   closeDialog(shareModal);
+  currentShareDialog = null;
   clearShareImage();
 });
 shareModal.addEventListener("click", (event) => {
   if (event.target === shareModal) {
     closeDialog(shareModal);
+    currentShareDialog = null;
     clearShareImage();
   }
 });
@@ -3381,6 +3503,7 @@ window.addEventListener("keydown", (event) => {
     detailModal.classList.remove("open");
     targetModal.classList.remove("open");
     mapModal.classList.remove("open");
+    currentShareDialog = null;
     clearShareImage();
     syncModalState();
   }
