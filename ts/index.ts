@@ -218,7 +218,7 @@ let playersLoadError = "";
 const PLAYER_STREAM_FORMAT = "rwr-player-stream-v1";
 const PLAYER_PAGE_SIZE = 100;
 const PLAYER_STREAM_BATCH_SIZE = 500;
-const APP_SHELL_REFRESH_FILES = ["index.html", "scripts/index.js", "sw.js"];
+const APP_SHELL_REFRESH_FILES = ["index.html", "scripts/html-to-image.js", "scripts/index.js", "sw.js"];
 const imagePromiseCache = new Map();
 const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 1));
 const isCompactPlayerPagination = () => window.matchMedia("(max-width: 640px)").matches;

@@ -1,6 +1,6 @@
 {
-  "version": "7df0e2f4d727be1d457bc92529b1813388e09838e718e6988168c87e5a4d7f00",
-  "generatedAt": "2026-07-05T08:33:31.085Z",
+  "version": "24635922c3b24d64c188244b309571b1b264b1fdfbe5d4f9ddd88044a8713f52",
+  "generatedAt": "2026-07-05T08:48:29.805Z",
   "files": {
     "data/ammo-blast-power.json": "d96df0c30011acebb1c24f0cbab6153e34c0b55416679ed12c1c3d1754e98685",
     "data/maps.json": "a1591beea24ed782b532d80d3a9b311cc8e60119d244851fd9880c0530662775",
@@ -284,7 +284,8 @@
     "model/willys_mb_recoilless_rifle/willys_mb_recoilless_rifle.glb": "cff91dac74fbedf8e4d9f63f9d5cbbaf2a514f2af32d57f2ee5ca4dbf7f85432",
     "model/willys_mb/willys_mb.blend": "a7ae02a0ba1e2bbfb068ecbae002dbe6f0f8dc85a595dccca25157b7c7a376a9",
     "model/willys_mb/willys_mb.glb": "ff6975747b9f6247b1aad71dbb217779e2999d5aa238c6bd9bf84e6a9001fb94",
-    "scripts/index.js": "ebde7e29c97a47b306dfa72aaf83d0dc3c861576864fbe53bf55c504034d95c0",
+    "scripts/html-to-image.js": "0181b9a4ea3351540751b2e72b6baecb5c2297093fcb0bd2af94fc531cb0fbda",
+    "scripts/index.js": "6a715729ec25414a00708f12858d286a29cb063bccafd9d6eab89bc49d122a15",
     "splash.webp": "86d76d62491f6288f3dc02ca6f7a99fc8c2b1feaeaa9010f66ed897bff6e7cd4",
     "sw.js": "e4156852bf7c0918050c0f351d2dc57a81d544e3bd2a32d001b4669eda5c78ea",
     "weapons_textures/hud_austen_mki.webp": "8c44b0bf85815b253d5f6d73cb6c7e359e29a39e731cee3e26c84a847b2b0a4c",
