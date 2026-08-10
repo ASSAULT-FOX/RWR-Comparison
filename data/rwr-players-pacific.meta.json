@@ -1,8 +1,8 @@
 {
-  "version": "2ccc02ce0cd0755a199727e3bcf9342ef71da43fb6b1378260f87a1533c12b41",
-  "generatedAt": "2026-08-09T12:58:46+00:00",
+  "version": "88b94849df355422ff0a9f3d1fc6f058d4eb8ce4e51422d155e15b4a8de4f3bf",
+  "generatedAt": "2026-08-10T13:17:16+00:00",
   "source": "http://rwr.runningwithrifles.com/rwr_stats/view_players.php?db=pacific",
   "database": "pacific",
-  "count": 26608,
+  "count": 26635,
   "dataFile": "rwr-players-pacific.json"
 }
